@@ -396,7 +396,7 @@ out geom;`,
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="hospital"];
   relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="hospital"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             stations: {
@@ -408,7 +408,7 @@ out center tags;`,
   node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["railway"~"^(station|halt|tram_stop)$"];
   node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="bus_station"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             attractions: {
@@ -422,7 +422,7 @@ out center tags;`,
   node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["historic"~"^(castle|monument|memorial|ruins|building)$"];
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["historic"~"^(castle|monument)$"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             parks: {
@@ -434,7 +434,7 @@ out center tags;`,
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="park"]["name"];
   relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="park"]["name"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             shopping: {
@@ -446,7 +446,7 @@ out center tags;`,
   node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["shop"="mall"];
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["shop"="mall"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             busstops: {
@@ -468,7 +468,7 @@ out;`,
   node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="cinema"];
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="cinema"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             zoo: {
@@ -481,7 +481,7 @@ out center tags;`,
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="zoo"];
   relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="zoo"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             townhall: {
@@ -494,7 +494,7 @@ out center tags;`,
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="townhall"];
   relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="townhall"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             water: {
@@ -519,7 +519,7 @@ out geom;`,
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="aquarium"];
   relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="aquarium"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             library: {
@@ -531,7 +531,7 @@ out center tags;`,
   node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="library"];
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="library"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             golf: {
@@ -543,7 +543,7 @@ out center tags;`,
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="golf_course"];
   relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="golf_course"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             stadium: {
@@ -556,7 +556,7 @@ out center tags;`,
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="stadium"];
   relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="stadium"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             embassy: {
@@ -568,7 +568,7 @@ out center tags;`,
   node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="embassy"];
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="embassy"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
             consulate: {
@@ -580,7 +580,7 @@ out center tags;`,
   node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="consulate"];
   way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="consulate"];
 );
-out center tags;`,
+out center bb tags;`,
                 render: renderPOIs,
             },
         };
@@ -784,6 +784,10 @@ out center tags;`,
                 } else if (el.center) {
                     lat = el.center.lat;
                     lng = el.center.lon;
+                } else if (el.bounds) {
+                    // Fallback for relations where Overpass couldn't compute a center
+                    lat = (el.bounds.minlat + el.bounds.maxlat) / 2;
+                    lng = (el.bounds.minlon + el.bounds.maxlon) / 2;
                 } else {
                     return;
                 }
