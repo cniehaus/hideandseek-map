@@ -1,0 +1,278 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    display: flex;
+    height: 100vh;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 13px;
+    background: #0d1117;
+    color: #c9d1d9;
+}
+
+#sidebar {
+    width: 300px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+#map { flex: 1; }
+
+/* ── Sidebar sections ─────────────────────────────── */
+.s-header {
+    padding: 14px 16px 12px;
+    background: #0d1117;
+    border-bottom: 1px solid #30363d;
+}
+.s-header h1 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f0883e;
+    letter-spacing: -0.3px;
+}
+.s-header small { color: #8b949e; font-size: 11px; }
+
+.section {
+    padding: 12px 16px;
+    border-bottom: 1px solid #21262d;
+}
+.section-title {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #8b949e;
+    margin-bottom: 8px;
+}
+
+/* ── Form controls ────────────────────────────────── */
+.row { display: flex; gap: 6px; margin-bottom: 6px; }
+
+input[type="text"], input[type="number"] {
+    flex: 1;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 13px;
+    min-width: 0;
+}
+input:focus {
+    outline: none;
+    border-color: #f0883e;
+    box-shadow: 0 0 0 2px rgba(240,136,62,0.2);
+}
+input::placeholder { color: #484f58; }
+
+button {
+    background: #f0883e;
+    color: #0d1117;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+button:hover { background: #d4722e; }
+
+button.ghost {
+    background: transparent;
+    color: #8b949e;
+    border: 1px solid #30363d;
+    font-weight: 400;
+}
+button.ghost:hover { background: #21262d; color: #c9d1d9; }
+
+button.danger {
+    background: transparent;
+    color: #f85149;
+    border: none;
+    padding: 2px 6px;
+    font-weight: 400;
+    font-size: 12px;
+}
+button.danger:hover { background: rgba(248,81,73,0.1); }
+
+/* ── Layer list ───────────────────────────────────── */
+.layer-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 4px;
+}
+.layer-row:hover { background: rgba(255,255,255,0.03); margin: 0 -4px; padding: 5px 4px; }
+
+.layer-row input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    accent-color: #f0883e;
+    flex-shrink: 0;
+}
+.dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.layer-name { flex: 1; }
+.layer-count { color: #484f58; font-size: 11px; }
+
+/* ── Radius tool ──────────────────────────────────── */
+.coord-display {
+    font-size: 11px;
+    font-family: monospace;
+    color: #8b949e;
+    background: #0d1117;
+    padding: 5px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border: 1px solid #21262d;
+}
+.coord-display:hover { border-color: #30363d; }
+
+.radius-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 0;
+    font-size: 12px;
+    border-bottom: 1px solid #21262d;
+    cursor: pointer;
+}
+.radius-item:last-child { border: none; }
+.radius-item:hover { opacity: 0.8; }
+.radius-item .ri-info { flex: 1; line-height: 1.3; }
+.radius-item .ri-lat { color: #8b949e; font-size: 10px; font-family: monospace; }
+
+/* ── Status bar ───────────────────────────────────── */
+#status {
+    margin-top: auto;
+    padding: 7px 16px;
+    font-size: 11px;
+    color: #8b949e;
+    background: #0d1117;
+    border-top: 1px solid #30363d;
+    min-height: 30px;
+}
+#status.loading { color: #f0883e; }
+#status.error   { color: #f85149; }
+#status.ok      { color: #3fb950; }
+
+/* ── Leaflet overrides ────────────────────────────── */
+.leaflet-popup-content-wrapper {
+    background: #161b22;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+}
+.leaflet-popup-tip { background: #161b22; }
+.leaflet-popup-content { font-size: 13px; line-height: 1.5; }
+.popup-name { font-weight: 700; font-size: 14px; color: #e6edf3; }
+.popup-type { color: #8b949e; font-size: 11px; margin-top: 2px; }
+.popup-coords { color: #484f58; font-size: 10px; font-family: monospace; margin-top: 4px; }
+
+/* ── Select ──────────────────────────────────────── */
+select {
+    width: 100%;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+}
+select:focus {
+    outline: none;
+    border-color: #f0883e;
+}
+
+/* ── Radius km-Labels ────────────────────────────── */
+.radius-km-label span {
+    font-size: 10px;
+    font-weight: 700;
+    color: #000;
+    padding: 1px 5px;
+    border-radius: 3px;
+    border: 1px solid #000;
+    white-space: nowrap;
+    opacity: 0.85;
+    display: inline-block;
+}
+
+/* ── Distanz-Tool ─────────────────────────────────── */
+button.meas-active {
+    background: #58a6ff;
+}
+button.meas-active:hover { background: #3b82f6; }
+
+.meas-result {
+    font-size: 13px;
+    color: #c9d1d9;
+    background: #0d1117;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #21262d;
+    text-align: center;
+    margin-top: 8px;
+    min-height: 30px;
+    line-height: 30px;
+}
+
+.meas-icon {
+    background: #f0883e;
+    color: #0d1117;
+    font-weight: 800;
+    font-size: 11px;
+    border-radius: 50%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.meas-line-label {
+    display: inline-block;
+    background: #0d1117;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 2px solid #f0883e;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    pointer-events: none;
+    line-height: 1.4;
+    transform: translateX(-50%);
+}
+
+.plz-label {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-weight: 800;
+    font-size: 12px;
+    color: #1a1a1a;
+    text-shadow:
+        1px 1px 3px rgba(255,255,255,0.9),
+       -1px 1px 3px rgba(255,255,255,0.9),
+        1px -1px 3px rgba(255,255,255,0.9),
+       -1px -1px 3px rgba(255,255,255,0.9);
+    pointer-events: none;
+    white-space: nowrap;
+}
