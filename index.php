@@ -130,6 +130,48 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
                 <span class="layer-count" id="cnt-water"></span>
             </label>
 
+            <label class="layer-row" for="lyr-aquarium">
+                <input type="checkbox" id="lyr-aquarium" onchange="toggleLayer('aquarium', this.checked)">
+                <div class="dot" style="background:#06b6d4"></div>
+                <span class="layer-name">Aquarien</span>
+                <span class="layer-count" id="cnt-aquarium"></span>
+            </label>
+
+            <label class="layer-row" for="lyr-library">
+                <input type="checkbox" id="lyr-library" onchange="toggleLayer('library', this.checked)">
+                <div class="dot" style="background:#a78bfa"></div>
+                <span class="layer-name">Büchereien</span>
+                <span class="layer-count" id="cnt-library"></span>
+            </label>
+
+            <label class="layer-row" for="lyr-golf">
+                <input type="checkbox" id="lyr-golf" onchange="toggleLayer('golf', this.checked)">
+                <div class="dot" style="background:#84cc16"></div>
+                <span class="layer-name">Golf-Plätze</span>
+                <span class="layer-count" id="cnt-golf"></span>
+            </label>
+
+            <label class="layer-row" for="lyr-stadium">
+                <input type="checkbox" id="lyr-stadium" onchange="toggleLayer('stadium', this.checked)">
+                <div class="dot" style="background:#f43f5e"></div>
+                <span class="layer-name">Stadien</span>
+                <span class="layer-count" id="cnt-stadium"></span>
+            </label>
+
+            <label class="layer-row" for="lyr-embassy">
+                <input type="checkbox" id="lyr-embassy" onchange="toggleLayer('embassy', this.checked)">
+                <div class="dot" style="background:#f59e0b"></div>
+                <span class="layer-name">Botschaften</span>
+                <span class="layer-count" id="cnt-embassy"></span>
+            </label>
+
+            <label class="layer-row" for="lyr-consulate">
+                <input type="checkbox" id="lyr-consulate" onchange="toggleLayer('consulate', this.checked)">
+                <div class="dot" style="background:#d97706"></div>
+                <span class="layer-name">Konsulate</span>
+                <span class="layer-count" id="cnt-consulate"></span>
+            </label>
+
             <div style="margin-top:10px">
                 <button class="ghost" style="width:100%" onclick="clearAllLayers()">Alle Layer entfernen</button>
             </div>
@@ -200,6 +242,19 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
 
     <!-- ════════ MAP ════════ -->
     <div id="map"></div>
+
+    <!-- ════════ ERROR POPUP ════════ -->
+    <div id="errorOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center">
+        <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:20px 22px;max-width:480px;width:90%;box-shadow:0 8px 32px #0008">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                <span style="font-size:18px">⚠️</span>
+                <strong style="color:#f85149;font-size:14px">Fehler beim Laden</strong>
+                <button onclick="closeErrorPopup()" style="margin-left:auto;background:none;border:none;color:#8b949e;font-size:18px;cursor:pointer;padding:0 4px">✕</button>
+            </div>
+            <pre id="errorText" style="background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:10px;font-size:11px;color:#c9d1d9;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto;margin:0 0 12px"></pre>
+            <button id="errorCopyBtn" onclick="copyErrorText()" style="width:100%;font-size:12px">📋 Fehlertext kopieren</button>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/osmtogeojson@3.0.0-beta.5/osmtogeojson.min.js"></script>
@@ -433,6 +488,80 @@ out center tags;`,
 out geom;`,
                 render: renderWater,
             },
+            aquarium: {
+                label: 'Aquarien',
+                color: '#06b6d4',
+                icon: '🐠',
+                buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="aquarium"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="aquarium"];
+  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="aquarium"];
+);
+out center tags;`,
+                render: renderPOIs,
+            },
+            library: {
+                label: 'Büchereien',
+                color: '#a78bfa',
+                icon: '📚',
+                buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="library"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="library"];
+);
+out center tags;`,
+                render: renderPOIs,
+            },
+            golf: {
+                label: 'Golf-Plätze',
+                color: '#84cc16',
+                icon: '⛳',
+                buildQuery: (bb) => `[out:json][timeout:60];
+(
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="golf_course"];
+  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="golf_course"];
+);
+out center tags;`,
+                render: renderPOIs,
+            },
+            stadium: {
+                label: 'Stadien',
+                color: '#f43f5e',
+                icon: '🏟️',
+                buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="stadium"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="stadium"];
+  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="stadium"];
+);
+out center tags;`,
+                render: renderPOIs,
+            },
+            embassy: {
+                label: 'Botschaften',
+                color: '#f59e0b',
+                icon: '🏛️',
+                buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="embassy"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="embassy"];
+);
+out center tags;`,
+                render: renderPOIs,
+            },
+            consulate: {
+                label: 'Konsulate',
+                color: '#d97706',
+                icon: '🏢',
+                buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="consulate"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="consulate"];
+);
+out center tags;`,
+                render: renderPOIs,
+            },
         };
 
         // PLZ color palette
@@ -533,7 +662,8 @@ out geom;`,
                 setStatus(def.label + ' geladen', 'ok');
             } catch (e) {
                 if (cntEl) cntEl.textContent = '✗';
-                setStatus('Fehler beim Laden: ' + e.message, 'error');
+                setStatus('Fehler – Details im Popup', 'error');
+                showErrorPopup(`Layer: ${def.label}\n\n${e.message}`);
                 console.error('[layer:' + id + ']', e);
             }
         }
@@ -963,6 +1093,32 @@ out geom;`,
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;');
         }
+
+        // ── Error popup ───────────────────────────────────────────────────────────────
+        function showErrorPopup(msg) {
+            document.getElementById('errorText').textContent = msg;
+            document.getElementById('errorCopyBtn').textContent = '📋 Fehlertext kopieren';
+            const overlay = document.getElementById('errorOverlay');
+            overlay.style.display = 'flex';
+        }
+
+        function closeErrorPopup() {
+            document.getElementById('errorOverlay').style.display = 'none';
+        }
+
+        function copyErrorText() {
+            const text = document.getElementById('errorText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                document.getElementById('errorCopyBtn').textContent = '✅ Kopiert!';
+                setTimeout(() => {
+                    document.getElementById('errorCopyBtn').textContent = '📋 Fehlertext kopieren';
+                }, 2000);
+            });
+        }
+
+        document.getElementById('errorOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('errorOverlay')) closeErrorPopup();
+        });
 
         // ── Keyboard: Enter in city input ─────────────────────────────────────────────
         document.getElementById('cityInput')

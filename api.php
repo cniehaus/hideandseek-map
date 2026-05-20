@@ -47,19 +47,34 @@ function httpPost(string $url, string $body): string
 {
     $ctx = stream_context_create([
         'http' => [
-            'method'  => 'POST',
-            'header'  => implode("\r\n", [
+            'method'         => 'POST',
+            'header'         => implode("\r\n", [
                 'Content-Type: application/x-www-form-urlencoded',
                 'User-Agent: JetlagHideSeekMaps/1.0',
             ]) . "\r\n",
-            'content' => $body,
-            'timeout' => 90,
+            'content'        => $body,
+            'timeout'        => 90,
+            'ignore_errors'  => true,
         ],
         'ssl' => ['verify_peer' => true],
     ]);
     $result = @file_get_contents($url, false, $ctx);
     if ($result === false) {
-        throw new RuntimeException("HTTP POST to Overpass failed");
+        throw new RuntimeException("Overpass nicht erreichbar (Netzwerkfehler)");
+    }
+    // Check HTTP status code
+    $status = 200;
+    foreach ($http_response_header ?? [] as $h) {
+        if (preg_match('#^HTTP/\S+ (\d+)#', $h, $m)) {
+            $status = (int) $m[1];
+        }
+    }
+    if ($status === 429) {
+        throw new RuntimeException("Overpass: Zu viele Anfragen – bitte kurz warten und erneut versuchen");
+    }
+    if ($status >= 400) {
+        $msg = substr(strip_tags($result), 0, 200);
+        throw new RuntimeException("Overpass HTTP $status: " . trim($msg));
     }
     return $result;
 }
