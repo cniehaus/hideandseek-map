@@ -276,3 +276,99 @@ button.meas-active:hover { background: #3b82f6; }
     pointer-events: none;
     white-space: nowrap;
 }
+
+/* ── Mobile drawer ────────────────────────────────── */
+#menuToggle {
+    display: none;
+}
+
+#sidebarBackdrop {
+    display: none;
+}
+
+@media (max-width: 700px) {
+    body { display: block; }
+
+    #map {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(320px, 88vw);
+        min-width: 0;
+        z-index: 2000;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.7);
+    }
+
+    #sidebar.open {
+        transform: translateX(0);
+    }
+
+    #sidebarBackdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 1999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+    }
+
+    #sidebarBackdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    #menuToggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 1500;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: #161b22;
+        border: 1px solid #30363d;
+        color: #c9d1d9;
+        font-size: 20px;
+        font-weight: 400;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.6);
+        padding: 0;
+        line-height: 1;
+    }
+
+    #menuToggle:hover { background: #21262d; color: #fff; }
+
+    .s-header-close {
+        display: flex !important;
+    }
+}
+
+.s-header-close {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #8b949e;
+    font-size: 22px;
+    font-weight: 400;
+    padding: 0 2px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.s-header-close:hover { color: #fff; background: none; }

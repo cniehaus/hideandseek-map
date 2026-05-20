@@ -17,6 +17,10 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
 
 <body>
 
+    <!-- ════════ MOBILE TOGGLE ════════ -->
+    <button id="menuToggle" onclick="openSidebar()" aria-label="Menü öffnen">☰</button>
+    <div id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
     <!-- ════════ SIDEBAR ════════ -->
     <div id="sidebar">
         <div class="s-header">
@@ -25,9 +29,10 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
                     <h1>Jet Lag Maps</h1>
                     <small>Hide &amp; Seek Kartentools</small>
                 </div>
-                <div style="display:flex;gap:3px;flex-shrink:0">
+                <div style="display:flex;gap:3px;flex-shrink:0;align-items:center">
                     <button id="unitKm" style="font-size:11px;padding:3px 8px" onclick="setUnits('metric')">km</button>
                     <button id="unitMi" class="ghost" style="font-size:11px;padding:3px 8px" onclick="setUnits('imperial')">mi</button>
+                    <button class="s-header-close" onclick="closeSidebar()" aria-label="Menü schließen">✕</button>
                 </div>
             </div>
             <select id="tileSelect" onchange="setTileLayer(this.value)">
@@ -1092,6 +1097,19 @@ out center tags;`,
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;');
+        }
+
+        // ── Mobile sidebar ────────────────────────────────────────────────────────────
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('sidebarBackdrop').classList.add('open');
+            document.getElementById('menuToggle').style.display = 'none';
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarBackdrop').classList.remove('open');
+            document.getElementById('menuToggle').style.display = '';
         }
 
         // ── Error popup ───────────────────────────────────────────────────────────────
