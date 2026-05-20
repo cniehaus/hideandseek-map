@@ -13,6 +13,7 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
     <title>Jet Lag Hide &amp; Seek – Karten</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css" />
+    <style id="print-page-size">@page { size: A4 portrait; margin: 5mm; }</style>
 </head>
 
 <body>
@@ -35,13 +36,6 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
                     <button class="s-header-close" onclick="closeSidebar()" aria-label="Menü schließen">✕</button>
                 </div>
             </div>
-            <select id="tileSelect" onchange="setTileLayer(this.value)">
-                <option value="osm">OSM Standard</option>
-                <option value="positron">Hell (CartoDB Positron)</option>
-                <option value="dark">Dunkel (CartoDB Dark)</option>
-                <option value="voyager">Voyager (CartoDB)</option>
-                <option value="satellite">Satellit (Esri)</option>
-            </select>
         </div>
 
         <!-- Stadt -->
@@ -242,26 +236,27 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
             <button class="ghost" style="width:100%;margin-top:6px" onclick="clearMeasure()">Messung löschen</button>
         </div>
 
-        <!-- PDF-Export -->
-        <div class="section">
-            <div class="section-title">PDF-Export</div>
-            <select id="printFormat" style="margin-bottom:6px">
-                <option value="A4">DIN A4</option>
-                <option value="A3">DIN A3</option>
-                <option value="letter">US Letter</option>
-            </select>
-            <div style="display:flex;gap:4px;margin-bottom:8px">
-                <button id="tabPortrait"  style="flex:1;font-size:12px" onclick="setPrintOrientation('portrait')">Hochformat</button>
-                <button id="tabLandscape" class="ghost" style="flex:1;font-size:12px" onclick="setPrintOrientation('landscape')">Querformat</button>
-            </div>
-            <button style="width:100%" onclick="printMap()">🖨️ Als PDF drucken</button>
-        </div>
-
         <div id="status">Bereit</div>
     </div>
 
     <!-- ════════ MAP ════════ -->
     <div id="map"></div>
+
+    <!-- ════════ MAP STYLE FAB ════════ -->
+    <button id="styleFab" onclick="toggleStylePopover()" title="Kartenstil wählen" aria-label="Kartenstil">🗺</button>
+
+    <div id="stylePopover">
+        <div class="pp-label">Kartenstil</div>
+        <button class="style-opt active" data-tile="osm"      onclick="selectStyle(this,'osm')">OSM Standard</button>
+        <button class="style-opt"        data-tile="positron"  onclick="selectStyle(this,'positron')">☀️ Hell (Positron)</button>
+        <button class="style-opt"        data-tile="dark"      onclick="selectStyle(this,'dark')">🌑 Dunkel</button>
+        <button class="style-opt"        data-tile="voyager"   onclick="selectStyle(this,'voyager')">🧭 Voyager</button>
+        <button class="style-opt"        data-tile="satellite" onclick="selectStyle(this,'satellite')">🛰 Satellit</button>
+        <button class="style-opt"        data-tile="opnv"      onclick="selectStyle(this,'opnv')">🚌 ÖPNV-Karte</button>
+    </div>
+
+    <!-- ════════ PRINT FAB ════════ -->
+    <button id="printFab" onclick="printMap()" title="Als PDF drucken" aria-label="Drucken">🖨</button>
 
     <!-- ════════ ERROR POPUP ════════ -->
     <div id="errorOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center">
@@ -316,6 +311,12 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
                 label: 'Satellit (Esri)',
                 url:   'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
                 attr:  'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                maxZoom: 18,
+            },
+            opnv: {
+                label: 'ÖPNV-Karte',
+                url:   'https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png',
+                attr:  'Map &copy; <a href="https://memomaps.de/">memomaps.de</a> CC-BY-SA, Kartendaten &copy; <a href="https://openstreetmap.org">OpenStreetMap</a>-Mitwirkende',
                 maxZoom: 18,
             },
         };
@@ -1114,34 +1115,33 @@ out center tags;`,
                 .replace(/"/g, '&quot;');
         }
 
-        // ── PDF-Export ────────────────────────────────────────────────────────────────
-        let printOrientation = 'portrait';
-
-        function setPrintOrientation(o) {
-            printOrientation = o;
-            document.getElementById('tabPortrait').className  = o === 'portrait'  ? '' : 'ghost';
-            document.getElementById('tabLandscape').className = o === 'landscape' ? '' : 'ghost';
-        }
-
+        // ── Print FAB ─────────────────────────────────────────────────────────────────
         function printMap() {
-            // Close sidebar on mobile so it doesn't interfere
             closeSidebar();
-
-            const format = document.getElementById('printFormat').value;
-
-            // Inject / update the dynamic @page rule
-            let dynStyle = document.getElementById('dynamicPrintStyle');
-            if (!dynStyle) {
-                dynStyle = document.createElement('style');
-                dynStyle.id = 'dynamicPrintStyle';
-                document.head.appendChild(dynStyle);
-            }
-            dynStyle.textContent = `@page { size: ${format} ${printOrientation}; margin: 5mm; }`;
-
-            // Let Leaflet adapt to any layout shift before printing
             map.invalidateSize();
-            window.print();
+            setTimeout(() => window.print(), 100);
         }
+
+        // ── Map style FAB ─────────────────────────────────────────────────────────────
+        function toggleStylePopover() {
+            document.getElementById('stylePopover').classList.toggle('open');
+        }
+
+        function selectStyle(btn, key) {
+            setTileLayer(key);
+            document.querySelectorAll('.style-opt').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('stylePopover').classList.remove('open');
+        }
+
+        // Close style popover on outside click
+        document.addEventListener('click', (e) => {
+            const pop = document.getElementById('stylePopover');
+            const fab = document.getElementById('styleFab');
+            if (pop.classList.contains('open') && !pop.contains(e.target) && e.target !== fab) {
+                pop.classList.remove('open');
+            }
+        });
 
         // ── Mobile sidebar ────────────────────────────────────────────────────────────
         function openSidebar() {

@@ -277,6 +277,73 @@ button.meas-active:hover { background: #3b82f6; }
     white-space: nowrap;
 }
 
+/* ── FABs (floating action buttons) ──────────────── */
+#printFab,
+#styleFab {
+    position: fixed;
+    right: 12px;
+    z-index: 1200;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    font-size: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.55);
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#printFab         { bottom: 30px; }
+#styleFab         { bottom: 84px; }
+#printFab:hover,
+#styleFab:hover   { background: #21262d; color: #fff; }
+
+/* ── Style popover ────────────────────────────────── */
+#stylePopover {
+    position: fixed;
+    bottom: 138px;
+    right: 12px;
+    z-index: 1201;
+    width: 195px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.7);
+    display: none;
+    flex-direction: column;
+    gap: 3px;
+}
+#stylePopover.open { display: flex; }
+
+.pp-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: #8b949e;
+    margin-bottom: 5px;
+}
+
+.style-opt {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #c9d1d9;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.style-opt:hover  { background: #21262d; color: #fff; }
+.style-opt.active { background: #21262d; border-color: #f0883e; color: #f0883e; font-weight: 600; }
+
 /* ── Print / PDF-Export ───────────────────────────── */
 @media print {
     * {
@@ -287,7 +354,10 @@ button.meas-active:hover { background: #3b82f6; }
     #sidebar,
     #menuToggle,
     #sidebarBackdrop,
-    #errorOverlay {
+    #errorOverlay,
+    #printFab,
+    #styleFab,
+    #stylePopover {
         display: none !important;
     }
 
