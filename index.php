@@ -242,6 +242,21 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
             <button class="ghost" style="width:100%;margin-top:6px" onclick="clearMeasure()">Messung löschen</button>
         </div>
 
+        <!-- PDF-Export -->
+        <div class="section">
+            <div class="section-title">PDF-Export</div>
+            <select id="printFormat" style="margin-bottom:6px">
+                <option value="A4">DIN A4</option>
+                <option value="A3">DIN A3</option>
+                <option value="letter">US Letter</option>
+            </select>
+            <div style="display:flex;gap:4px;margin-bottom:8px">
+                <button id="tabPortrait"  style="flex:1;font-size:12px" onclick="setPrintOrientation('portrait')">Hochformat</button>
+                <button id="tabLandscape" class="ghost" style="flex:1;font-size:12px" onclick="setPrintOrientation('landscape')">Querformat</button>
+            </div>
+            <button style="width:100%" onclick="printMap()">🖨️ Als PDF drucken</button>
+        </div>
+
         <div id="status">Bereit</div>
     </div>
 
@@ -1099,6 +1114,35 @@ out center tags;`,
                 .replace(/"/g, '&quot;');
         }
 
+        // ── PDF-Export ────────────────────────────────────────────────────────────────
+        let printOrientation = 'portrait';
+
+        function setPrintOrientation(o) {
+            printOrientation = o;
+            document.getElementById('tabPortrait').className  = o === 'portrait'  ? '' : 'ghost';
+            document.getElementById('tabLandscape').className = o === 'landscape' ? '' : 'ghost';
+        }
+
+        function printMap() {
+            // Close sidebar on mobile so it doesn't interfere
+            closeSidebar();
+
+            const format = document.getElementById('printFormat').value;
+
+            // Inject / update the dynamic @page rule
+            let dynStyle = document.getElementById('dynamicPrintStyle');
+            if (!dynStyle) {
+                dynStyle = document.createElement('style');
+                dynStyle.id = 'dynamicPrintStyle';
+                document.head.appendChild(dynStyle);
+            }
+            dynStyle.textContent = `@page { size: ${format} ${printOrientation}; margin: 5mm; }`;
+
+            // Let Leaflet adapt to any layout shift before printing
+            map.invalidateSize();
+            window.print();
+        }
+
         // ── Mobile sidebar ────────────────────────────────────────────────────────────
         function openSidebar() {
             document.getElementById('sidebar').classList.add('open');
@@ -1126,12 +1170,37 @@ out center tags;`,
 
         function copyErrorText() {
             const text = document.getElementById('errorText').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                document.getElementById('errorCopyBtn').textContent = '✅ Kopiert!';
-                setTimeout(() => {
-                    document.getElementById('errorCopyBtn').textContent = '📋 Fehlertext kopieren';
-                }, 2000);
-            });
+            const btn  = document.getElementById('errorCopyBtn');
+
+            const confirm = () => {
+                btn.textContent = '✅ Kopiert!';
+                setTimeout(() => { btn.textContent = '📋 Fehlertext kopieren'; }, 2000);
+            };
+            const fail = () => {
+                btn.textContent = '✗ Kopieren fehlgeschlagen';
+                setTimeout(() => { btn.textContent = '📋 Fehlertext kopieren'; }, 2000);
+            };
+
+            // Modern API (HTTPS / localhost)
+            if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(text).then(confirm).catch(fail);
+                return;
+            }
+
+            // Fallback for HTTP: temporary textarea + execCommand
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                const ok = document.execCommand('copy');
+                document.body.removeChild(ta);
+                ok ? confirm() : fail();
+            } catch (_) {
+                fail();
+            }
         }
 
         document.getElementById('errorOverlay').addEventListener('click', (e) => {

@@ -120,6 +120,11 @@ function doGeocode(): void
 
 function doOverpass(): void
 {
+    static $endpoints = [
+        'https://overpass-api.de/api/interpreter',
+        'https://overpass.karte.io/api/interpreter',
+        'https://overpass.osm.ch/api/interpreter',
+    ];
     $query = $_POST['query'] ?? '';
     if ($query === '') {
         throw new InvalidArgumentException('POST parameter "query" is required');
@@ -131,14 +136,27 @@ function doOverpass(): void
         return;
     }
 
-    $data = httpPost(
-        'https://overpass-api.de/api/interpreter',
-        http_build_query(['data' => $query])
-    );
+    $body   = http_build_query(['data' => $query]);
+    $data   = null;
+    $errors = [];
 
-    if (json_decode($data) === null) {
-        $msg = substr(strip_tags($data), 0, 200);
-        throw new RuntimeException("Overpass-Fehler: " . trim($msg));
+    foreach ($endpoints as $endpoint) {
+        try {
+            $data = httpPost($endpoint, $body);
+            if (json_decode($data) !== null) {
+                break; // success
+            }
+            $msg      = substr(strip_tags($data), 0, 200);
+            $errors[] = "$endpoint: " . trim($msg);
+            $data     = null;
+        } catch (RuntimeException $e) {
+            $errors[] = "$endpoint: " . $e->getMessage();
+            $data     = null;
+        }
+    }
+
+    if ($data === null) {
+        throw new RuntimeException("Alle Overpass-Server fehlgeschlagen:\n" . implode("\n", $errors));
     }
 
     cacheSet($cacheKey, $data);

@@ -277,6 +277,39 @@ button.meas-active:hover { background: #3b82f6; }
     white-space: nowrap;
 }
 
+/* ── Print / PDF-Export ───────────────────────────── */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    #sidebar,
+    #menuToggle,
+    #sidebarBackdrop,
+    #errorOverlay {
+        display: none !important;
+    }
+
+    body {
+        display: block !important;
+        margin: 0 !important;
+        background: #fff !important;
+    }
+
+    #map {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* Keep Leaflet tile colours intact */
+    .leaflet-container {
+        background: #fff !important;
+    }
+}
+
 /* ── Mobile drawer ────────────────────────────────── */
 #menuToggle {
     display: none;
