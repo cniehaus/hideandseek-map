@@ -1,0 +1,109 @@
+<?php return [
+    // App
+    'app_title'            => 'Jet Lag Maps',
+    'app_subtitle'         => 'Hide & Seek Map Tools',
+
+    // Units
+    'unit_km'              => 'km',
+    'unit_mi'              => 'mi',
+
+    // Sections
+    'sec_city'             => 'City',
+    'sec_layers'           => 'Layers',
+    'sec_radius'           => 'Radius Tool',
+    'sec_measure'          => 'Distance & Direction',
+
+    // City search
+    'city_placeholder'     => 'e.g. London, Berlin …',
+    'btn_search'           => 'Search',
+
+    // Layer names
+    'lyr_plz'              => 'Postal Codes',
+    'lyr_hospitals'        => 'Hospitals',
+    'lyr_stations'         => 'Train & Tram Stations',
+    'lyr_attractions'      => 'Attractions',
+    'lyr_parks'            => 'Parks & Green Spaces',
+    'lyr_shopping'         => 'Shopping Centres',
+    'lyr_busstops'         => 'Bus Stops',
+    'lyr_cinema'           => 'Cinemas',
+    'lyr_zoo'              => 'Zoos',
+    'lyr_townhall'         => 'Town Halls',
+    'lyr_water'            => 'Water Bodies',
+    'lyr_aquarium'         => 'Aquariums',
+    'lyr_library'          => 'Libraries',
+    'lyr_golf'             => 'Golf Courses',
+    'lyr_stadium'          => 'Stadiums',
+    'lyr_embassy'          => 'Embassies',
+    'lyr_consulate'        => 'Consulates',
+    'btn_clear_layers'     => 'Remove all layers',
+
+    // Radius tool
+    'coord_hint'           => '↖ Click on the map to set the centre',
+    'tab_single'           => 'Single',
+    'tab_interval'         => 'Interval',
+    'lbl_radius'           => '{0} radius',
+    'lbl_step'             => '{0} step,',
+    'lbl_rings'            => 'rings',
+    'btn_draw'             => 'Draw',
+    'manual_hint'          => 'Or enter coordinates manually:',
+    'lat_placeholder'      => 'Lat e.g. 53.1435',
+    'lng_placeholder'      => 'Lon e.g. 8.2146',
+    'btn_use_coords'       => 'Use coordinates',
+    'btn_clear_radii'      => 'Remove all radii',
+
+    // Measure tool
+    'measure_hint'         => 'Click two points on the map – A then B.',
+    'btn_measure_start'    => 'Start measuring',
+    'btn_measure_stop'     => 'Cancel',
+    'btn_clear_meas'       => 'Clear measurement',
+
+    // Map styles
+    'style_label'          => 'Map style',
+    'style_osm'            => 'OSM Standard',
+    'style_light'          => '☀️ Light (Positron)',
+    'style_dark'           => '🌑 Dark',
+    'style_voyager'        => '🧭 Voyager',
+    'style_satellite'      => '🛰 Satellite',
+    'style_opnv'           => '🚌 Public Transport',
+
+    // FABs
+    'fab_print_title'      => 'Print / Save as PDF',
+    'fab_style_title'      => 'Choose map style',
+
+    // Status messages (JS)
+    'status_ready'         => 'Ready',
+    'status_searching'     => 'Searching city …',
+    'status_not_found'     => 'City not found',
+    'status_err'           => 'Error: {0}',
+    'status_map'           => 'Map: {0}',
+    'status_loading'       => 'Loading {0} …',
+    'status_loaded'        => '{0} loaded',
+    'status_err_popup'     => 'Error – see popup for details',
+    'status_point_a'       => 'Click point A on the map',
+    'status_point_b'       => 'Click point B on the map',
+    'status_meas_done'     => 'Measurement complete',
+    'status_center'        => 'Centre: {0}',
+    'status_no_point'      => 'Click a point on the map first',
+    'status_bad_radius'    => 'Invalid radius',
+    'status_bad_interval'  => 'Invalid interval values',
+    'status_radius_drawn'  => 'Radius drawn: {0}',
+    'status_interval_drawn'=> 'Interval drawn: {0} rings × {1}',
+    'status_bad_coords'    => 'Invalid coordinates',
+
+    // Radius list
+    'ri_radius'            => '{0} radius',
+    'ri_interval'          => '{0}× {1} interval',
+
+    // Compass directions (comma-separated, starting N clockwise)
+    'compass_dirs'         => 'N,NE,E,SE,S,SW,W,NW',
+
+    // PLZ popup
+    'plz_label'            => 'Postcode {0}',
+
+    // Error popup
+    'err_title'            => 'Loading error',
+    'err_copy'             => '📋 Copy error text',
+    'err_copied'           => '✅ Copied!',
+    'err_copy_fail'        => '✗ Copy failed',
+    'err_layer'            => "Layer: {0}\n\n{1}",
+];

@@ -460,6 +460,50 @@ button.meas-active:hover { background: #3b82f6; }
     }
 }
 
+/* ── About footer ─────────────────────────────────── */
+#about-footer {
+    position: fixed;
+    bottom: 0;
+    left: 300px;
+    right: 0;
+    z-index: 1100;
+    background: #161b22;
+    border-top: 1px solid #30363d;
+    font-size: 11px;
+    color: #8b949e;
+    padding: 0 12px;
+}
+
+#about-footer summary {
+    cursor: pointer;
+    padding: 5px 0;
+    user-select: none;
+    list-style: none;
+    color: #484f58;
+}
+
+#about-footer summary:hover { color: #8b949e; }
+
+#about-footer .about-content {
+    padding: 8px 0 10px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+#about-footer .about-content p { max-width: 600px; line-height: 1.5; }
+
+#about-footer a { color: #58a6ff; text-decoration: none; }
+#about-footer a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+    #about-footer { left: 0; }
+}
+
+@media print {
+    #about-footer { display: none; }
+}
+
 .s-header-close {
     display: none;
     align-items: center;

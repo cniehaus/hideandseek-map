@@ -2,18 +2,76 @@
 
 declare(strict_types=1);
 
+// ── Spracherkennung ───────────────────────────────────────────────────────────
+$supported = ['de', 'en'];
+$lang = $_GET['lang'] ?? '';
+if (!in_array($lang, $supported, true)) {
+    $accept = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
+    $lang   = str_starts_with($accept, 'en') ? 'en' : 'de';
+}
+$strings = require __DIR__ . '/langs/' . $lang . '.php';
+
+function t(string $key): string {
+    global $strings;
+    return htmlspecialchars($strings[$key] ?? $key, ENT_QUOTES, 'UTF-8');
+}
+
+function tf(string $key, string ...$args): string {
+    global $strings;
+    $s = $strings[$key] ?? $key;
+    foreach ($args as $i => $v) {
+        $s = str_replace('{' . $i . '}', $v, $s);
+    }
+    return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+}
+
 $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
-<html lang="de">
+<html lang="<?= $lang ?>">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jet Lag Hide &amp; Seek – Karten</title>
+    <title>Jet Lag Hide &amp; Seek – Karten &amp; Spielhilfe</title>
+    <meta name="description" content="Interaktive Karte für das Brettspiel Jet Lag: The Game – Hide &amp; Seek. Zeigt Postleitzahlen, Bahnhöfe, Krankenhäuser, Sehenswürdigkeiten und Stadien für deine Stadt. Druckfertig für das Spiel." />
+    <meta name="keywords" content="Jet Lag Hide and Seek, Jet Lag The Game, Karte, Postleitzahlen, Spielhilfe, Brettspiel, JetLag" />
+    <meta name="author" content="Carsten Niehaus" />
+    <link rel="canonical" href="https://<?= htmlspecialchars($_SERVER['HTTP_HOST'] ?? '', ENT_QUOTES, 'UTF-8') ?>/index.php" />
+
+    <!-- Open Graph (für Social Media & Google-Vorschau) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Jet Lag Hide &amp; Seek – Interaktive Spielkarte" />
+    <meta property="og:description" content="Plane dein Hide &amp; Seek-Spiel mit interaktiven Karten: Postleitzahlen, Bahnhöfe, Krankenhäuser, Sehenswürdigkeiten und mehr – druckfertig für jede Stadt." />
+    <meta property="og:url" content="https://<?= htmlspecialchars($_SERVER['HTTP_HOST'] ?? '', ENT_QUOTES, 'UTF-8') ?>/index.php" />
+    <meta property="og:image" content="https://<?= htmlspecialchars($_SERVER['HTTP_HOST'] ?? '', ENT_QUOTES, 'UTF-8') ?>/og-preview.png" />
+    <meta property="og:image:width" content="2844" />
+    <meta property="og:image:height" content="2126" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://<?= htmlspecialchars($_SERVER['HTTP_HOST'] ?? '', ENT_QUOTES, 'UTF-8') ?>/og-preview.png" />
+
+    <!-- Strukturierte Daten für Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Jet Lag Hide & Seek – Karten",
+      "description": "Interaktive Karte für das Brettspiel Jet Lag: The Game Hide & Seek. Zeigt Postleitzahlen, Bahnhöfe, Krankenhäuser und mehr.",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "about": {
+        "@type": "Game",
+        "name": "Jet Lag: The Game – Hide & Seek",
+        "url": "https://store.nebula.tv/collections/jetlag/products/hideandseek"
+      }
+    }
+    </script>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css" />
     <style id="print-page-size">@page { size: A4 portrait; margin: 5mm; }</style>
+    <script>const LANG = <?= json_encode($strings, JSON_UNESCAPED_UNICODE) ?>;</script>
 </head>
 
 <body>
@@ -27,175 +85,177 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
         <div class="s-header">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px">
                 <div>
-                    <h1>Jet Lag Maps</h1>
-                    <small>Hide &amp; Seek Kartentools</small>
+                    <h1><?= t('app_title') ?></h1>
+                    <small><?= t('app_subtitle') ?></small>
                 </div>
                 <div style="display:flex;gap:3px;flex-shrink:0;align-items:center">
-                    <button id="unitKm" style="font-size:11px;padding:3px 8px" onclick="setUnits('metric')">km</button>
-                    <button id="unitMi" class="ghost" style="font-size:11px;padding:3px 8px" onclick="setUnits('imperial')">mi</button>
-                    <button class="s-header-close" onclick="closeSidebar()" aria-label="Menü schließen">✕</button>
+                    <button id="unitKm" style="font-size:11px;padding:3px 8px" onclick="setUnits('metric')"><?= t('unit_km') ?></button>
+                    <button id="unitMi" class="ghost" style="font-size:11px;padding:3px 8px" onclick="setUnits('imperial')"><?= t('unit_mi') ?></button>
+                    <button <?= $lang === 'de' ? '' : 'class="ghost"' ?> style="font-size:11px;padding:3px 8px" onclick="switchLang('de')">DE</button>
+                    <button <?= $lang === 'en' ? '' : 'class="ghost"' ?> style="font-size:11px;padding:3px 8px" onclick="switchLang('en')">EN</button>
+                    <button class="s-header-close" onclick="closeSidebar()" aria-label="close">✕</button>
                 </div>
             </div>
         </div>
 
         <!-- Stadt -->
         <div class="section">
-            <div class="section-title">Stadt</div>
+            <div class="section-title"><?= t('sec_city') ?></div>
             <div class="row">
-                <input type="text" id="cityInput" value="<?= $defaultCity ?>" placeholder="z.B. Oldenburg, Bremen …">
-                <button onclick="searchCity()">Suchen</button>
+                <input type="text" id="cityInput" value="<?= $defaultCity ?>" placeholder="<?= t('city_placeholder') ?>">
+                <button onclick="searchCity()"><?= t('btn_search') ?></button>
             </div>
             <div id="cityHint" style="font-size:11px;color:#8b949e;margin-top:2px"></div>
         </div>
 
         <!-- Layer -->
         <div class="section">
-            <div class="section-title">Layer</div>
+            <div class="section-title"><?= t('sec_layers') ?></div>
 
             <label class="layer-row" for="lyr-plz">
                 <input type="checkbox" id="lyr-plz" onchange="toggleLayer('plz', this.checked)">
                 <div class="dot" style="background:#4ecdc4;border:1px solid #2aa8a8"></div>
-                <span class="layer-name">Postleitzahlen</span>
+                <span class="layer-name"><?= t('lyr_plz') ?></span>
                 <span class="layer-count" id="cnt-plz"></span>
             </label>
 
             <label class="layer-row" for="lyr-hospitals">
                 <input type="checkbox" id="lyr-hospitals" onchange="toggleLayer('hospitals', this.checked)">
                 <div class="dot" style="background:#f85149"></div>
-                <span class="layer-name">Krankenhäuser</span>
+                <span class="layer-name"><?= t('lyr_hospitals') ?></span>
                 <span class="layer-count" id="cnt-hospitals"></span>
             </label>
 
             <label class="layer-row" for="lyr-stations">
                 <input type="checkbox" id="lyr-stations" onchange="toggleLayer('stations', this.checked)">
                 <div class="dot" style="background:#58a6ff"></div>
-                <span class="layer-name">Bahnhöfe &amp; Haltestellen</span>
+                <span class="layer-name"><?= t('lyr_stations') ?></span>
                 <span class="layer-count" id="cnt-stations"></span>
             </label>
 
             <label class="layer-row" for="lyr-attractions">
                 <input type="checkbox" id="lyr-attractions" onchange="toggleLayer('attractions', this.checked)">
                 <div class="dot" style="background:#ffa657"></div>
-                <span class="layer-name">Sehenswürdigkeiten</span>
+                <span class="layer-name"><?= t('lyr_attractions') ?></span>
                 <span class="layer-count" id="cnt-attractions"></span>
             </label>
 
             <label class="layer-row" for="lyr-parks">
                 <input type="checkbox" id="lyr-parks" onchange="toggleLayer('parks', this.checked)">
                 <div class="dot" style="background:#3fb950"></div>
-                <span class="layer-name">Parks &amp; Grünanlagen</span>
+                <span class="layer-name"><?= t('lyr_parks') ?></span>
                 <span class="layer-count" id="cnt-parks"></span>
             </label>
 
             <label class="layer-row" for="lyr-shopping">
                 <input type="checkbox" id="lyr-shopping" onchange="toggleLayer('shopping', this.checked)">
                 <div class="dot" style="background:#d2a8ff"></div>
-                <span class="layer-name">Einkaufszentren</span>
+                <span class="layer-name"><?= t('lyr_shopping') ?></span>
                 <span class="layer-count" id="cnt-shopping"></span>
             </label>
 
             <label class="layer-row" for="lyr-busstops">
                 <input type="checkbox" id="lyr-busstops" onchange="toggleLayer('busstops', this.checked)">
                 <div class="dot" style="background:#facc15"></div>
-                <span class="layer-name">Bushaltestellen</span>
+                <span class="layer-name"><?= t('lyr_busstops') ?></span>
                 <span class="layer-count" id="cnt-busstops"></span>
             </label>
 
             <label class="layer-row" for="lyr-cinema">
                 <input type="checkbox" id="lyr-cinema" onchange="toggleLayer('cinema', this.checked)">
                 <div class="dot" style="background:#e879f9"></div>
-                <span class="layer-name">Kinos</span>
+                <span class="layer-name"><?= t('lyr_cinema') ?></span>
                 <span class="layer-count" id="cnt-cinema"></span>
             </label>
 
             <label class="layer-row" for="lyr-zoo">
                 <input type="checkbox" id="lyr-zoo" onchange="toggleLayer('zoo', this.checked)">
                 <div class="dot" style="background:#a3e635"></div>
-                <span class="layer-name">Zoos</span>
+                <span class="layer-name"><?= t('lyr_zoo') ?></span>
                 <span class="layer-count" id="cnt-zoo"></span>
             </label>
 
             <label class="layer-row" for="lyr-townhall">
                 <input type="checkbox" id="lyr-townhall" onchange="toggleLayer('townhall', this.checked)">
                 <div class="dot" style="background:#fb923c"></div>
-                <span class="layer-name">Rathäuser</span>
+                <span class="layer-name"><?= t('lyr_townhall') ?></span>
                 <span class="layer-count" id="cnt-townhall"></span>
             </label>
 
             <label class="layer-row" for="lyr-water">
                 <input type="checkbox" id="lyr-water" onchange="toggleLayer('water', this.checked)">
                 <div class="dot" style="background:#38bdf8;border:1px solid #0ea5e9"></div>
-                <span class="layer-name">Wasserflächen</span>
+                <span class="layer-name"><?= t('lyr_water') ?></span>
                 <span class="layer-count" id="cnt-water"></span>
             </label>
 
             <label class="layer-row" for="lyr-aquarium">
                 <input type="checkbox" id="lyr-aquarium" onchange="toggleLayer('aquarium', this.checked)">
                 <div class="dot" style="background:#06b6d4"></div>
-                <span class="layer-name">Aquarien</span>
+                <span class="layer-name"><?= t('lyr_aquarium') ?></span>
                 <span class="layer-count" id="cnt-aquarium"></span>
             </label>
 
             <label class="layer-row" for="lyr-library">
                 <input type="checkbox" id="lyr-library" onchange="toggleLayer('library', this.checked)">
                 <div class="dot" style="background:#a78bfa"></div>
-                <span class="layer-name">Büchereien</span>
+                <span class="layer-name"><?= t('lyr_library') ?></span>
                 <span class="layer-count" id="cnt-library"></span>
             </label>
 
             <label class="layer-row" for="lyr-golf">
                 <input type="checkbox" id="lyr-golf" onchange="toggleLayer('golf', this.checked)">
                 <div class="dot" style="background:#84cc16"></div>
-                <span class="layer-name">Golf-Plätze</span>
+                <span class="layer-name"><?= t('lyr_golf') ?></span>
                 <span class="layer-count" id="cnt-golf"></span>
             </label>
 
             <label class="layer-row" for="lyr-stadium">
                 <input type="checkbox" id="lyr-stadium" onchange="toggleLayer('stadium', this.checked)">
                 <div class="dot" style="background:#f43f5e"></div>
-                <span class="layer-name">Stadien</span>
+                <span class="layer-name"><?= t('lyr_stadium') ?></span>
                 <span class="layer-count" id="cnt-stadium"></span>
             </label>
 
             <label class="layer-row" for="lyr-embassy">
                 <input type="checkbox" id="lyr-embassy" onchange="toggleLayer('embassy', this.checked)">
                 <div class="dot" style="background:#f59e0b"></div>
-                <span class="layer-name">Botschaften</span>
+                <span class="layer-name"><?= t('lyr_embassy') ?></span>
                 <span class="layer-count" id="cnt-embassy"></span>
             </label>
 
             <label class="layer-row" for="lyr-consulate">
                 <input type="checkbox" id="lyr-consulate" onchange="toggleLayer('consulate', this.checked)">
                 <div class="dot" style="background:#d97706"></div>
-                <span class="layer-name">Konsulate</span>
+                <span class="layer-name"><?= t('lyr_consulate') ?></span>
                 <span class="layer-count" id="cnt-consulate"></span>
             </label>
 
             <div style="margin-top:10px">
-                <button class="ghost" style="width:100%" onclick="clearAllLayers()">Alle Layer entfernen</button>
+                <button class="ghost" style="width:100%" onclick="clearAllLayers()"><?= t('btn_clear_layers') ?></button>
             </div>
         </div>
 
         <!-- Radius-Tool -->
         <div class="section">
-            <div class="section-title">Radius-Tool</div>
+            <div class="section-title"><?= t('sec_radius') ?></div>
 
-            <div class="coord-display" id="clickCoords" title="Klick auf der Karte setzt den Mittelpunkt">
-                ↖ Auf die Karte klicken, um Mittelpunkt zu setzen
+            <div class="coord-display" id="clickCoords">
+                <?= t('coord_hint') ?>
             </div>
 
             <!-- Mode tabs -->
             <div style="display:flex;gap:4px;margin-bottom:8px">
-                <button id="tabSingle" style="flex:1;font-size:12px" onclick="setRadiusMode('single')">Einzeln</button>
-                <button id="tabInterval" class="ghost" style="flex:1;font-size:12px" onclick="setRadiusMode('interval')">Intervall</button>
+                <button id="tabSingle" style="flex:1;font-size:12px" onclick="setRadiusMode('single')"><?= t('tab_single') ?></button>
+                <button id="tabInterval" class="ghost" style="flex:1;font-size:12px" onclick="setRadiusMode('interval')"><?= t('tab_interval') ?></button>
             </div>
 
             <!-- Single mode -->
             <div id="modeSingle">
                 <div class="row">
                     <input type="number" id="radiusKm" value="2" min="0.1" max="100" step="0.1" placeholder="km" style="max-width:80px">
-                    <span id="unitLabelRadius" style="line-height:31px;color:#8b949e;font-size:12px">km Radius</span>
-                    <button onclick="drawRadius()" style="margin-left:auto">Zeichnen</button>
+                    <span id="unitLabelRadius" style="line-height:31px;color:#8b949e;font-size:12px"><?= tf('lbl_radius', 'km') ?></span>
+                    <button onclick="drawRadius()" style="margin-left:auto"><?= t('btn_draw') ?></button>
                 </div>
             </div>
 
@@ -203,71 +263,90 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
             <div id="modeInterval" style="display:none">
                 <div class="row" style="align-items:center">
                     <input type="number" id="intervalStep" value="1" min="0.1" max="50" step="0.1" style="max-width:65px">
-                    <span id="unitLabelStep" style="color:#8b949e;font-size:12px;white-space:nowrap">km Schritt,</span>
+                    <span id="unitLabelStep" style="color:#8b949e;font-size:12px;white-space:nowrap"><?= tf('lbl_step', 'km') ?></span>
                     <input type="number" id="intervalCount" value="5" min="2" max="10" step="1" style="max-width:50px">
-                    <span style="color:#8b949e;font-size:12px">Ringe</span>
+                    <span style="color:#8b949e;font-size:12px"><?= t('lbl_rings') ?></span>
                 </div>
-                <button style="width:100%;margin-top:4px" onclick="drawRadius()">Zeichnen</button>
+                <button style="width:100%;margin-top:4px" onclick="drawRadius()"><?= t('btn_draw') ?></button>
             </div>
 
             <div style="font-size:11px;color:#484f58;margin:8px 0 4px">
-                Oder Koordinaten manuell eingeben:
+                <?= t('manual_hint') ?>
             </div>
             <div class="row">
-                <input type="text" id="manualLat" placeholder="Breite z.B. 53.1435">
-                <input type="text" id="manualLng" placeholder="Länge z.B. 8.2146">
+                <input type="text" id="manualLat" placeholder="<?= t('lat_placeholder') ?>">
+                <input type="text" id="manualLng" placeholder="<?= t('lng_placeholder') ?>">
             </div>
-            <button class="ghost" style="width:100%;margin-bottom:4px" onclick="useManualCoords()">Koordinaten übernehmen</button>
+            <button class="ghost" style="width:100%;margin-bottom:4px" onclick="useManualCoords()"><?= t('btn_use_coords') ?></button>
 
             <div id="radiusList"></div>
             <div style="margin-top:8px">
-                <button class="ghost" style="width:100%" onclick="clearAllRadii()">Alle Radien löschen</button>
+                <button class="ghost" style="width:100%" onclick="clearAllRadii()"><?= t('btn_clear_radii') ?></button>
             </div>
         </div>
 
         <!-- Distanz & Richtung -->
         <div class="section">
-            <div class="section-title">Distanz &amp; Richtung</div>
+            <div class="section-title"><?= t('sec_measure') ?></div>
             <div style="font-size:11px;color:#484f58;margin-bottom:8px">
-                Zwei Punkte auf der Karte setzen – A dann B.
+                <?= t('measure_hint') ?>
             </div>
-            <button id="measBtn" style="width:100%" onclick="toggleMeasure()">Messen starten</button>
+            <button id="measBtn" style="width:100%" onclick="toggleMeasure()"><?= t('btn_measure_start') ?></button>
             <div class="meas-result" id="measResult"></div>
-            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearMeasure()">Messung löschen</button>
+            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearMeasure()"><?= t('btn_clear_meas') ?></button>
         </div>
 
-        <div id="status">Bereit</div>
+        <div id="status"><?= t('status_ready') ?></div>
     </div>
 
     <!-- ════════ MAP ════════ -->
     <div id="map"></div>
 
     <!-- ════════ MAP STYLE FAB ════════ -->
-    <button id="styleFab" onclick="toggleStylePopover()" title="Kartenstil wählen" aria-label="Kartenstil">🗺</button>
+    <button id="styleFab" onclick="toggleStylePopover()" title="<?= t('fab_style_title') ?>" aria-label="<?= t('fab_style_title') ?>">🗺</button>
 
     <div id="stylePopover">
-        <div class="pp-label">Kartenstil</div>
-        <button class="style-opt active" data-tile="osm"      onclick="selectStyle(this,'osm')">OSM Standard</button>
-        <button class="style-opt"        data-tile="positron"  onclick="selectStyle(this,'positron')">☀️ Hell (Positron)</button>
-        <button class="style-opt"        data-tile="dark"      onclick="selectStyle(this,'dark')">🌑 Dunkel</button>
-        <button class="style-opt"        data-tile="voyager"   onclick="selectStyle(this,'voyager')">🧭 Voyager</button>
-        <button class="style-opt"        data-tile="satellite" onclick="selectStyle(this,'satellite')">🛰 Satellit</button>
-        <button class="style-opt"        data-tile="opnv"      onclick="selectStyle(this,'opnv')">🚌 ÖPNV-Karte</button>
+        <div class="pp-label"><?= t('style_label') ?></div>
+        <button class="style-opt active" data-tile="osm"      onclick="selectStyle(this,'osm')"><?= t('style_osm') ?></button>
+        <button class="style-opt"        data-tile="positron"  onclick="selectStyle(this,'positron')"><?= t('style_light') ?></button>
+        <button class="style-opt"        data-tile="dark"      onclick="selectStyle(this,'dark')"><?= t('style_dark') ?></button>
+        <button class="style-opt"        data-tile="voyager"   onclick="selectStyle(this,'voyager')"><?= t('style_voyager') ?></button>
+        <button class="style-opt"        data-tile="satellite" onclick="selectStyle(this,'satellite')"><?= t('style_satellite') ?></button>
+        <button class="style-opt"        data-tile="opnv"      onclick="selectStyle(this,'opnv')"><?= t('style_opnv') ?></button>
     </div>
 
     <!-- ════════ PRINT FAB ════════ -->
-    <button id="printFab" onclick="printMap()" title="Als PDF drucken" aria-label="Drucken">🖨</button>
+    <button id="printFab" onclick="printMap()" title="<?= t('fab_print_title') ?>" aria-label="<?= t('fab_print_title') ?>">🖨</button>
+
+    <!-- ════════ ABOUT FOOTER ════════ -->
+    <footer id="about-footer">
+        <details>
+            <summary>Was ist dieses Tool? ▾</summary>
+            <div class="about-content">
+                <p>
+                    <strong>Jet Lag Maps</strong> ist eine Spielhilfe für das Brettspiel
+                    <a href="https://store.nebula.tv/collections/jetlag/products/hideandseek" target="_blank" rel="noopener">Jet Lag: The Game – Hide &amp; Seek</a>,
+                    inspiriert vom <a href="https://www.youtube.com/c/jetlagthegame" target="_blank" rel="noopener">YouTube-Kanal Jet Lag: The Game</a>.
+                </p>
+                <p>
+                    Das Tool zeigt interaktive Karten mit Postleitzahlbezirken, Bahnhöfen, Krankenhäusern,
+                    Sehenswürdigkeiten und Stadien für beliebige Städte – druckfertig im A4-Format.
+                    Alle Kartendaten kommen von <a href="https://www.openstreetmap.org" target="_blank" rel="noopener">OpenStreetMap</a>.
+                </p>
+            </div>
+        </details>
+    </footer>
 
     <!-- ════════ ERROR POPUP ════════ -->
     <div id="errorOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center">
         <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:20px 22px;max-width:480px;width:90%;box-shadow:0 8px 32px #0008">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
                 <span style="font-size:18px">⚠️</span>
-                <strong style="color:#f85149;font-size:14px">Fehler beim Laden</strong>
+                <strong style="color:#f85149;font-size:14px"><?= t('err_title') ?></strong>
                 <button onclick="closeErrorPopup()" style="margin-left:auto;background:none;border:none;color:#8b949e;font-size:18px;cursor:pointer;padding:0 4px">✕</button>
             </div>
             <pre id="errorText" style="background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:10px;font-size:11px;color:#c9d1d9;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto;margin:0 0 12px"></pre>
-            <button id="errorCopyBtn" onclick="copyErrorText()" style="width:100%;font-size:12px">📋 Fehlertext kopieren</button>
+            <button id="errorCopyBtn" onclick="copyErrorText()" style="width:100%;font-size:12px"><?= t('err_copy') ?></button>
         </div>
     </div>
 
@@ -275,6 +354,19 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
     <script src="https://cdn.jsdelivr.net/npm/osmtogeojson@3.0.0-beta.5/osmtogeojson.min.js"></script>
     <script>
         'use strict';
+
+        // ── i18n ──────────────────────────────────────────────────────────────────────
+        const t  = key => LANG[key] ?? key;
+        const tf = (key, ...args) => {
+            let s = LANG[key] ?? key;
+            args.forEach((a, i) => { s = s.replaceAll(`{${i}}`, a); });
+            return s;
+        };
+        function switchLang(lang) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url.toString();
+        }
 
         // ── Map init ─────────────────────────────────────────────────────────────────
         const map = L.map('map', {
@@ -360,8 +452,8 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
             units = u;
             document.getElementById('unitKm').className = u === 'metric'   ? '' : 'ghost';
             document.getElementById('unitMi').className = u === 'imperial' ? '' : 'ghost';
-            document.getElementById('unitLabelRadius').textContent = unitStr() + ' Radius';
-            document.getElementById('unitLabelStep').textContent   = unitStr() + ' Schritt,';
+            document.getElementById('unitLabelRadius').textContent = tf('lbl_radius', unitStr());
+            document.getElementById('unitLabelStep').textContent   = tf('lbl_step', unitStr());
         }
         let radiusCounter = 0;
         let radiusMode = 'single';
@@ -379,7 +471,7 @@ $defaultCity = htmlspecialchars($_GET['city'] ?? 'Oldenburg', ENT_QUOTES, 'UTF-8
         // ── Layer definitions ─────────────────────────────────────────────────────────
         const LAYER_DEFS = {
             plz: {
-                label: 'Postleitzahlen',
+                label: 'lyr_plz',
                 color: '#4ecdc4',
                 buildQuery: (bb) => `[out:json][timeout:90];
 relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["boundary"="postal_code"];
@@ -387,7 +479,7 @@ out geom;`,
                 render: renderPLZ,
             },
             hospitals: {
-                label: 'Krankenhäuser',
+                label: 'lyr_hospitals',
                 color: '#f85149',
                 icon: '🏥',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -400,7 +492,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             stations: {
-                label: 'Bahnhöfe & Haltestellen',
+                label: 'lyr_stations',
                 color: '#58a6ff',
                 icon: '🚉',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -412,7 +504,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             attractions: {
-                label: 'Sehenswürdigkeiten',
+                label: 'lyr_attractions',
                 color: '#ffa657',
                 icon: '⭐',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -426,7 +518,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             parks: {
-                label: 'Parks & Grünanlagen',
+                label: 'lyr_parks',
                 color: '#3fb950',
                 icon: '🌳',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -438,7 +530,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             shopping: {
-                label: 'Einkaufszentren',
+                label: 'lyr_shopping',
                 color: '#d2a8ff',
                 icon: '🛍️',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -450,7 +542,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             busstops: {
-                label: 'Bushaltestellen',
+                label: 'lyr_busstops',
                 color: '#facc15',
                 icon: '🚌',
                 markerOpts: { radius: 5, color: '#000', weight: 1.5 },
@@ -460,7 +552,7 @@ out;`,
                 render: renderPOIs,
             },
             cinema: {
-                label: 'Kinos',
+                label: 'lyr_cinema',
                 color: '#e879f9',
                 icon: '🎬',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -472,7 +564,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             zoo: {
-                label: 'Zoos',
+                label: 'lyr_zoo',
                 color: '#a3e635',
                 icon: '🦁',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -485,7 +577,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             townhall: {
-                label: 'Rathäuser',
+                label: 'lyr_townhall',
                 color: '#fb923c',
                 icon: '🏛️',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -498,7 +590,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             water: {
-                label: 'Wasserflächen',
+                label: 'lyr_water',
                 color: '#38bdf8',
                 buildQuery: (bb) => `[out:json][timeout:90];
 (
@@ -510,7 +602,7 @@ out geom;`,
                 render: renderWater,
             },
             aquarium: {
-                label: 'Aquarien',
+                label: 'lyr_aquarium',
                 color: '#06b6d4',
                 icon: '🐠',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -523,7 +615,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             library: {
-                label: 'Büchereien',
+                label: 'lyr_library',
                 color: '#a78bfa',
                 icon: '📚',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -535,7 +627,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             golf: {
-                label: 'Golf-Plätze',
+                label: 'lyr_golf',
                 color: '#84cc16',
                 icon: '⛳',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -547,7 +639,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             stadium: {
-                label: 'Stadien',
+                label: 'lyr_stadium',
                 color: '#f43f5e',
                 icon: '🏟️',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -560,7 +652,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             embassy: {
-                label: 'Botschaften',
+                label: 'lyr_embassy',
                 color: '#f59e0b',
                 icon: '🏛️',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -572,7 +664,7 @@ out center bb tags;`,
                 render: renderPOIs,
             },
             consulate: {
-                label: 'Konsulate',
+                label: 'lyr_consulate',
                 color: '#d97706',
                 icon: '🏢',
                 buildQuery: (bb) => `[out:json][timeout:60];
@@ -597,14 +689,14 @@ out center bb tags;`,
             const name = document.getElementById('cityInput').value.trim();
             if (!name) return;
 
-            setStatus('Suche Stadt …', 'loading');
+            setStatus(t('status_searching'), 'loading');
 
             try {
                 const res = await fetch('api.php?action=geocode&city=' + encodeURIComponent(name));
                 const data = await res.json();
 
                 if (!Array.isArray(data) || data.length === 0) {
-                    setStatus('Stadt nicht gefunden', 'error');
+                    setStatus(t('status_not_found'), 'error');
                     return;
                 }
 
@@ -634,9 +726,9 @@ out center bb tags;`,
                     await loadLayer(id);
                 }
 
-                setStatus('Karte: ' + best.display_name.split(',')[0], 'ok');
+                setStatus(tf('status_map', best.display_name.split(',')[0]), 'ok');
             } catch (e) {
-                setStatus('Fehler: ' + e.message, 'error');
+                setStatus(tf('status_err', e.message), 'error');
             }
         }
 
@@ -658,7 +750,7 @@ out center bb tags;`,
 
             const cntEl = document.getElementById('cnt-' + id);
             if (cntEl) cntEl.textContent = '…';
-            setStatus('Lade ' + def.label + ' …', 'loading');
+            setStatus(tf('status_loading', t(def.label)), 'loading');
 
             try {
                 const query = def.buildQuery(currentCity.bbox);
@@ -680,11 +772,11 @@ out center bb tags;`,
 
                 const n = data.elements?.length ?? 0;
                 if (cntEl) cntEl.textContent = n > 0 ? `(${n})` : '';
-                setStatus(def.label + ' geladen', 'ok');
+                setStatus(tf('status_loaded', t(def.label)), 'ok');
             } catch (e) {
                 if (cntEl) cntEl.textContent = '✗';
-                setStatus('Fehler – Details im Popup', 'error');
-                showErrorPopup(`Layer: ${def.label}\n\n${e.message}`);
+                setStatus(t('status_err_popup'), 'error');
+                showErrorPopup(tf('err_layer', t(def.label), e.message));
                 console.error('[layer:' + id + ']', e);
             }
         }
@@ -746,7 +838,7 @@ out center bb tags;`,
                         fillOpacity: 0.18
                     });
                 });
-                poly.bindPopup(`<div class="popup-name">PLZ ${plz}</div>`);
+                poly.bindPopup(`<div class="popup-name">${tf('plz_label', plz)}</div>`);
 
                 result.push(poly);
 
@@ -792,7 +884,7 @@ out center bb tags;`,
                     return;
                 }
 
-                const name = el.tags?.name ?? el.tags?.['name:de'] ?? def.label;
+                const name = el.tags?.name ?? el.tags?.['name:de'] ?? t(def.label);
                 const type = el.tags?.amenity ?? el.tags?.railway ??
                     el.tags?.tourism ?? el.tags?.leisure ??
                     el.tags?.historic ?? el.tags?.shop ?? '';
@@ -817,7 +909,7 @@ out center bb tags;`,
                     clickedPoint = L.latLng(lat, lng);
                     document.getElementById('clickCoords').textContent =
                         `📍 ${lat.toFixed(6)},  ${lng.toFixed(6)}`;
-                    setStatus(`Mittelpunkt: ${name}`, 'ok');
+                    setStatus(tf('status_center', name), 'ok');
                 });
 
                 result.push(marker);
@@ -866,7 +958,7 @@ out center bb tags;`,
                     icon: measIcon('A')
                 }).addTo(map);
                 measLayers.push(mA);
-                setStatus('Punkt B auf der Karte setzen', 'loading');
+                setStatus(t('status_point_b'), 'loading');
                 return;
             }
             if (measMode === 'B') {
@@ -899,9 +991,9 @@ out center bb tags;`,
                 measLayers.push(mB, line, lineLabel);
                 document.getElementById('measResult').innerHTML =
                     `<strong>${fmtDist(km)}</strong> &nbsp;·&nbsp; ${deg}° ${dir}`;
-                document.getElementById('measBtn').textContent = 'Messen starten';
+                document.getElementById('measBtn').textContent = t('btn_measure_start');
                 document.getElementById('measBtn').classList.remove('meas-active');
-                setStatus('Messung abgeschlossen', 'ok');
+                setStatus(t('status_meas_done'), 'ok');
                 return;
             }
             clickedPoint = e.latlng;
@@ -913,7 +1005,7 @@ out center bb tags;`,
             const lat = parseFloat(document.getElementById('manualLat').value.trim().replace(',', '.'));
             const lng = parseFloat(document.getElementById('manualLng').value.trim().replace(',', '.'));
             if (isNaN(lat) || isNaN(lng)) {
-                setStatus('Ungültige Koordinaten', 'error');
+                setStatus(t('status_bad_coords'), 'error');
                 return;
             }
             clickedPoint = L.latLng(lat, lng);
@@ -976,7 +1068,7 @@ out center bb tags;`,
 
         function drawRadius() {
             if (!clickedPoint) {
-                setStatus('Erst einen Punkt auf der Karte klicken', 'error');
+                setStatus(t('status_no_point'), 'error');
                 return;
             }
 
@@ -985,7 +1077,7 @@ out center bb tags;`,
 
             if (radiusMode === 'single') {
                 const inputVal = parseFloat(document.getElementById('radiusKm').value);
-                if (isNaN(inputVal) || inputVal <= 0) { setStatus('Ungültiger Radius', 'error'); return; }
+                if (isNaN(inputVal) || inputVal <= 0) { setStatus(t('status_bad_radius'), 'error'); return; }
                 const km     = toKm(inputVal);
                 const color  = `hsl(${hue},80%,55%)`;
                 const circle = L.circle(clickedPoint, {
@@ -997,14 +1089,14 @@ out center bb tags;`,
                 }).addTo(map);
                 const label = makeKmLabel(clickedPoint, km, color).addTo(map);
                 radiusItems[id] = { layers: [circle, center, label], outerCircle: circle };
-                addRadiusListEntry(id, `${fmtDistShort(km)} Radius`, clickedPoint, color, circle);
-                setStatus(`Radius gezeichnet: ${fmtDistShort(km)}`, 'ok');
+                addRadiusListEntry(id, tf('ri_radius', fmtDistShort(km)), clickedPoint, color, circle);
+                setStatus(tf('status_radius_drawn', fmtDistShort(km)), 'ok');
 
             } else {
                 const inputStep = parseFloat(document.getElementById('intervalStep').value);
                 const count     = parseInt(document.getElementById('intervalCount').value);
                 if (isNaN(inputStep) || inputStep <= 0 || isNaN(count) || count < 1) {
-                    setStatus('Ungültige Intervall-Werte', 'error'); return;
+                    setStatus(t('status_bad_interval'), 'error'); return;
                 }
                 const step = toKm(inputStep);
                 const layers = [];
@@ -1025,8 +1117,8 @@ out center bb tags;`,
                 }).addTo(map);
                 layers.push(centerDot);
                 radiusItems[id] = { layers, outerCircle };
-                addRadiusListEntry(id, `${count}× ${fmtDistShort(step)} Intervall`, clickedPoint, INTERVAL_COLORS[0], outerCircle);
-                setStatus(`Intervall gezeichnet: ${count} Ringe à ${fmtDistShort(step)}`, 'ok');
+                addRadiusListEntry(id, tf('ri_interval', count, fmtDistShort(step)), clickedPoint, INTERVAL_COLORS[0], outerCircle);
+                setStatus(tf('status_interval_drawn', count, fmtDistShort(step)), 'ok');
             }
         }
 
@@ -1068,7 +1160,7 @@ out center bb tags;`,
             const y = Math.sin(dLng) * Math.cos(lat2);
             const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
             const deg = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
-            const dirs = ['N', 'NO', 'O', 'SO', 'S', 'SW', 'W', 'NW'];
+            const dirs = t('compass_dirs').split(',');
             return {
                 deg: Math.round(deg),
                 dir: dirs[Math.round(deg / 45) % 8]
@@ -1084,9 +1176,9 @@ out center bb tags;`,
                 measB = null;
                 clearMeasLayers();
                 document.getElementById('measResult').textContent = '';
-                document.getElementById('measBtn').textContent = 'Abbrechen';
+                document.getElementById('measBtn').textContent = t('btn_measure_stop');
                 document.getElementById('measBtn').classList.add('meas-active');
-                setStatus('Punkt A auf der Karte setzen', 'loading');
+                setStatus(t('status_point_a'), 'loading');
             }
         }
 
@@ -1094,9 +1186,9 @@ out center bb tags;`,
             measMode = null;
             clearMeasLayers();
             document.getElementById('measResult').textContent = '';
-            document.getElementById('measBtn').textContent = 'Messen starten';
+            document.getElementById('measBtn').textContent = t('btn_measure_start');
             document.getElementById('measBtn').classList.remove('meas-active');
-            setStatus('Bereit', '');
+            setStatus(t('status_ready'), '');
         }
 
         function clearMeasLayers() {
@@ -1163,7 +1255,7 @@ out center bb tags;`,
         // ── Error popup ───────────────────────────────────────────────────────────────
         function showErrorPopup(msg) {
             document.getElementById('errorText').textContent = msg;
-            document.getElementById('errorCopyBtn').textContent = '📋 Fehlertext kopieren';
+            document.getElementById('errorCopyBtn').textContent = t('err_copy');
             const overlay = document.getElementById('errorOverlay');
             overlay.style.display = 'flex';
         }
@@ -1177,12 +1269,12 @@ out center bb tags;`,
             const btn  = document.getElementById('errorCopyBtn');
 
             const confirm = () => {
-                btn.textContent = '✅ Kopiert!';
-                setTimeout(() => { btn.textContent = '📋 Fehlertext kopieren'; }, 2000);
+                btn.textContent = t('err_copied');
+                setTimeout(() => { btn.textContent = t('err_copy'); }, 2000);
             };
             const fail = () => {
-                btn.textContent = '✗ Kopieren fehlgeschlagen';
-                setTimeout(() => { btn.textContent = '📋 Fehlertext kopieren'; }, 2000);
+                btn.textContent = t('err_copy_fail');
+                setTimeout(() => { btn.textContent = t('err_copy'); }, 2000);
             };
 
             // Modern API (HTTPS / localhost)
