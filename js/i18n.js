@@ -1,8 +1,8 @@
 'use strict';
 
-// ── Übersetzungs-Hilfsfunktionen ──────────────────────────────────────────────
-// t('key')            → übersetzter Text
-// tf('key', a, b, …) → Text mit Platzhaltern {0}, {1}, …
+// ── Translation helpers ───────────────────────────────────────────────────────
+// t('key')            → translated text
+// tf('key', a, b, …) → text with placeholders {0}, {1}, …
 const t  = key => LANG[key] ?? key;
 const tf = (key, ...args) => {
     let s = LANG[key] ?? key;
@@ -10,14 +10,14 @@ const tf = (key, ...args) => {
     return s;
 };
 
-// ── Sprachwechsel (Seite neu laden mit ?lang=de|en) ───────────────────────────
+// ── Language switch (reload page with ?lang=de|en) ────────────────────────────
 function switchLang(lang) {
     const url = new URL(window.location.href);
     url.searchParams.set('lang', lang);
     window.location.href = url.toString();
 }
 
-// ── Alle data-i18n-Elemente im DOM übersetzen ─────────────────────────────────
+// ── Translate all data-i18n elements in the DOM ───────────────────────────────
 function applyI18n() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         el.textContent = t(el.dataset.i18n);

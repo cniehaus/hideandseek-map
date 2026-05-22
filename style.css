@@ -213,7 +213,7 @@ select:focus {
     display: inline-block;
 }
 
-/* ── Distanz-Tool ─────────────────────────────────── */
+/* ── Distance tool ────────────────────────────────── */
 button.meas-active {
     background: #58a6ff;
 }
@@ -276,6 +276,24 @@ button.meas-active:hover { background: #3b82f6; }
     pointer-events: none;
     white-space: nowrap;
 }
+
+/* ── Measurement zone labels (semicircles) ────────── */
+.zone-label {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.85);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.65);
+    pointer-events: none;
+}
+.zone-label-1 { background: #f97316; }
+.zone-label-2 { background: #38bdf8; color: #0d1117; }
 
 /* ── FABs (floating action buttons) ──────────────── */
 #printFab,

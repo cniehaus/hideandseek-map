@@ -1,9 +1,9 @@
 'use strict';
 
-// ── Aktuell angezeigte Stadt ──────────────────────────────────────────────────
+// ── Currently displayed city ──────────────────────────────────────────────────
 let currentCity = null;
 
-// ── Einheiten-System (metric | imperial) ─────────────────────────────────────
+// ── Unit system (metric | imperial) ──────────────────────────────────────────
 let units = 'metric';
 
 function toKm(v)         { return units === 'imperial' ? v * KM_PER_MILE : v; }
@@ -20,7 +20,7 @@ function setUnits(u) {
     document.getElementById('unitLabelStep').textContent   = tf('lbl_step',   unitStr());
 }
 
-// ── Stadtsuche via Nominatim ──────────────────────────────────────────────────
+// ── City search via Nominatim ─────────────────────────────────────────────────
 async function searchCity() {
     const name = document.getElementById('cityInput').value.trim();
     if (!name) return;
@@ -58,7 +58,7 @@ async function searchCity() {
             [currentCity.bbox[1], currentCity.bbox[3]],
         ]);
 
-        // Aktive Layer für neue Stadt neu laden
+        // Reload active layers for the new city
         const activeIds = Object.keys(activeLayers);
         clearAllLayers();
         for (const id of activeIds) {

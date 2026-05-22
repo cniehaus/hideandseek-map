@@ -1,29 +1,29 @@
 'use strict';
 
-// ── Einheiten ─────────────────────────────────────────────────────────────────
+// ── Units ─────────────────────────────────────────────────────────────────────
 const KM_PER_MILE = 1.60934;
 
-// ── Farben für PLZ-Polygone ───────────────────────────────────────────────────
+// ── Colours for postal-code polygons ─────────────────────────────────────────
 const PLZ_COLORS = [
     '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7',
     '#dda0dd', '#98d8c8', '#f7dc6f', '#bb8fce', '#85c1e9',
     '#f8b500', '#00b4db', '#ff8b94', '#a8e6cf', '#ffd3b6',
 ];
 
-// ── Farben für Intervall-Radien ───────────────────────────────────────────────
+// ── Colours for interval radii ────────────────────────────────────────────────
 const INTERVAL_COLORS = [
     '#22d3ee', '#34d399', '#a3e635', '#fbbf24', '#f87171',
     '#c084fc', '#60a5fa', '#2dd4bf', '#fb923c', '#e879f9',
 ];
 
-// ── Overpass-API-Endpunkte (Fallback-Reihenfolge) ────────────────────────────
+// ── Overpass API endpoints (fallback order) ───────────────────────────────────
 const OVERPASS_ENDPOINTS = [
     'https://overpass-api.de/api/interpreter',
     'https://overpass.karte.io/api/interpreter',
     'https://overpass.osm.ch/api/interpreter',
 ];
 
-// ── Kartenstile (Leaflet Tile-Layer-Definitionen) ────────────────────────────
+// ── Map styles (Leaflet tile-layer definitions) ───────────────────────────────
 const TILE_LAYERS = {
     osm: {
         url:     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',

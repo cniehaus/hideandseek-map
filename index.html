@@ -1,34 +1,39 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jet Lag Hide &amp; Seek – Karten &amp; Spielhilfe</title>
-    <meta name="description" content="Interaktive Karte für das Brettspiel Jet Lag: The Game – Hide &amp; Seek. Zeigt Postleitzahlen, Bahnhöfe, Krankenhäuser, Sehenswürdigkeiten und Stadien für deine Stadt. Druckfertig für das Spiel." />
-    <meta name="keywords" content="Jet Lag Hide and Seek, Jet Lag The Game, Karte, Postleitzahlen, Spielhilfe, Brettspiel, JetLag" />
+    <title>Jet Lag Hide &amp; Seek – Interactive Map Tool</title>
+    <meta name="description" content="Interactive map tool for Jet Lag: The Game – Hide &amp; Seek. Explore postal codes, train stations, hospitals, landmarks, stadiums and more for any city worldwide. Print-ready in A4 format." />
+    <meta name="keywords" content="Jet Lag Hide and Seek, Jet Lag The Game, interactive map, postal codes, game helper, board game tool, train stations, landmarks, stadiums, map tool, Nebula TV, JetLag" />
     <meta name="author" content="Carsten Niehaus" />
     <link rel="canonical" href="https://cniehaus.github.io/hideandseek-map/" />
+    <link rel="alternate" hreflang="en" href="https://cniehaus.github.io/hideandseek-map/?lang=en" />
+    <link rel="alternate" hreflang="de" href="https://cniehaus.github.io/hideandseek-map/?lang=de" />
+    <link rel="alternate" hreflang="x-default" href="https://cniehaus.github.io/hideandseek-map/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Jet Lag Hide &amp; Seek – Interaktive Spielkarte" />
-    <meta property="og:description" content="Plane dein Hide &amp; Seek-Spiel mit interaktiven Karten: Postleitzahlen, Bahnhöfe, Krankenhäuser, Sehenswürdigkeiten und mehr – druckfertig für jede Stadt." />
+    <meta property="og:title" content="Jet Lag Hide &amp; Seek – Interactive Map Tool" />
+    <meta property="og:description" content="Plan your Hide &amp; Seek game with interactive maps: postal codes, train stations, hospitals, landmarks and more – print-ready for any city worldwide." />
     <meta property="og:url" content="https://cniehaus.github.io/hideandseek-map/" />
     <meta property="og:image" content="https://cniehaus.github.io/hideandseek-map/og-preview.png" />
     <meta property="og:image:width" content="2844" />
     <meta property="og:image:height" content="2126" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jet Lag Hide &amp; Seek – Interactive Map Tool" />
+    <meta name="twitter:description" content="Plan your Hide &amp; Seek game with interactive maps: postal codes, train stations, hospitals, landmarks and more – print-ready for any city worldwide." />
     <meta name="twitter:image" content="https://cniehaus.github.io/hideandseek-map/og-preview.png" />
 
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "Jet Lag Hide & Seek – Karten",
-      "description": "Interaktive Karte für das Brettspiel Jet Lag: The Game Hide & Seek. Zeigt Postleitzahlen, Bahnhöfe, Krankenhäuser und mehr.",
+      "name": "Jet Lag Maps – Hide & Seek",
+      "description": "Interactive map tool for Jet Lag: The Game – Hide & Seek. Shows postal codes, train stations, hospitals, landmarks, stadiums and more for any city worldwide.",
       "applicationCategory": "GameApplication",
       "operatingSystem": "Any",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "about": {
         "@type": "Game",
         "name": "Jet Lag: The Game – Hide & Seek",
@@ -55,7 +60,7 @@
 <body>
 
     <!-- ════════ MOBILE TOGGLE ════════ -->
-    <button id="menuToggle" onclick="openSidebar()" aria-label="Menü öffnen">☰</button>
+    <button id="menuToggle" onclick="openSidebar()" aria-label="Open menu">☰</button>
     <div id="sidebarBackdrop" onclick="closeSidebar()"></div>
 
     <!-- ════════ SIDEBAR ════════ -->
@@ -76,7 +81,7 @@
             </div>
         </div>
 
-        <!-- Stadt -->
+        <!-- City -->
         <div class="section">
             <div class="section-title" data-i18n="sec_city">Stadt</div>
             <div class="row">
@@ -86,7 +91,7 @@
             <div id="cityHint" style="font-size:11px;color:#8b949e;margin-top:2px"></div>
         </div>
 
-        <!-- Layer -->
+        <!-- Layers -->
         <div class="section">
             <div class="section-title" data-i18n="sec_layers">Layer</div>
 
@@ -214,7 +219,7 @@
             </div>
         </div>
 
-        <!-- Radius-Tool -->
+        <!-- Radius Tool -->
         <div class="section">
             <div class="section-title" data-i18n="sec_radius">Radius-Tool</div>
 
@@ -262,7 +267,7 @@
             </div>
         </div>
 
-        <!-- Distanz & Richtung -->
+        <!-- Distance & Direction -->
         <div class="section">
             <div class="section-title" data-i18n="sec_measure">Distanz &amp; Richtung</div>
             <div style="font-size:11px;color:#484f58;margin-bottom:8px" data-i18n="measure_hint">
@@ -298,17 +303,17 @@
     <!-- ════════ ABOUT FOOTER ════════ -->
     <footer id="about-footer">
         <details>
-            <summary>Was ist dieses Tool? ▾</summary>
+            <summary>About this tool ▾</summary>
             <div class="about-content">
                 <p>
-                    <strong>Jet Lag Maps</strong> ist eine Spielhilfe für das Brettspiel
+                    <strong>Jet Lag Maps</strong> is a companion tool for the board game
                     <a href="https://store.nebula.tv/collections/jetlag/products/hideandseek" target="_blank" rel="noopener">Jet Lag: The Game – Hide &amp; Seek</a>,
-                    inspiriert vom <a href="https://www.youtube.com/c/jetlagthegame" target="_blank" rel="noopener">YouTube-Kanal Jet Lag: The Game</a>.
+                    inspired by the <a href="https://www.youtube.com/@jetlagthegame" target="_blank" rel="noopener">YouTube channel Jet Lag: The Game</a>.
                 </p>
                 <p>
-                    Das Tool zeigt interaktive Karten mit Postleitzahlbezirken, Bahnhöfen, Krankenhäusern,
-                    Sehenswürdigkeiten und Stadien für beliebige Städte – druckfertig im A4-Format.
-                    Alle Kartendaten kommen von <a href="https://www.openstreetmap.org" target="_blank" rel="noopener">OpenStreetMap</a>.
+                    The tool shows interactive maps with postal code districts, train stations, hospitals,
+                    landmarks, stadiums and more for any city – print-ready in A4 format.
+                    All map data comes from <a href="https://www.openstreetmap.org" target="_blank" rel="noopener">OpenStreetMap</a>.
                 </p>
             </div>
         </details>
@@ -330,20 +335,20 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/osmtogeojson@3.0.0-beta.5/osmtogeojson.min.js"></script>
 
-    <!-- Reihenfolge wichtig: jede Datei darf nur auf früher geladene Globals zugreifen -->
-    <script src="js/config.js"></script>    <!-- Konstanten (Farben, Tile-URLs, Endpoints)  -->
+    <!-- Load order matters: each file may only reference globals from earlier files -->
+    <script src="js/config.js"></script>    <!-- constants (colours, tile URLs, endpoints)   -->
     <script src="js/i18n.js"></script>      <!-- t(), tf(), switchLang(), applyI18n()        -->
-    <script src="js/map.js"></script>       <!-- map-Objekt, setTileLayer()                  -->
+    <script src="js/map.js"></script>       <!-- map object, setTileLayer()                  -->
     <script src="js/overpass.js"></script>  <!-- overpassFetch()                             -->
     <script src="js/renderers.js"></script> <!-- renderPLZ(), renderPOIs(), renderWater()    -->
-    <script src="js/layers.js"></script>    <!-- LAYER_DEFS + Layer-Verwaltung               -->
-    <script src="js/city.js"></script>      <!-- searchCity(), Einheiten (km/mi)             -->
-    <script src="js/radius.js"></script>    <!-- Radius-Tool, clickedPoint                   -->
-    <script src="js/measure.js"></script>   <!-- Distanz & Richtung, map.on('click', …)      -->
-    <script src="js/ui.js"></script>        <!-- Sidebar, Druck, Fehler-Popup, Hilfsfunktionen -->
+    <script src="js/layers.js"></script>    <!-- LAYER_DEFS + layer management               -->
+    <script src="js/city.js"></script>      <!-- searchCity(), units (km/mi)                 -->
+    <script src="js/radius.js"></script>    <!-- radius tool, clickedPoint                   -->
+    <script src="js/measure.js"></script>   <!-- distance & direction, map.on('click', …)    -->
+    <script src="js/ui.js"></script>        <!-- sidebar, print, error popup, helpers        -->
 
     <script>
-        // ── Initialisierung ───────────────────────────────────────────────────────────
+        // Initialisation
         applyI18n();
         searchCity();
     </script>

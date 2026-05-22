@@ -1,15 +1,15 @@
 'use strict';
 
-// ── Allgemeine Hilfsfunktionen ────────────────────────────────────────────────
+// ── General helpers ───────────────────────────────────────────────────────────
 
-// Statuszeile am unteren Rand der Sidebar aktualisieren
+// Update the status bar at the bottom of the sidebar
 function setStatus(msg, type = '') {
     const el    = document.getElementById('status');
     el.textContent = msg;
     el.className   = type;
 }
 
-// HTML-Sonderzeichen escapen (für Popup-Inhalte)
+// Escape HTML special characters (for popup content)
 function esc(str) {
     return String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -18,14 +18,14 @@ function esc(str) {
         .replace(/"/g, '&quot;');
 }
 
-// ── Drucken ───────────────────────────────────────────────────────────────────
+// ── Print ─────────────────────────────────────────────────────────────────────
 function printMap() {
     closeSidebar();
     map.invalidateSize();
     setTimeout(() => window.print(), 100);
 }
 
-// ── Kartenstil-Popover ────────────────────────────────────────────────────────
+// ── Map style popover ─────────────────────────────────────────────────────────
 function toggleStylePopover() {
     document.getElementById('stylePopover').classList.toggle('open');
 }
@@ -37,7 +37,7 @@ function selectStyle(btn, key) {
     document.getElementById('stylePopover').classList.remove('open');
 }
 
-// Popover schließen bei Klick außerhalb
+// Close popover when clicking outside
 document.addEventListener('click', (e) => {
     const pop = document.getElementById('stylePopover');
     const fab = document.getElementById('styleFab');
@@ -46,7 +46,7 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// ── Mobile Sidebar ────────────────────────────────────────────────────────────
+// ── Mobile sidebar ────────────────────────────────────────────────────────────
 function openSidebar() {
     document.getElementById('sidebar').classList.add('open');
     document.getElementById('sidebarBackdrop').classList.add('open');
@@ -59,7 +59,7 @@ function closeSidebar() {
     document.getElementById('menuToggle').style.display = '';
 }
 
-// ── Fehler-Popup ──────────────────────────────────────────────────────────────
+// ── Error popup ───────────────────────────────────────────────────────────────
 function showErrorPopup(msg) {
     document.getElementById('errorText').textContent  = msg;
     document.getElementById('errorCopyBtn').textContent = t('err_copy');
@@ -87,7 +87,7 @@ function copyErrorText() {
         navigator.clipboard.writeText(text).then(confirm).catch(fail);
         return;
     }
-    // Fallback für ältere Browser
+    // Fallback for older browsers
     try {
         const ta = document.createElement('textarea');
         ta.value = text;
@@ -101,12 +101,12 @@ function copyErrorText() {
     } catch (_) { fail(); }
 }
 
-// Fehler-Popup bei Klick auf den Hintergrund schließen
+// Close error popup when clicking the backdrop
 document.getElementById('errorOverlay').addEventListener('click', (e) => {
     if (e.target === document.getElementById('errorOverlay')) closeErrorPopup();
 });
 
-// Enter-Taste im Stadtfeld auslösen
+// Trigger search on Enter in the city field
 document.getElementById('cityInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') searchCity();
 });

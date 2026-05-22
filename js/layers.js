@@ -1,14 +1,14 @@
 'use strict';
 
 // ════════════════════════════════════════════════════════════════════════════════
-// POI-FILTER-DEFINITIONEN
-// Jeder Eintrag beschreibt einen Layer:
-//   label       → i18n-Schlüssel für Anzeigename
-//   color       → Farbe für Marker / Polygone
-//   icon        → optionales Emoji für Popups
-//   markerOpts  → optionale Leaflet-CircleMarker-Overrides
-//   buildQuery  → Funktion (bbox) → Overpass-QL-String
-//   render      → Renderer-Funktion aus renderers.js
+// POI LAYER DEFINITIONS
+// Each entry describes one layer:
+//   label       → i18n key for the display name
+//   color       → colour for markers / polygons
+//   icon        → optional emoji for popups
+//   markerOpts  → optional Leaflet CircleMarker overrides
+//   buildQuery  → function (bbox) → Overpass QL string
+//   render      → renderer function from renderers.js
 // ════════════════════════════════════════════════════════════════════════════════
 const LAYER_DEFS = {
 
@@ -235,10 +235,10 @@ out center bb tags;`,
     },
 };
 
-// ── Layer-Zustand ─────────────────────────────────────────────────────────────
+// ── Layer state ───────────────────────────────────────────────────────────────
 let activeLayers = {};
 
-// ── Layer ein-/ausschalten ────────────────────────────────────────────────────
+// ── Toggle layer on/off ───────────────────────────────────────────────────────
 async function toggleLayer(id, enabled) {
     if (enabled) {
         if (!currentCity) await searchCity();
@@ -248,7 +248,7 @@ async function toggleLayer(id, enabled) {
     }
 }
 
-// ── Layer laden (Overpass-Abfrage → Renderer → Karte) ─────────────────────────
+// ── Load layer (Overpass query → renderer → map) ──────────────────────────────
 async function loadLayer(id) {
     if (!currentCity) return;
 
@@ -278,7 +278,7 @@ async function loadLayer(id) {
     }
 }
 
-// ── Einzelnen Layer entfernen ─────────────────────────────────────────────────
+// ── Remove a single layer ─────────────────────────────────────────────────────
 function removeLayer(id) {
     if (activeLayers[id]) {
         activeLayers[id].forEach(l => map.removeLayer(l));
@@ -288,7 +288,7 @@ function removeLayer(id) {
     if (cntEl) cntEl.textContent = '';
 }
 
-// ── Alle Layer entfernen ──────────────────────────────────────────────────────
+// ── Remove all layers ─────────────────────────────────────────────────────────
 function clearAllLayers() {
     Object.keys(activeLayers).forEach(removeLayer);
     document.querySelectorAll('[id^="lyr-"]').forEach(cb => cb.checked = false);

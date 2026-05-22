@@ -1,7 +1,7 @@
 'use strict';
 
-// ── PLZ-Polygone ──────────────────────────────────────────────────────────────
-// Konvertiert OSM-Relationen zu farbigen GeoJSON-Flächen mit PLZ-Label.
+// ── Postal-code polygons ──────────────────────────────────────────────────────
+// Converts OSM relations to coloured GeoJSON areas with postal-code labels.
 function renderPLZ(id, data, def) {
     const result = [];
     let geojson;
@@ -51,8 +51,8 @@ function renderPLZ(id, data, def) {
     return result;
 }
 
-// ── POI-Punkte (Krankenhäuser, Bahnhöfe, …) ──────────────────────────────────
-// Zeichnet jeden OSM-Knoten/Weg/Relation als farbigen CircleMarker.
+// ── POI points (hospitals, train stations, …) ────────────────────────────────
+// Draws each OSM node/way/relation as a coloured CircleMarker.
 function renderPOIs(id, data, def) {
     const result = [];
 
@@ -84,7 +84,7 @@ function renderPOIs(id, data, def) {
             <div class="popup-coords">${lat.toFixed(5)}, ${lng.toFixed(5)}</div>
         `);
 
-        // Klick auf POI setzt auch den Radius-Mittelpunkt
+        // Clicking a POI also sets the radius centre point
         marker.on('click', () => {
             clickedPoint = L.latLng(lat, lng);
             document.getElementById('clickCoords').textContent =
@@ -98,8 +98,8 @@ function renderPOIs(id, data, def) {
     return result;
 }
 
-// ── Wasserflächen ─────────────────────────────────────────────────────────────
-// Konvertiert OSM-Ways/Relations zu blauen GeoJSON-Polygonen.
+// ── Water bodies ─────────────────────────────────────────────────────────────
+// Converts OSM ways/relations to blue GeoJSON polygons.
 function renderWater(id, data, def) {
     const result = [];
     let geojson;

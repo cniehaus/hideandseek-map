@@ -1,12 +1,12 @@
 'use strict';
 
-// ── Zustand ───────────────────────────────────────────────────────────────────
-let clickedPoint  = null;   // aktueller Mittelpunkt (wird auch in renderers.js gesetzt)
+// ── State ─────────────────────────────────────────────────────────────────────
+let clickedPoint  = null;   // current centre point (also set in renderers.js)
 let radiusCounter = 0;
 let radiusMode    = 'single';
-const radiusItems = {};     // id → { layers: [...], outerCircle }
+const radiusItems = {};     // id → { layers: [], outerCircle }
 
-// ── Modus wechseln (Einzeln / Intervall) ─────────────────────────────────────
+// ── Switch mode (single / interval) ──────────────────────────────────────────
 function setRadiusMode(mode) {
     radiusMode = mode;
     document.getElementById('modeSingle').style.display   = mode === 'single'   ? '' : 'none';
@@ -15,7 +15,7 @@ function setRadiusMode(mode) {
     document.getElementById('tabInterval').className      = mode === 'interval' ? '' : 'ghost';
 }
 
-// ── Manuelle Koordinaten übernehmen ──────────────────────────────────────────
+// ── Apply manual coordinates ──────────────────────────────────────────────────
 function useManualCoords() {
     const lat = parseFloat(document.getElementById('manualLat').value.trim().replace(',', '.'));
     const lng = parseFloat(document.getElementById('manualLng').value.trim().replace(',', '.'));
@@ -29,8 +29,8 @@ function useManualCoords() {
     map.setView(clickedPoint, Math.max(map.getZoom(), 13));
 }
 
-// ── Hilfsfunktionen für Radius-Beschriftung ───────────────────────────────────
-// Berechnet einen Punkt am Rand des Kreises (Richtung Norden) für das Label.
+// ── Radius label helpers ──────────────────────────────────────────────────────
+// Computes a point on the circle edge (due north) for the distance label.
 function radiusLabelPos(center, km) {
     const R   = 6371;
     const d   = km / R;
@@ -54,7 +54,7 @@ function makeKmLabel(center, km, color) {
     });
 }
 
-// ── Eintrag in der Radius-Liste ───────────────────────────────────────────────
+// ── Add an entry to the radius list ──────────────────────────────────────────
 function addRadiusListEntry(id, desc, center, dotColor, outerCircle) {
     const list = document.getElementById('radiusList');
     const item = document.createElement('div');
@@ -66,7 +66,7 @@ function addRadiusListEntry(id, desc, center, dotColor, outerCircle) {
             <div>${desc}</div>
             <div class="ri-lat">${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}</div>
         </div>
-        <button class="danger" onclick="removeRadius(${id})" title="Entfernen">✕</button>
+        <button class="danger" onclick="removeRadius(${id})" title="Remove">✕</button>
     `;
     item.addEventListener('click', (e) => {
         if (e.target.tagName === 'BUTTON') return;
@@ -75,7 +75,7 @@ function addRadiusListEntry(id, desc, center, dotColor, outerCircle) {
     list.appendChild(item);
 }
 
-// ── Radius zeichnen ───────────────────────────────────────────────────────────
+// ── Draw radius ───────────────────────────────────────────────────────────────
 function drawRadius() {
     if (!clickedPoint) {
         setStatus(t('status_no_point'), 'error');
@@ -137,7 +137,7 @@ function drawRadius() {
     }
 }
 
-// ── Radius entfernen ──────────────────────────────────────────────────────────
+// ── Remove a radius ───────────────────────────────────────────────────────────
 function removeRadius(id) {
     if (!radiusItems[id]) return;
     radiusItems[id].layers.forEach(l => map.removeLayer(l));
@@ -145,7 +145,7 @@ function removeRadius(id) {
     document.getElementById('ri-' + id)?.remove();
 }
 
-// ── Alle Radien entfernen ─────────────────────────────────────────────────────
+// ── Remove all radii ──────────────────────────────────────────────────────────
 function clearAllRadii() {
     Object.keys(radiusItems).forEach(id => removeRadius(Number(id)));
 }

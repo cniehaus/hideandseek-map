@@ -1,8 +1,8 @@
 'use strict';
 
-// ── Overpass-API-Abfrage mit automatischem Fallback ───────────────────────────
-// Probiert alle Endpunkte aus OVERPASS_ENDPOINTS der Reihe nach.
-// Wirft einen Fehler, wenn alle Endpunkte fehlschlagen.
+// ── Overpass API query with automatic fallback ────────────────────────────────
+// Tries all endpoints from OVERPASS_ENDPOINTS in order.
+// Throws an error if all endpoints fail.
 async function overpassFetch(query) {
     const body   = 'data=' + encodeURIComponent(query);
     const errors = [];
@@ -14,7 +14,7 @@ async function overpassFetch(query) {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body,
             });
-            if (res.status === 429) throw new Error('Zu viele Anfragen – bitte kurz warten');
+            if (res.status === 429) throw new Error('Too many requests – please wait a moment');
             if (!res.ok)            throw new Error(`HTTP ${res.status}`);
             return await res.json();
         } catch (e) {
@@ -22,5 +22,5 @@ async function overpassFetch(query) {
         }
     }
 
-    throw new Error('Alle Overpass-Server fehlgeschlagen:\n' + errors.join('\n'));
+    throw new Error('All Overpass servers failed:\n' + errors.join('\n'));
 }
