@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hideandseek.niehaus-ol.de/sitemap.xml
+Sitemap: https://cniehaus.github.io/hideandseek-map/sitemap.xml
