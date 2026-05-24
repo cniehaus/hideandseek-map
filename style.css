@@ -245,6 +245,33 @@ button.meas-active:hover { background: #3b82f6; }
     box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 
+/* ── Click-point crosshair marker ──────────────────── */
+.click-marker-icon {
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid #f0883e;
+    border-radius: 50%;
+    background: rgba(240, 136, 62, 0.18);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+    position: relative;
+}
+.click-marker-icon::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 2px; bottom: 2px;
+    width: 1.5px;
+    background: #f0883e;
+    transform: translateX(-50%);
+}
+.click-marker-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 2px; right: 2px;
+    height: 1.5px;
+    background: #f0883e;
+    transform: translateY(-50%);
+}
+
 .meas-line-label {
     display: inline-block;
     background: #0d1117;

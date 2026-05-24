@@ -86,9 +86,7 @@ function renderPOIs(id, data, def) {
 
         // Clicking a POI also sets the radius centre point
         marker.on('click', () => {
-            clickedPoint = L.latLng(lat, lng);
-            document.getElementById('clickCoords').textContent =
-                `📍 ${lat.toFixed(6)},  ${lng.toFixed(6)}`;
+            setClickedPoint(L.latLng(lat, lng));
             setStatus(tf('status_center', name), 'ok');
         });
 

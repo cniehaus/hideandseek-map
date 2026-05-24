@@ -188,7 +188,5 @@ map.on('click', (e) => {
     }
 
     // No measurement mode active → set radius centre point
-    clickedPoint = e.latlng;
-    document.getElementById('clickCoords').textContent =
-        `📍 ${e.latlng.lat.toFixed(6)},  ${e.latlng.lng.toFixed(6)}`;
+    setClickedPoint(e.latlng);
 });

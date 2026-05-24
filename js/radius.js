@@ -2,9 +2,28 @@
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let clickedPoint  = null;   // current centre point (also set in renderers.js)
+let clickMarker   = null;   // crosshair marker showing the current centre
 let radiusCounter = 0;
 let radiusMode    = 'single';
 const radiusItems = {};     // id → { layers: [], outerCircle }
+
+// ── Set clicked point + crosshair marker ─────────────────────────────────────
+function setClickedPoint(latlng) {
+    clickedPoint = latlng;
+    document.getElementById('clickCoords').textContent =
+        `📍 ${latlng.lat.toFixed(6)},  ${latlng.lng.toFixed(6)}`;
+    if (clickMarker) map.removeLayer(clickMarker);
+    clickMarker = L.marker(latlng, {
+        icon: L.divIcon({
+            className:  '',
+            html:       '<div class="click-marker-icon"></div>',
+            iconSize:   [22, 22],
+            iconAnchor: [11, 11],
+        }),
+        interactive:  false,
+        zIndexOffset: 200,
+    }).addTo(map);
+}
 
 // ── Switch mode (single / interval) ──────────────────────────────────────────
 function setRadiusMode(mode) {
@@ -23,9 +42,7 @@ function useManualCoords() {
         setStatus(t('status_bad_coords'), 'error');
         return;
     }
-    clickedPoint = L.latLng(lat, lng);
-    document.getElementById('clickCoords').textContent =
-        `📍 ${lat.toFixed(6)},  ${lng.toFixed(6)}`;
+    setClickedPoint(L.latLng(lat, lng));
     map.setView(clickedPoint, Math.max(map.getZoom(), 13));
 }
 
