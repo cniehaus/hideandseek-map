@@ -1,7 +1,7 @@
 # Jet Lag Maps – Hide & Seek
 
 > An interactive map tool for the board game [Jet Lag: The Game – Hide & Seek](https://store.nebula.tv/collections/jetlag/products/hideandseek).
-> Plan your game with live OpenStreetMap data: postal codes, hospitals, train stations, attractions, and much more – fully printable as A4 PDF.
+> Plan your game with live OpenStreetMap data: postal codes, hospitals, train stations, bus lines, and much more – fully printable as A4 PDF.
 
 **[▶ Open the live app](https://cniehaus.github.io/hideandseek-map/)**
 
@@ -11,13 +11,34 @@
 
 ## Features
 
-- **17 toggleable map layers** – postal codes, hospitals, train & tram stations, bus stops, attractions, parks, shopping centres, cinemas, zoos, town halls, water bodies, aquariums, libraries, golf courses, stadiums, embassies, consulates
-- **Radius tool** – single circle or multi-ring interval view, with a km/mi label on the ring
-- **Distance & direction** – click two points to measure Haversine distance and bearing
-- **6 map styles** – OSM Standard, Positron (light), Dark, Voyager, Satellite, ÖPNV
-- **Bilingual** – English and German, auto-detected from browser locale
-- **Print-ready** – A4 PDF output via browser print dialog
-- **100 % static** – no server, no database; runs on GitHub Pages
+### Map layers
+**17 toggleable layers** – postal codes, hospitals, train & tram stations, bus stops, attractions, parks, shopping centres, cinemas, zoos, town halls, water bodies, aquariums, libraries, golf courses, stadiums, embassies, consulates.
+
+Clicking any **bus stop** shows a popup listing every bus line that serves it – fetched live from OpenStreetMap:
+
+![Bus stop popup showing lines 301, 303, 304, 340](screenshot-buslines.png)
+
+### Bus route lines
+Draw any bus (or tram) line by number directly on the map. Type a line number such as **305** in the *Bus-Linien* section and click *Einzeichnen* – the full route appears as a coloured line. Multiple lines can be shown at once, each with its own colour.
+
+### Radius & interval tool
+Draw a circle of any radius around a chosen centre point – or a set of evenly-spaced rings for interval-based rules.
+
+**Radii are draggable** – grab the centre dot and move the whole circle to a new position without redrawing it.
+
+### Distance & direction tool
+Click two points (A then B) to get the Haversine distance and compass bearing. The result is shown with two semicircle zones.
+
+**Both markers are draggable** – move A or B after placing them; distance, bearing, and zones update in real time.
+
+### Click-point marker
+Every map click sets a centre point for the radius tool and marks it with a crosshair symbol so you always know where the last click landed.
+
+### Map styles & printing
+6 map styles (OSM Standard, Positron, Dark, Voyager, Satellite, ÖPNV). Print-ready A4 PDF via the browser print dialog.
+
+### Bilingual
+English and German, auto-detected from browser locale. Switch at any time with the DE / EN buttons.
 
 ---
 
@@ -27,7 +48,7 @@
 |---|---|
 | Map rendering | [Leaflet 1.9](https://leafletjs.com/) |
 | Map tiles | OpenStreetMap, CARTO, Esri, memomaps |
-| POI data | [Overpass API](https://overpass-api.de/) (with 3-endpoint fallback) |
+| POI & route data | [Overpass API](https://overpass-api.de/) (with 3-endpoint fallback) |
 | Geocoding | [Nominatim](https://nominatim.openstreetmap.org/) |
 | OSM → GeoJSON | [osmtogeojson](https://github.com/tyrasd/osmtogeojson) |
 | Languages | Plain JS objects (`langs/de.js`, `langs/en.js`) |
@@ -55,8 +76,9 @@ hideandseek-map/
     ├── renderers.js    # renderPLZ(), renderPOIs(), renderWater()
     ├── layers.js       # LAYER_DEFS (all POI filters) + layer management
     ├── city.js         # searchCity() + km/mi unit helpers
-    ├── radius.js       # Radius / interval circle tool
-    ├── measure.js      # Distance & bearing tool + map click handler
+    ├── busroutes.js    # Bus/tram route line tool
+    ├── radius.js       # Radius / interval circle tool (draggable)
+    ├── measure.js      # Distance & bearing tool + map click handler (draggable)
     └── ui.js           # Sidebar, print, error popup, style FAB
 ```
 
