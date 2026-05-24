@@ -56,7 +56,25 @@ function renderPLZ(id, data, def) {
 function renderPOIs(id, data, def) {
     const result = [];
 
-    (data.elements ?? []).forEach(el => {
+    let elements = data.elements ?? [];
+
+    if (id === 'busstops') {
+        // Merge stops within 50 m — opposite-direction platforms of the same stop
+        // become one marker. The popup's around:80m query still finds all lines.
+        const placed = [];
+        elements = elements.filter(el => {
+            if (el.type !== 'node') return true;
+            const close = placed.some(([plat, plng]) => {
+                const dlat = (el.lat  - plat) * 111320;
+                const dlng = (el.lon  - plng) * 111320 * Math.cos(plat * Math.PI / 180);
+                return dlat * dlat + dlng * dlng < 2500; // 50² m²
+            });
+            if (!close) placed.push([el.lat, el.lon]);
+            return !close;
+        });
+    }
+
+    elements.forEach(el => {
         let lat, lng;
         if      (el.type === 'node') { lat = el.lat;                                lng = el.lon; }
         else if (el.center)          { lat = el.center.lat;                         lng = el.center.lon; }
@@ -94,7 +112,10 @@ function renderPOIs(id, data, def) {
                 fetching = true;
                 try {
                     const d = await overpassFetch(
-                        `[out:json][timeout:30];\nnode(${el.id});\nrelation(bn)["route"~"^(bus|tram|trolleybus|subway|light_rail)$"];\nout tags;`
+                        `[out:json][timeout:30];
+(\n  node(${el.id});\n  node(around:80,${lat},${lng})["public_transport"~"^(stop_position|platform)$"];\n);
+relation(bn)["route"~"^(bus|tram|trolleybus|subway|light_rail)$"];
+out tags;`
                     );
                     const refs = [...new Set(
                         (d.elements ?? []).filter(r => r.tags?.ref).map(r => r.tags.ref)
