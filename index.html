@@ -222,6 +222,22 @@
             </div>
         </div>
 
+        <!-- Bus Routes -->
+        <div class="section">
+            <div class="section-title" data-i18n="sec_busroutes">Bus-Linien</div>
+            <div style="font-size:11px;color:#484f58;margin-bottom:8px" data-i18n="busroute_hint">
+                Liniennummer eingeben (z.B. 305)
+            </div>
+            <div class="row">
+                <input type="text" id="busRouteInput" placeholder="305" style="flex:1;max-width:90px">
+                <button onclick="addBusRoute()" data-i18n="btn_add_route">Einzeichnen</button>
+            </div>
+            <div id="busRouteList"></div>
+            <div style="margin-top:8px">
+                <button class="ghost" style="width:100%" onclick="clearAllBusRoutes()" data-i18n="btn_clear_routes">Alle Linien entfernen</button>
+            </div>
+        </div>
+
         <!-- Radius Tool -->
         <div class="section">
             <div class="section-title" data-i18n="sec_radius">Radius-Tool</div>
@@ -346,6 +362,7 @@
     <script src="js/renderers.js"></script> <!-- renderPLZ(), renderPOIs(), renderWater()    -->
     <script src="js/layers.js"></script>    <!-- LAYER_DEFS + layer management               -->
     <script src="js/city.js"></script>      <!-- searchCity(), units (km/mi)                 -->
+    <script src="js/busroutes.js"></script> <!-- bus route lines                             -->
     <script src="js/radius.js"></script>    <!-- radius tool, clickedPoint                   -->
     <script src="js/measure.js"></script>   <!-- distance & direction, map.on('click', …)    -->
     <script src="js/ui.js"></script>        <!-- sidebar, print, error popup, helpers        -->

@@ -110,3 +110,8 @@ document.getElementById('errorOverlay').addEventListener('click', (e) => {
 document.getElementById('cityInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') searchCity();
 });
+
+// Trigger addBusRoute on Enter in the bus route input
+document.getElementById('busRouteInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addBusRoute();
+});
