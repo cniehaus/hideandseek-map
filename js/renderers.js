@@ -78,11 +78,44 @@ function renderPOIs(id, data, def) {
             ...(def.markerOpts ?? {}),
         });
 
-        marker.bindPopup(`
+        const baseHtml = () => `
             <div class="popup-name">${def.icon ?? '📌'} ${esc(name)}</div>
             <div class="popup-type">${esc(type)}</div>
-            <div class="popup-coords">${lat.toFixed(5)}, ${lng.toFixed(5)}</div>
-        `);
+            <div class="popup-coords">${lat.toFixed(5)}, ${lng.toFixed(5)}</div>`;
+
+        if (id === 'busstops' && el.id) {
+            let fetched  = false;
+            let fetching = false;
+            marker.bindPopup(
+                baseHtml() + `<div class="popup-routes"><div class="popup-routes-loading"><div class="popup-spinner"></div>${t('stop_lines_loading')}</div></div>`
+            );
+            marker.on('popupopen', async () => {
+                if (fetched || fetching) return;
+                fetching = true;
+                try {
+                    const d = await overpassFetch(
+                        `[out:json][timeout:30];\nnode(${el.id});\nrelation(bn)["route"~"^(bus|tram|trolleybus|subway|light_rail)$"];\nout tags;`
+                    );
+                    const refs = [...new Set(
+                        (d.elements ?? []).filter(r => r.tags?.ref).map(r => r.tags.ref)
+                    )].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+                    const inner = refs.length
+                        ? refs.map(r => `<span class="route-chip">${esc(r)}</span>`).join('')
+                        : `<span style="color:#484f58;font-size:11px">${t('stop_lines_none')}</span>`;
+
+                    marker.setPopupContent(baseHtml() + `<div class="popup-routes">${inner}</div>`);
+                    fetched = true;
+                } catch (_) {
+                    marker.setPopupContent(baseHtml() + `<div class="popup-routes"><span style="color:#f85149;font-size:11px">${t('stop_lines_error')}</span></div>`);
+                    fetched = true;
+                } finally {
+                    fetching = false;
+                }
+            });
+        } else {
+            marker.bindPopup(baseHtml());
+        }
 
         // Clicking a POI also sets the radius centre point
         marker.on('click', () => {
