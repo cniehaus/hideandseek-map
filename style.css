@@ -243,7 +243,20 @@ button.meas-active:hover { background: #3b82f6; }
     justify-content: center;
     border: 2px solid #fff;
     box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    cursor: grab;
 }
+.meas-icon:active { cursor: grabbing; }
+
+/* ── Radius centre drag handle ──────────────────── */
+.radius-drag-handle {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    cursor: grab;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+.radius-drag-handle:active { cursor: grabbing; }
 
 /* ── Click-point crosshair marker ──────────────────── */
 .click-marker-icon {

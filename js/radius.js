@@ -112,12 +112,26 @@ function drawRadius() {
             radius: km * 1000, color: '#000', fillColor: color,
             fillOpacity: 0.30, weight: 3, dashArray: '8 5',
         }).addTo(map);
-        const center = L.circleMarker(clickedPoint, {
-            radius: 5, fillColor: color, color: '#000', weight: 2, fillOpacity: 1,
-        }).addTo(map);
         const label  = makeKmLabel(clickedPoint, km, color).addTo(map);
+        const handle = L.marker(clickedPoint, {
+            draggable: true,
+            icon: L.divIcon({
+                className:  '',
+                html:       `<div class="radius-drag-handle" style="background:${color}"></div>`,
+                iconSize:   [14, 14],
+                iconAnchor: [7, 7],
+            }),
+            zIndexOffset: 400,
+        }).addTo(map);
+        handle.on('drag', (e) => {
+            const c = e.target.getLatLng();
+            circle.setLatLng(c);
+            label.setLatLng(radiusLabelPos(c, km));
+            const el = document.querySelector('#ri-' + id + ' .ri-lat');
+            if (el) el.textContent = `${c.lat.toFixed(5)}, ${c.lng.toFixed(5)}`;
+        });
 
-        radiusItems[id] = { layers: [circle, center, label], outerCircle: circle };
+        radiusItems[id] = { layers: [circle, label, handle], outerCircle: circle };
         addRadiusListEntry(id, tf('ri_radius', fmtDistShort(km)), clickedPoint, color, circle);
         setStatus(tf('status_radius_drawn', fmtDistShort(km)), 'ok');
 
@@ -130,6 +144,7 @@ function drawRadius() {
         const step   = toKm(inputStep);
         const layers = [];
         let outerCircle;
+        const circlesAndLabels = [];
 
         for (let i = 1; i <= count; i++) {
             const km    = step * i;
@@ -140,13 +155,30 @@ function drawRadius() {
             }).addTo(map);
             const label = makeKmLabel(clickedPoint, km, color).addTo(map);
             layers.push(circle, label);
+            circlesAndLabels.push({ circle, label, km });
             outerCircle = circle;
         }
 
-        const centerDot = L.circleMarker(clickedPoint, {
-            radius: 5, fillColor: '#fff', color: '#000', weight: 2, fillOpacity: 1,
+        const handle = L.marker(clickedPoint, {
+            draggable: true,
+            icon: L.divIcon({
+                className:  '',
+                html:       '<div class="radius-drag-handle" style="background:#fff"></div>',
+                iconSize:   [14, 14],
+                iconAnchor: [7, 7],
+            }),
+            zIndexOffset: 400,
         }).addTo(map);
-        layers.push(centerDot);
+        handle.on('drag', (e) => {
+            const c = e.target.getLatLng();
+            circlesAndLabels.forEach(({ circle, label, km }) => {
+                circle.setLatLng(c);
+                label.setLatLng(radiusLabelPos(c, km));
+            });
+            const el = document.querySelector('#ri-' + id + ' .ri-lat');
+            if (el) el.textContent = `${c.lat.toFixed(5)}, ${c.lng.toFixed(5)}`;
+        });
+        layers.push(handle);
 
         radiusItems[id] = { layers, outerCircle };
         addRadiusListEntry(id, tf('ri_interval', count, fmtDistShort(step)), clickedPoint, INTERVAL_COLORS[0], outerCircle);
