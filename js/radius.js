@@ -140,11 +140,14 @@ function drawRadius() {
             circle.setLatLng(c);
             label.setLatLng(radiusLabelPos(c, km));
             updateRadiusCoordLabel(id, c);
+            radiusItems[id].center = c;
         });
+        handle.on('dragend', updatePermalink);
 
-        radiusItems[id] = { layers: [circle, label, handle], outerCircle: circle };
+        radiusItems[id] = { layers: [circle, label, handle], outerCircle: circle, type: 'single', center: L.latLng(clickedPoint.lat, clickedPoint.lng), km };
         addRadiusListEntry(id, tf('ri_radius', fmtDistShort(km)), clickedPoint, color, circle);
         setStatus(tf('status_radius_drawn', fmtDistShort(km)), 'ok');
+        updatePermalink();
 
     } else {
         const inputStep = parseFloat(document.getElementById('intervalStep').value);
@@ -178,12 +181,15 @@ function drawRadius() {
                 label.setLatLng(radiusLabelPos(c, km));
             });
             updateRadiusCoordLabel(id, c);
+            radiusItems[id].center = c;
         });
+        handle.on('dragend', updatePermalink);
         layers.push(handle);
 
-        radiusItems[id] = { layers, outerCircle };
+        radiusItems[id] = { layers, outerCircle, type: 'interval', center: L.latLng(clickedPoint.lat, clickedPoint.lng), step, count };
         addRadiusListEntry(id, tf('ri_interval', count, fmtDistShort(step)), clickedPoint, INTERVAL_COLORS[0], outerCircle);
         setStatus(tf('status_interval_drawn', count, fmtDistShort(step)), 'ok');
+        updatePermalink();
     }
 }
 
@@ -193,6 +199,7 @@ function removeRadius(id) {
     radiusItems[id].layers.forEach(l => map.removeLayer(l));
     delete radiusItems[id];
     document.getElementById('ri-' + id)?.remove();
+    updatePermalink();
 }
 
 // ── Remove all radii ──────────────────────────────────────────────────────────

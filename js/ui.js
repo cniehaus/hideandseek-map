@@ -60,6 +60,7 @@ function selectStyle(btn, key) {
     document.querySelectorAll('.style-opt').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('stylePopover').classList.remove('open');
+    updatePermalink();
 }
 
 // Close popover when clicking outside

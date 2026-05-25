@@ -21,6 +21,7 @@ const COLOR_THEMES = {
             '#f97316', '#a855f7',
         ],
         layers: {
+            cityboundary: '#f0883e',
             plz:          '#4ecdc4',
             hospitals:    '#f85149',
             stations:     '#58a6ff',
@@ -61,6 +62,7 @@ const COLOR_THEMES = {
             '#332288', '#44AA99', '#56B4E9', '#882255', '#AA3377',
         ],
         layers: {
+            cityboundary: '#56B4E9',
             plz:          '#0072B2',
             hospitals:    '#D55E00',
             stations:     '#4477AA',

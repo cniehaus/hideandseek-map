@@ -97,6 +97,7 @@ out geom;`;
         addBusRouteListEntry(id, ref, routeName, color);
         setStatus(tf('status_route_loaded', ref, data.elements.length), 'ok');
         input.value = '';
+        updatePermalink();
     } catch (e) {
         setStatus(t('status_err_popup'), 'error');
         showErrorPopup(tf('err_busroute', ref, e.message));
@@ -111,6 +112,7 @@ function removeBusRoute(id) {
     busRouteItems[id].layers.forEach(l => map.removeLayer(l));
     delete busRouteItems[id];
     document.getElementById('br-' + id)?.remove();
+    updatePermalink();
 }
 
 // ── Remove all bus routes ─────────────────────────────────────────────────────

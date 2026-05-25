@@ -18,6 +18,7 @@ function setUnits(u) {
     document.getElementById('unitMi').className        = u === 'imperial' ? '' : 'ghost';
     document.getElementById('unitLabelRadius').textContent = tf('lbl_radius', unitStr());
     document.getElementById('unitLabelStep').textContent   = tf('lbl_step',   unitStr());
+    updatePermalink();
 }
 
 // ── City search via Nominatim ─────────────────────────────────────────────────
@@ -45,10 +46,12 @@ async function searchCity() {
         ) ?? data[0];
 
         currentCity = {
-            name: best.display_name,
-            lat:  parseFloat(best.lat),
-            lng:  parseFloat(best.lon),
-            bbox: best.boundingbox.map(parseFloat),
+            name:     best.display_name,
+            lat:      parseFloat(best.lat),
+            lng:      parseFloat(best.lon),
+            bbox:     best.boundingbox.map(parseFloat),
+            osm_type: best.osm_type,
+            osm_id:   best.osm_id,
         };
 
         document.getElementById('cityHint').textContent = best.display_name;
@@ -68,6 +71,7 @@ async function searchCity() {
         }
 
         setStatus(tf('status_map', best.display_name.split(',')[0]), 'ok');
+        updatePermalink();
     } catch (e) {
         setStatus(tf('status_err', e.message), 'error');
     }

@@ -389,7 +389,8 @@ button.meas-active:hover { background: #3b82f6; }
 
 /* ── FABs (floating action buttons) ──────────────── */
 #printFab,
-#styleFab {
+#styleFab,
+#permalinkFab {
     position: fixed;
     right: 12px;
     z-index: 1200;
@@ -409,13 +410,15 @@ button.meas-active:hover { background: #3b82f6; }
 }
 #printFab         { bottom: 30px; }
 #styleFab         { bottom: 84px; }
+#permalinkFab     { bottom: 138px; }
 #printFab:hover,
-#styleFab:hover   { background: #21262d; color: #fff; }
+#styleFab:hover,
+#permalinkFab:hover { background: #21262d; color: #fff; }
 
 /* ── Style popover ────────────────────────────────── */
 #stylePopover {
     position: fixed;
-    bottom: 138px;
+    bottom: 192px;
     right: 12px;
     z-index: 1201;
     width: 195px;

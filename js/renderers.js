@@ -1,5 +1,39 @@
 'use strict';
 
+// ── City boundary ─────────────────────────────────────────────────────────────
+// Renders the administrative boundary of the searched city as a thick dashed
+// outline with no fill, so the player can see where the city ends.
+function renderCityBoundary(id, data, def) {
+    const result = [];
+    let geojson;
+    try {
+        geojson = osmtogeojson(data);
+    } catch (e) {
+        console.error('osmtogeojson failed for city boundary', e);
+        return result;
+    }
+
+    geojson.features.forEach(feat => {
+        const gtype = feat.geometry?.type;
+        if (!gtype || !gtype.includes('Polygon')) return;
+
+        const name = feat.properties?.name ?? currentCity?.name?.split(',')[0] ?? '';
+        const poly = L.geoJSON(feat, {
+            style: {
+                color:       def.color,
+                weight:      4,
+                opacity:     0.9,
+                fillOpacity: 0,
+                dashArray:   '12 7',
+            },
+        });
+        if (name) poly.bindPopup(`<div class="popup-name">🏙️ ${esc(name)}</div>`);
+        result.push(poly);
+    });
+
+    return result;
+}
+
 // ── Postal-code polygons ──────────────────────────────────────────────────────
 // Converts OSM relations to coloured GeoJSON areas with postal-code labels.
 function renderPLZ(id, data, def) {

@@ -21,6 +21,25 @@ const bbStr = bb => `${bb[0]},${bb[2]},${bb[1]},${bb[3]}`;
 // ════════════════════════════════════════════════════════════════════════════════
 const LAYER_DEFS = {
 
+    cityboundary: {
+        label: 'lyr_cityboundary',
+        color: '#f0883e',
+        buildQuery: () => {
+            // Prefer the exact OSM relation from Nominatim; fall back to name search.
+            if (currentCity?.osm_type === 'relation' && currentCity?.osm_id) {
+                return `[out:json][timeout:60];
+relation(${currentCity.osm_id});
+out geom;`;
+            }
+            const name = currentCity?.name?.split(',')[0]?.trim() ?? '';
+            const bb   = currentCity?.bbox ?? [0, 0, 0, 0];
+            return `[out:json][timeout:60];
+relation(${bbStr(bb)})["boundary"="administrative"]["name"~"^${name}$",i];
+out geom;`;
+        },
+        render: renderCityBoundary,
+    },
+
     plz: {
         label: 'lyr_plz',
         color: '#4ecdc4',
@@ -313,6 +332,7 @@ async function toggleLayer(id, enabled) {
         removeLayer(id);
         delete layerDataCache[id];
     }
+    updatePermalink();
 }
 
 // ── Load layer (Overpass query → renderer → map) ──────────────────────────────
@@ -389,4 +409,5 @@ function updateLayerDots() {
 function clearAllLayers() {
     Object.keys(activeLayers).forEach(removeLayer);
     document.querySelectorAll('[id^="lyr-"]').forEach(cb => cb.checked = false);
+    updatePermalink();
 }

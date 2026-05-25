@@ -39,4 +39,8 @@ function applyI18n() {
     const printFab = document.getElementById('printFab');
     printFab.title = t('fab_print_title');
     printFab.setAttribute('aria-label', t('fab_print_title'));
+
+    const permalinkFab = document.getElementById('permalinkFab');
+    permalinkFab.title = t('fab_permalink_title');
+    permalinkFab.setAttribute('aria-label', t('fab_permalink_title'));
 }
