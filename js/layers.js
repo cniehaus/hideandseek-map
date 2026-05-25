@@ -7,7 +7,7 @@
 // So bb[0]=south, bb[1]=north, bb[2]=west, bb[3]=east → we swap [1] and [2].
 // Using this helper in every query avoids repeating the same index shuffle and
 // makes it obvious what the four numbers mean.
-const bbStr = bb => `${bbStr(bb)}`;
+const bbStr = bb => `${bb[0]},${bb[2]},${bb[1]},${bb[3]}`;
 
 // ════════════════════════════════════════════════════════════════════════════════
 // POI LAYER DEFINITIONS
