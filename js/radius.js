@@ -46,6 +46,20 @@ function useManualCoords() {
     map.setView(clickedPoint, Math.max(map.getZoom(), 13));
 }
 
+// ── Drag handle for radius centre ────────────────────────────────────────────
+function makeDragHandle(latlng, color) {
+    return L.marker(latlng, {
+        draggable: true,
+        icon: L.divIcon({
+            className:  '',
+            html:       `<div class="radius-drag-handle" style="background:${color}"></div>`,
+            iconSize:   [14, 14],
+            iconAnchor: [7, 7],
+        }),
+        zIndexOffset: 400,
+    }).addTo(map);
+}
+
 // ── Radius label helpers ──────────────────────────────────────────────────────
 // Computes a point on the circle edge (due north) for the distance label.
 function radiusLabelPos(center, km) {
@@ -113,16 +127,7 @@ function drawRadius() {
             fillOpacity: 0.30, weight: 3, dashArray: '8 5',
         }).addTo(map);
         const label  = makeKmLabel(clickedPoint, km, color).addTo(map);
-        const handle = L.marker(clickedPoint, {
-            draggable: true,
-            icon: L.divIcon({
-                className:  '',
-                html:       `<div class="radius-drag-handle" style="background:${color}"></div>`,
-                iconSize:   [14, 14],
-                iconAnchor: [7, 7],
-            }),
-            zIndexOffset: 400,
-        }).addTo(map);
+        const handle = makeDragHandle(clickedPoint, color);
         handle.on('drag', (e) => {
             const c = e.target.getLatLng();
             circle.setLatLng(c);
@@ -159,16 +164,7 @@ function drawRadius() {
             outerCircle = circle;
         }
 
-        const handle = L.marker(clickedPoint, {
-            draggable: true,
-            icon: L.divIcon({
-                className:  '',
-                html:       '<div class="radius-drag-handle" style="background:#fff"></div>',
-                iconSize:   [14, 14],
-                iconAnchor: [7, 7],
-            }),
-            zIndexOffset: 400,
-        }).addTo(map);
+        const handle = makeDragHandle(clickedPoint, '#fff');
         handle.on('drag', (e) => {
             const c = e.target.getLatLng();
             circlesAndLabels.forEach(({ circle, label, km }) => {
