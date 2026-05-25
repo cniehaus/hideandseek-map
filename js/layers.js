@@ -301,7 +301,8 @@ out center bb tags;`,
 };
 
 // ── Layer state ───────────────────────────────────────────────────────────────
-let activeLayers = {};
+let activeLayers    = {};
+const layerDataCache = {};  // id → last Overpass response (used for re-colour without re-fetch)
 
 // ── Toggle layer on/off ───────────────────────────────────────────────────────
 async function toggleLayer(id, enabled) {
@@ -310,6 +311,7 @@ async function toggleLayer(id, enabled) {
         await loadLayer(id);
     } else {
         removeLayer(id);
+        delete layerDataCache[id];
     }
 }
 
@@ -327,6 +329,7 @@ async function loadLayer(id) {
     try {
         const query        = def.buildQuery(currentCity.bbox);
         const data         = await overpassFetch(query);
+        layerDataCache[id] = data;
         removeLayer(id);
         const leafletLayers = def.render(id, data, def);
         activeLayers[id]   = leafletLayers;
@@ -351,6 +354,35 @@ function removeLayer(id) {
     }
     const cntEl = document.getElementById('cnt-' + id);
     if (cntEl) cntEl.textContent = '';
+}
+
+// ── Re-colour active layers after a theme change (no Overpass re-fetch) ───────
+function recolorActiveLayers() {
+    const theme = COLOR_THEMES[colorMode];
+    Object.entries(theme.layers).forEach(([id, color]) => {
+        if (LAYER_DEFS[id]) LAYER_DEFS[id].color = color;
+    });
+    Object.keys(activeLayers).forEach(id => {
+        const cached = layerDataCache[id];
+        if (!cached) return;
+        activeLayers[id].forEach(l => map.removeLayer(l));
+        delete activeLayers[id];
+        const leafletLayers = LAYER_DEFS[id].render(id, cached, LAYER_DEFS[id]);
+        activeLayers[id] = leafletLayers;
+        leafletLayers.forEach(l => l.addTo(map));
+    });
+    updateLayerDots();
+}
+
+// ── Sync sidebar colour dots to the active theme ──────────────────────────────
+function updateLayerDots() {
+    const theme = COLOR_THEMES[colorMode];
+    Object.entries(theme.layers).forEach(([id, color]) => {
+        const label = document.querySelector(`[for="lyr-${id}"]`);
+        if (!label) return;
+        const dot = label.querySelector('.dot');
+        if (dot) dot.style.background = color;
+    });
 }
 
 // ── Remove all layers ─────────────────────────────────────────────────────────

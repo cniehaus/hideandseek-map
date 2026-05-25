@@ -25,6 +25,31 @@ function printMap() {
     setTimeout(() => window.print(), 100);
 }
 
+// ── Color mode (default / colorblind-safe) ────────────────────────────────────
+function setColorMode(mode) {
+    colorMode = mode;
+    localStorage.setItem('colorMode', mode);
+    PLZ_COLORS      = COLOR_THEMES[mode].plz;
+    INTERVAL_COLORS = COLOR_THEMES[mode].interval;
+    BUS_ROUTE_COLORS = COLOR_THEMES[mode].busRoute;
+    recolorActiveLayers();
+    recolorBusRoutes();
+    document.querySelectorAll('.color-mode-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === mode);
+    });
+}
+
+function initColorMode() {
+    const theme = COLOR_THEMES[colorMode];
+    Object.entries(theme.layers).forEach(([id, color]) => {
+        if (LAYER_DEFS[id]) LAYER_DEFS[id].color = color;
+    });
+    updateLayerDots();
+    document.querySelectorAll('.color-mode-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === colorMode);
+    });
+}
+
 // ── Map style popover ─────────────────────────────────────────────────────────
 function toggleStylePopover() {
     document.getElementById('stylePopover').classList.toggle('open');

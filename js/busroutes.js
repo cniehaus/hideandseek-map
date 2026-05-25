@@ -1,11 +1,7 @@
 'use strict';
 
-// ── Colour palette for route lines ────────────────────────────────────────────
-const BUS_ROUTE_COLORS = [
-    '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
-    '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16',
-    '#f97316', '#a855f7',
-];
+// ── Colour palette for route lines (kept in sync with COLOR_THEMES) ───────────
+let BUS_ROUTE_COLORS = COLOR_THEMES[colorMode].busRoute;
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let busRouteItems   = {};       // id → { layers, color, name, ref }
@@ -120,4 +116,16 @@ function removeBusRoute(id) {
 // ── Remove all bus routes ─────────────────────────────────────────────────────
 function clearAllBusRoutes() {
     Object.keys(busRouteItems).forEach(id => removeBusRoute(Number(id)));
+}
+
+// ── Re-colour existing routes after a theme change ───────────────────────────
+function recolorBusRoutes() {
+    const palette = COLOR_THEMES[colorMode].busRoute;
+    Object.entries(busRouteItems).forEach(([id, item]) => {
+        const newColor = palette[(parseInt(id) - 1) % palette.length];
+        item.layers.forEach(l => l.setStyle?.({ color: newColor }));
+        item.color = newColor;
+        const dot = document.querySelector('#br-' + id + ' .dot');
+        if (dot) dot.style.background = newColor;
+    });
 }

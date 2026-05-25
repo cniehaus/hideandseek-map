@@ -438,6 +438,11 @@ button.meas-active:hover { background: #3b82f6; }
     color: #8b949e;
     margin-bottom: 5px;
 }
+.pp-sep {
+    height: 1px;
+    background: #30363d;
+    margin: 6px 0;
+}
 
 .style-opt {
     width: 100%;

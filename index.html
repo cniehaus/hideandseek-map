@@ -344,6 +344,10 @@
         <button class="style-opt"        data-tile="voyager"   onclick="selectStyle(this,'voyager')"  data-i18n="style_voyager">🧭 Voyager</button>
         <button class="style-opt"        data-tile="satellite" onclick="selectStyle(this,'satellite')" data-i18n="style_satellite">🛰 Satellit</button>
         <button class="style-opt"        data-tile="opnv"      onclick="selectStyle(this,'opnv')"     data-i18n="style_opnv">🚌 ÖPNV-Karte</button>
+        <div class="pp-sep"></div>
+        <div class="pp-label" data-i18n="color_mode_label">Farbpalette</div>
+        <button class="style-opt color-mode-btn" data-mode="default"    onclick="setColorMode('default')"    data-i18n="color_mode_default">Standard</button>
+        <button class="style-opt color-mode-btn" data-mode="colorblind" onclick="setColorMode('colorblind')" data-i18n="color_mode_cb">Farbenblind-sicher</button>
     </div>
 
     <!-- ════════ PRINT FAB ════════ -->
@@ -400,6 +404,7 @@
     <script>
         // Initialisation
         applyI18n();
+        initColorMode();
         searchCity();
     </script>
 </body>
