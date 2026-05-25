@@ -97,8 +97,21 @@ out center bb tags;`,
         icon:  '🌳',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  way(${bbStr(bb)})["leisure"="park"]["name"];
+  way(${bbStr(bb)})["leisure"="park"]["name"]["wikipedia"];
+  way(${bbStr(bb)})["leisure"="park"]["name"]["wikidata"];
   relation(${bbStr(bb)})["leisure"="park"]["name"];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
+
+    greenspaces: {
+        label: 'lyr_greenspaces',
+        color: '#86efac',
+        icon:  '🌿',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  way(${bbStr(bb)})["leisure"="park"]["name"][!"wikipedia"][!"wikidata"];
 );
 out center bb tags;`,
         render: renderPOIs,
