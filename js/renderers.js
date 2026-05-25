@@ -74,6 +74,24 @@ function renderPOIs(id, data, def) {
         });
     }
 
+    if (id === 'swimmingpool') {
+        // Merge individual pool basins within 80 m into one marker (e.g. Freibad
+        // complexes where each lane or basin is mapped as a separate node/way).
+        const placed = [];
+        elements = elements.filter(el => {
+            const lat = el.lat ?? el.center?.lat;
+            const lng = el.lon ?? el.center?.lon;
+            if (lat == null) return true;
+            const close = placed.some(([plat, plng]) => {
+                const dlat = (lat - plat) * 111320;
+                const dlng = (lng - plng) * 111320 * Math.cos(plat * Math.PI / 180);
+                return dlat * dlat + dlng * dlng < 6400; // 80² m²
+            });
+            if (!close) placed.push([lat, lng]);
+            return !close;
+        });
+    }
+
     elements.forEach(el => {
         let lat, lng;
         if      (el.type === 'node') { lat = el.lat;                                lng = el.lon; }

@@ -100,6 +100,27 @@ button.danger {
 }
 button.danger:hover { background: rgba(248,81,73,0.1); }
 
+/* ── Collapsible layers section ──────────────────── */
+.layers-details > summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.layers-details > summary::-webkit-details-marker { display: none; }
+.layers-details > summary::after {
+    content: '▾';
+    font-size: 13px;
+    color: #484f58;
+    transition: transform 0.2s;
+    line-height: 1;
+}
+.layers-details:not([open]) > summary::after {
+    transform: rotate(-90deg);
+}
+
 /* ── Layer list ───────────────────────────────────── */
 .layer-row {
     display: flex;

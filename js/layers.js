@@ -248,6 +248,47 @@ out center bb tags;`,
 out center bb tags;`,
         render: renderPOIs,
     },
+
+    swimmingpool: {
+        label: 'lyr_swimmingpool',
+        color: '#22d3ee',
+        icon:  '🏊',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="swimming_pool"]["name"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="swimming_pool"]["name"];
+  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="public_bath"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="public_bath"];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
+
+    police: {
+        label: 'lyr_police',
+        color: '#6366f1',
+        icon:  '🚔',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="police"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="police"];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
+
+    firestation: {
+        label: 'lyr_firestation',
+        color: '#ef4444',
+        icon:  '🚒',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="fire_station"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="fire_station"];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
 };
 
 // ── Layer state ───────────────────────────────────────────────────────────────

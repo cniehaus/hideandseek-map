@@ -96,7 +96,8 @@
 
         <!-- Layers -->
         <div class="section">
-            <div class="section-title" data-i18n="sec_layers">Layer</div>
+            <details open class="layers-details">
+            <summary class="section-title" data-i18n="sec_layers">Layer</summary>
 
             <label class="layer-row" for="lyr-plz">
                 <input type="checkbox" id="lyr-plz" onchange="toggleLayer('plz', this.checked)">
@@ -224,9 +225,31 @@
                 <span class="layer-count" id="cnt-cemetery"></span>
             </label>
 
+            <label class="layer-row" for="lyr-swimmingpool">
+                <input type="checkbox" id="lyr-swimmingpool" onchange="toggleLayer('swimmingpool', this.checked)">
+                <div class="dot" style="background:#22d3ee"></div>
+                <span class="layer-name" data-i18n="lyr_swimmingpool">Schwimmbäder</span>
+                <span class="layer-count" id="cnt-swimmingpool"></span>
+            </label>
+
+            <label class="layer-row" for="lyr-police">
+                <input type="checkbox" id="lyr-police" onchange="toggleLayer('police', this.checked)">
+                <div class="dot" style="background:#6366f1"></div>
+                <span class="layer-name" data-i18n="lyr_police">Polizeistationen</span>
+                <span class="layer-count" id="cnt-police"></span>
+            </label>
+
+            <label class="layer-row" for="lyr-firestation">
+                <input type="checkbox" id="lyr-firestation" onchange="toggleLayer('firestation', this.checked)">
+                <div class="dot" style="background:#ef4444"></div>
+                <span class="layer-name" data-i18n="lyr_firestation">Feuerwachen</span>
+                <span class="layer-count" id="cnt-firestation"></span>
+            </label>
+
             <div style="margin-top:10px">
                 <button class="ghost" style="width:100%" onclick="clearAllLayers()" data-i18n="btn_clear_layers">Alle Layer entfernen</button>
             </div>
+            </details>
         </div>
 
         <!-- Bus Routes -->
