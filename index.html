@@ -217,6 +217,13 @@
                 <span class="layer-count" id="cnt-consulate"></span>
             </label>
 
+            <label class="layer-row" for="lyr-cemetery">
+                <input type="checkbox" id="lyr-cemetery" onchange="toggleLayer('cemetery', this.checked)">
+                <div class="dot" style="background:#6b7280"></div>
+                <span class="layer-name" data-i18n="lyr_cemetery">Friedhöfe</span>
+                <span class="layer-count" id="cnt-cemetery"></span>
+            </label>
+
             <div style="margin-top:10px">
                 <button class="ghost" style="width:100%" onclick="clearAllLayers()" data-i18n="btn_clear_layers">Alle Layer entfernen</button>
             </div>

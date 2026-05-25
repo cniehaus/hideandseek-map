@@ -233,6 +233,21 @@ out center bb tags;`,
 out center bb tags;`,
         render: renderPOIs,
     },
+
+    cemetery: {
+        label: 'lyr_cemetery',
+        color: '#6b7280',
+        icon:  '⛪',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["landuse"="cemetery"];
+  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["landuse"="cemetery"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="grave_yard"];
+  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="grave_yard"];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
 };
 
 // ── Layer state ───────────────────────────────────────────────────────────────

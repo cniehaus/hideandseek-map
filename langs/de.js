@@ -26,6 +26,7 @@ const LANG_DE = {
     lyr_stadium:          'Stadien',
     lyr_embassy:          'Botschaften',
     lyr_consulate:        'Konsulate',
+    lyr_cemetery:         'Friedhöfe',
     btn_clear_layers:     'Alle Layer entfernen',
     sec_busroutes:        'Bus-Linien',
     busroute_hint:        'Liniennummer eingeben (z.B. 305)',
