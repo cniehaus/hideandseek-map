@@ -317,6 +317,34 @@ out center bb tags;`,
 out center bb tags;`,
         render: renderPOIs,
     },
+
+    airports: {
+        label: 'lyr_airports',
+        color: '#60a5fa',
+        icon:  '✈️',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bbStr(bb)})["aeroway"="aerodrome"]["iata"];
+  way(${bbStr(bb)})["aeroway"="aerodrome"]["iata"];
+  relation(${bbStr(bb)})["aeroway"="aerodrome"]["iata"];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
+
+    airfields: {
+        label: 'lyr_airfields',
+        color: '#94a3b8',
+        icon:  '🛩️',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bbStr(bb)})["aeroway"="aerodrome"][!"iata"]["military"!="airfield"];
+  way(${bbStr(bb)})["aeroway"="aerodrome"][!"iata"]["military"!="airfield"];
+  relation(${bbStr(bb)})["aeroway"="aerodrome"][!"iata"]["military"!="airfield"];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
 };
 
 // ── Layer state ───────────────────────────────────────────────────────────────

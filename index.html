@@ -253,6 +253,20 @@
                 <span class="layer-count" id="cnt-firestation"></span>
             </label>
 
+            <label class="layer-row" for="lyr-airports">
+                <input type="checkbox" id="lyr-airports" onchange="toggleLayer('airports', this.checked)">
+                <div class="dot" style="background:#60a5fa"></div>
+                <span class="layer-name" data-i18n="lyr_airports">Flughäfen</span>
+                <span class="layer-count" id="cnt-airports"></span>
+            </label>
+
+            <label class="layer-row" for="lyr-airfields">
+                <input type="checkbox" id="lyr-airfields" onchange="toggleLayer('airfields', this.checked)">
+                <div class="dot" style="background:#94a3b8"></div>
+                <span class="layer-name" data-i18n="lyr_airfields">Flugplätze</span>
+                <span class="layer-count" id="cnt-airfields"></span>
+            </label>
+
             <div style="margin-top:10px">
                 <button class="ghost" style="width:100%" onclick="clearAllLayers()" data-i18n="btn_clear_layers">Alle Layer entfernen</button>
             </div>

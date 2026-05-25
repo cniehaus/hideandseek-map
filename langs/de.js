@@ -31,6 +31,8 @@ const LANG_DE = {
     lyr_swimmingpool:     'Schwimmbäder',
     lyr_police:           'Polizeistationen',
     lyr_firestation:      'Feuerwachen',
+    lyr_airports:         'Flughäfen',
+    lyr_airfields:        'Flugplätze',
     btn_clear_layers:     'Alle Layer entfernen',
     sec_busroutes:        'Bus-Linien',
     busroute_hint:        'Liniennummer eingeben (z.B. 305)',
