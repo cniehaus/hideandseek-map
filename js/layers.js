@@ -1,5 +1,14 @@
 'use strict';
 
+// ── Bounding-box helper ───────────────────────────────────────────────────────
+// The Nominatim geocoder returns a bounding box as [south, north, west, east].
+// The Overpass API expects the same four values but in a different order:
+//   south, west, north, east
+// So bb[0]=south, bb[1]=north, bb[2]=west, bb[3]=east → we swap [1] and [2].
+// Using this helper in every query avoids repeating the same index shuffle and
+// makes it obvious what the four numbers mean.
+const bbStr = bb => `${bbStr(bb)}`;
+
 // ════════════════════════════════════════════════════════════════════════════════
 // POI LAYER DEFINITIONS
 // Each entry describes one layer:
@@ -16,7 +25,7 @@ const LAYER_DEFS = {
         label: 'lyr_plz',
         color: '#4ecdc4',
         buildQuery: (bb) => `[out:json][timeout:90];
-relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["boundary"="postal_code"];
+relation(${bbStr(bb)})["boundary"="postal_code"];
 out geom;`,
         render: renderPLZ,
     },
@@ -27,9 +36,9 @@ out geom;`,
         icon:  '🏥',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="hospital"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="hospital"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="hospital"];
+  node(${bbStr(bb)})["amenity"="hospital"];
+  way(${bbStr(bb)})["amenity"="hospital"];
+  relation(${bbStr(bb)})["amenity"="hospital"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -41,8 +50,8 @@ out center bb tags;`,
         icon:  '🚉',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["railway"~"^(station|halt|tram_stop)$"];
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="bus_station"];
+  node(${bbStr(bb)})["railway"~"^(station|halt|tram_stop)$"];
+  node(${bbStr(bb)})["amenity"="bus_station"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -54,10 +63,10 @@ out center bb tags;`,
         icon:  '⭐',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"~"^(attraction|museum|monument|artwork|viewpoint|gallery)$"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"~"^(attraction|museum|monument)$"];
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["historic"~"^(castle|monument|memorial|ruins|building)$"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["historic"~"^(castle|monument)$"];
+  node(${bbStr(bb)})["tourism"~"^(attraction|museum|monument|artwork|viewpoint|gallery)$"];
+  way(${bbStr(bb)})["tourism"~"^(attraction|museum|monument)$"];
+  node(${bbStr(bb)})["historic"~"^(castle|monument|memorial|ruins|building)$"];
+  way(${bbStr(bb)})["historic"~"^(castle|monument)$"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -69,8 +78,8 @@ out center bb tags;`,
         icon:  '🌳',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="park"]["name"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="park"]["name"];
+  way(${bbStr(bb)})["leisure"="park"]["name"];
+  relation(${bbStr(bb)})["leisure"="park"]["name"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -82,8 +91,8 @@ out center bb tags;`,
         icon:  '🛍️',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["shop"="mall"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["shop"="mall"];
+  node(${bbStr(bb)})["shop"="mall"];
+  way(${bbStr(bb)})["shop"="mall"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -95,7 +104,7 @@ out center bb tags;`,
         icon:       '🚌',
         markerOpts: { radius: 5, color: '#000', weight: 1.5 },
         buildQuery: (bb) => `[out:json][timeout:60];
-node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["highway"="bus_stop"];
+node(${bbStr(bb)})["highway"="bus_stop"];
 out;`,
         render: renderPOIs,
     },
@@ -106,8 +115,8 @@ out;`,
         icon:  '🎬',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="cinema"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="cinema"];
+  node(${bbStr(bb)})["amenity"="cinema"];
+  way(${bbStr(bb)})["amenity"="cinema"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -119,9 +128,9 @@ out center bb tags;`,
         icon:  '🦁',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="zoo"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="zoo"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="zoo"];
+  node(${bbStr(bb)})["tourism"="zoo"];
+  way(${bbStr(bb)})["tourism"="zoo"];
+  relation(${bbStr(bb)})["tourism"="zoo"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -133,9 +142,9 @@ out center bb tags;`,
         icon:  '🏛️',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="townhall"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="townhall"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="townhall"];
+  node(${bbStr(bb)})["amenity"="townhall"];
+  way(${bbStr(bb)})["amenity"="townhall"];
+  relation(${bbStr(bb)})["amenity"="townhall"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -146,9 +155,9 @@ out center bb tags;`,
         color: '#38bdf8',
         buildQuery: (bb) => `[out:json][timeout:90];
 (
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["natural"="water"]["name"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["natural"="water"]["name"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["waterway"="riverbank"]["name"];
+  way(${bbStr(bb)})["natural"="water"]["name"];
+  relation(${bbStr(bb)})["natural"="water"]["name"];
+  way(${bbStr(bb)})["waterway"="riverbank"]["name"];
 );
 out geom;`,
         render: renderWater,
@@ -160,9 +169,9 @@ out geom;`,
         icon:  '🐠',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="aquarium"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="aquarium"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["tourism"="aquarium"];
+  node(${bbStr(bb)})["tourism"="aquarium"];
+  way(${bbStr(bb)})["tourism"="aquarium"];
+  relation(${bbStr(bb)})["tourism"="aquarium"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -174,8 +183,8 @@ out center bb tags;`,
         icon:  '📚',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="library"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="library"];
+  node(${bbStr(bb)})["amenity"="library"];
+  way(${bbStr(bb)})["amenity"="library"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -187,8 +196,8 @@ out center bb tags;`,
         icon:  '⛳',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="golf_course"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="golf_course"];
+  way(${bbStr(bb)})["leisure"="golf_course"];
+  relation(${bbStr(bb)})["leisure"="golf_course"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -200,9 +209,9 @@ out center bb tags;`,
         icon:  '🏟️',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="stadium"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="stadium"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="stadium"];
+  node(${bbStr(bb)})["leisure"="stadium"];
+  way(${bbStr(bb)})["leisure"="stadium"];
+  relation(${bbStr(bb)})["leisure"="stadium"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -214,8 +223,8 @@ out center bb tags;`,
         icon:  '🏛️',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="embassy"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="embassy"];
+  node(${bbStr(bb)})["amenity"="embassy"];
+  way(${bbStr(bb)})["amenity"="embassy"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -227,8 +236,8 @@ out center bb tags;`,
         icon:  '🏢',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="consulate"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="consulate"];
+  node(${bbStr(bb)})["amenity"="consulate"];
+  way(${bbStr(bb)})["amenity"="consulate"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -240,10 +249,10 @@ out center bb tags;`,
         icon:  '⛪',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["landuse"="cemetery"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["landuse"="cemetery"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="grave_yard"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="grave_yard"];
+  way(${bbStr(bb)})["landuse"="cemetery"];
+  relation(${bbStr(bb)})["landuse"="cemetery"];
+  way(${bbStr(bb)})["amenity"="grave_yard"];
+  relation(${bbStr(bb)})["amenity"="grave_yard"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -255,10 +264,10 @@ out center bb tags;`,
         icon:  '🏊',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="swimming_pool"]["name"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["leisure"="swimming_pool"]["name"];
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="public_bath"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="public_bath"];
+  node(${bbStr(bb)})["leisure"="swimming_pool"]["name"];
+  way(${bbStr(bb)})["leisure"="swimming_pool"]["name"];
+  node(${bbStr(bb)})["amenity"="public_bath"];
+  way(${bbStr(bb)})["amenity"="public_bath"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -270,8 +279,8 @@ out center bb tags;`,
         icon:  '🚔',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="police"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="police"];
+  node(${bbStr(bb)})["amenity"="police"];
+  way(${bbStr(bb)})["amenity"="police"];
 );
 out center bb tags;`,
         render: renderPOIs,
@@ -283,8 +292,8 @@ out center bb tags;`,
         icon:  '🚒',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="fire_station"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="fire_station"];
+  node(${bbStr(bb)})["amenity"="fire_station"];
+  way(${bbStr(bb)})["amenity"="fire_station"];
 );
 out center bb tags;`,
         render: renderPOIs,
