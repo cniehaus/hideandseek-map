@@ -1,7 +1,7 @@
 # Jet Lag Maps – Hide & Seek
 
 > An interactive map tool for the board game [Jet Lag: The Game – Hide & Seek](https://store.nebula.tv/collections/jetlag/products/hideandseek).
-> Plan your game with live OpenStreetMap data: postal codes, hospitals, train stations, bus lines, and much more – fully printable as A4 PDF.
+> Plan your game with live OpenStreetMap data: city boundaries, postal codes, hospitals, train stations, bus lines, and much more – fully printable as A4 PDF. Includes a colour-blind safe palette.
 
 **[▶ Open the live app](https://cniehaus.github.io/hideandseek-map/)**
 
@@ -12,11 +12,23 @@
 ## Features
 
 ### Map layers
-**17 toggleable layers** – postal codes, hospitals, train & tram stations, bus stops, attractions, parks, shopping centres, cinemas, zoos, town halls, water bodies, aquariums, libraries, golf courses, stadiums, embassies, consulates.
+**22 toggleable layers** across three categories:
+
+| Category | Layers |
+|---|---|
+| City overview | City boundary, Postal codes |
+| Transport | Train & tram stations, Bus stops |
+| Emergency & civic | Hospitals, Police stations, Fire stations, Town halls, Embassies, Consulates |
+| Culture & leisure | Attractions, Cinemas, Zoos, Aquariums, Libraries, Golf courses, Stadiums |
+| Nature & amenity | Parks, Water bodies, Cemeteries, Swimming pools |
+| Commerce | Shopping centres |
 
 Clicking any **bus stop** shows a popup listing every bus line that serves it – fetched live from OpenStreetMap:
 
 ![Bus stop popup showing lines 301, 303, 304, 340](screenshot-buslines.png)
+
+### City boundary layer *(new)*
+Toggle the **Stadtgrenze / City Boundary** layer to draw the administrative outline of the searched city as a thick dashed line with no fill. Useful for quickly checking whether the hider is still inside the game area. The boundary is fetched using the exact OSM relation ID returned by Nominatim, so it matches the city precisely.
 
 ### Bus route lines
 Draw any bus (or tram) line by number directly on the map. Type a line number such as **305** in the *Bus-Linien* section and click *Einzeichnen* – the full route appears as a coloured line. Multiple lines can be shown at once, each with its own colour.
@@ -33,6 +45,14 @@ Click two points (A then B) to get the Haversine distance and compass bearing. T
 
 ### Click-point marker
 Every map click sets a centre point for the radius tool and marks it with a crosshair symbol so you always know where the last click landed.
+
+### Colour-blind safe palette *(new)*
+The map style popover (🗺 button) now includes a **Colour palette** toggle with two options:
+
+- **Default** – the original vivid colours
+- **Colour-blind safe** – based on the [Okabe-Ito](https://jfly.uni-koeln.de/color/) and [Paul Tol](https://personal.sron.nl/~pault/) palettes, designed to be distinguishable under deuteranopia and protanopia (red-green colour blindness). Replaces pure red/green pairs with vermillion/teal equivalents throughout all layers, postal-code zones, interval rings, and bus route lines.
+
+The choice is persisted in `localStorage` and switching palettes instantly re-colours any active layers without re-fetching data.
 
 ### Map styles & printing
 6 map styles (OSM Standard, Positron, Dark, Voyager, Satellite, ÖPNV). Print-ready A4 PDF via the browser print dialog.
@@ -69,20 +89,23 @@ hideandseek-map/
 │   └── en.js           # English translations (LANG_EN object)
 │
 └── js/
-    ├── config.js       # Constants: tile URLs, colours, Overpass endpoints
+    ├── config.js       # Constants: tile URLs, COLOR_THEMES (default + colorblind), Overpass endpoints
     ├── i18n.js         # t(), tf(), switchLang(), applyI18n()
     ├── map.js          # Leaflet map init + setTileLayer()
     ├── overpass.js     # overpassFetch() – POST with endpoint fallback
-    ├── renderers.js    # renderPLZ(), renderPOIs(), renderWater()
-    ├── layers.js       # LAYER_DEFS (all POI filters) + layer management
-    ├── city.js         # searchCity() + km/mi unit helpers
+    ├── renderers.js    # renderPLZ(), renderPOIs(), renderWater(), renderCityBoundary()
+    ├── layers.js       # LAYER_DEFS (all POI filters) + layer management + recolorActiveLayers()
+    ├── city.js         # searchCity() + km/mi unit helpers (stores OSM relation ID)
     ├── busroutes.js    # Bus/tram route line tool
     ├── radius.js       # Radius / interval circle tool (draggable)
     ├── measure.js      # Distance & bearing tool + map click handler (draggable)
-    └── ui.js           # Sidebar, print, error popup, style FAB
+    ├── permalink.js    # Shareable URL state
+    └── ui.js           # Sidebar, print, error popup, style FAB, setColorMode()
 ```
 
 The most important file for contributors is **`js/layers.js`** – it contains the complete definition of every map layer (Overpass query + colour + icon + renderer reference) in one place.
+
+Colour definitions live in **`js/config.js`** inside `COLOR_THEMES`. Both `default` and `colorblind` objects follow the same structure (`plz`, `interval`, `busRoute`, and `layers` sub-keys), so adding a third theme is straightforward.
 
 ---
 
@@ -148,6 +171,7 @@ That's it – no other code changes needed.
 - **Improved Overpass queries** – the existing queries are functional but not exhaustive; PRs that improve recall or reduce noise are welcome
 - **Mobile UX** – layout and touch behaviour on small screens can always improve
 - **Accessibility** – ARIA labels, keyboard navigation, colour-contrast improvements
+- **Additional colour themes** – add a third entry to `COLOR_THEMES` in `js/config.js` (e.g. a high-contrast theme) and a button in the style popover; the rest of the system picks it up automatically
 
 ### Sending a Pull Request
 
