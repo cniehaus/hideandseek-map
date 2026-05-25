@@ -46,6 +46,13 @@ function useManualCoords() {
     map.setView(clickedPoint, Math.max(map.getZoom(), 13));
 }
 
+// ── Update the lat/lng label in a radius sidebar entry ────────────────────────
+function updateRadiusCoordLabel(id, latlng) {
+    // Targets the small coordinate line inside the sidebar entry for radius #id
+    const el = document.querySelector('#ri-' + id + ' .ri-lat');
+    if (el) el.textContent = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
+}
+
 // ── Drag handle for radius centre ────────────────────────────────────────────
 function makeDragHandle(latlng, color) {
     return L.marker(latlng, {
@@ -132,8 +139,7 @@ function drawRadius() {
             const c = e.target.getLatLng();
             circle.setLatLng(c);
             label.setLatLng(radiusLabelPos(c, km));
-            const el = document.querySelector('#ri-' + id + ' .ri-lat');
-            if (el) el.textContent = `${c.lat.toFixed(5)}, ${c.lng.toFixed(5)}`;
+            updateRadiusCoordLabel(id, c);
         });
 
         radiusItems[id] = { layers: [circle, label, handle], outerCircle: circle };
@@ -171,8 +177,7 @@ function drawRadius() {
                 circle.setLatLng(c);
                 label.setLatLng(radiusLabelPos(c, km));
             });
-            const el = document.querySelector('#ri-' + id + ' .ri-lat');
-            if (el) el.textContent = `${c.lat.toFixed(5)}, ${c.lng.toFixed(5)}`;
+            updateRadiusCoordLabel(id, c);
         });
         layers.push(handle);
 
