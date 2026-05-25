@@ -5,6 +5,8 @@ let adminA              = null;   // { latlng, address } | null
 let adminB              = null;
 let adminMarkers        = [];
 let adminBoundaryLayers = [];
+let adminHighlightA     = null;   // level-1 highlight polygon for point A
+let adminHighlightB     = null;   // level-1 highlight polygon for point B
 
 // Nominatim address fields to check, in priority order, for each of the 4 game levels
 const ADMIN_LEVEL_FIELDS = [
@@ -46,6 +48,36 @@ function extractAdminLevel(address, fields) {
         if (address[f]) return address[f];
     }
     return null;
+}
+
+// Fetch + draw the level-1 (suburb/neighbourhood, zoom=14) highlight polygon
+async function fetchAndDrawHighlight(latlng, color) {
+    try {
+        const res = await fetch(
+            'https://nominatim.openstreetmap.org/reverse?' + new URLSearchParams({
+                lat: latlng.lat, lon: latlng.lng,
+                format: 'json', polygon_geojson: 1, zoom: 14,
+            })
+        );
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (!data.geojson) return null;
+
+        return L.geoJSON(data.geojson, {
+            style: {
+                color,
+                weight:      3.5,
+                opacity:     1,
+                fillColor:   color,
+                fillOpacity: 0.38,
+            },
+        }).addTo(map);
+    } catch (_) { return null; }
+}
+
+function clearHighlights() {
+    if (adminHighlightA) { map.removeLayer(adminHighlightA); adminHighlightA = null; }
+    if (adminHighlightB) { map.removeLayer(adminHighlightB); adminHighlightB = null; }
 }
 
 // Draw boundaries at zoom levels 10 / 8 / 5 around the given point
@@ -137,6 +169,7 @@ function toggleAdminCheck() {
     adminB    = null;
     clearAdminMarkers();
     clearBoundaryLayers();
+    clearHighlights();
     document.getElementById('adminResult').innerHTML = '';
     document.getElementById('adminBtn').textContent = t('btn_admin_stop');
     document.getElementById('adminBtn').classList.add('meas-active');
@@ -149,6 +182,7 @@ function clearAdminCheck() {
     adminB    = null;
     clearAdminMarkers();
     clearBoundaryLayers();
+    clearHighlights();
     document.getElementById('adminResult').innerHTML = '';
     document.getElementById('adminBtn').textContent  = t('btn_admin_start');
     document.getElementById('adminBtn').classList.remove('meas-active');
@@ -177,7 +211,8 @@ function adminHandleClick(e) {
             .then(d   => { adminA.address = d.address; renderAdminResult(); })
             .catch(err => setStatus(tf('status_err', err.message), 'error'));
 
-        // Boundary polygons for levels 2 / 3 / 4
+        // Level-1 highlight (orange) + background boundaries for levels 2/3/4
+        fetchAndDrawHighlight(latlng, '#f97316').then(l => { adminHighlightA = l; });
         fetchAndDrawBoundaries(latlng);
         return true;
     }
@@ -194,6 +229,9 @@ function adminHandleClick(e) {
         reverseGeocode(latlng)
             .then(d   => { adminB.address = d.address; renderAdminResult(); })
             .catch(err => setStatus(tf('status_err', err.message), 'error'));
+
+        // Level-1 highlight (blue) for point B
+        fetchAndDrawHighlight(latlng, '#38bdf8').then(l => { adminHighlightB = l; });
         return true;
     }
 
