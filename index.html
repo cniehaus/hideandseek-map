@@ -268,8 +268,9 @@
 
         <!-- Bus Routes -->
         <div class="section">
-            <div class="section-title" data-i18n="sec_busroutes">Bus-Linien</div>
-            <div style="font-size:11px;color:#484f58;margin-bottom:8px" data-i18n="busroute_hint">
+            <details class="layers-details">
+            <summary class="section-title" data-i18n="sec_busroutes">Bus-Linien</summary>
+            <div style="font-size:11px;color:#484f58;margin:6px 0 8px" data-i18n="busroute_hint">
                 Liniennummer eingeben (z.B. 305)
             </div>
             <div class="row">
@@ -280,11 +281,13 @@
             <div style="margin-top:8px">
                 <button class="ghost" style="width:100%" onclick="clearAllBusRoutes()" data-i18n="btn_clear_routes">Alle Linien entfernen</button>
             </div>
+            </details>
         </div>
 
         <!-- Radius Tool -->
         <div class="section">
-            <div class="section-title" data-i18n="sec_radius">Radius-Tool</div>
+            <details class="layers-details">
+            <summary class="section-title" data-i18n="sec_radius">Radius-Tool</summary>
 
             <div class="coord-display" id="clickCoords">
                 ↖ Auf die Karte klicken, um Mittelpunkt zu setzen
@@ -328,28 +331,33 @@
             <div style="margin-top:8px">
                 <button class="ghost" style="width:100%" onclick="clearAllRadii()" data-i18n="btn_clear_radii">Alle Radien löschen</button>
             </div>
+            </details>
         </div>
 
         <!-- Admin Division Checker -->
         <div class="section">
-            <div class="section-title" data-i18n="sec_admin">Admin-Division</div>
-            <div style="font-size:11px;color:#484f58;margin-bottom:8px" data-i18n="admin_hint">
+            <details class="layers-details">
+            <summary class="section-title" data-i18n="sec_admin">Admin-Division</summary>
+            <div style="font-size:11px;color:#484f58;margin:6px 0 8px" data-i18n="admin_hint">
                 Zwei Punkte setzen – zeigt ob sie in denselben Admin-Ebenen liegen.
             </div>
             <button id="adminBtn" style="width:100%;margin-bottom:4px" onclick="toggleAdminCheck()" data-i18n="btn_admin_start">Checker starten</button>
             <div id="adminResult"></div>
             <button class="ghost" style="width:100%;margin-top:6px" onclick="clearAdminCheck()" data-i18n="btn_admin_clear">Ergebnis löschen</button>
+            </details>
         </div>
 
         <!-- Distance & Direction -->
         <div class="section">
-            <div class="section-title" data-i18n="sec_measure">Distanz &amp; Richtung</div>
-            <div style="font-size:11px;color:#484f58;margin-bottom:8px" data-i18n="measure_hint">
+            <details class="layers-details">
+            <summary class="section-title" data-i18n="sec_measure">Distanz &amp; Richtung</summary>
+            <div style="font-size:11px;color:#484f58;margin:6px 0 8px" data-i18n="measure_hint">
                 Zwei Punkte auf der Karte setzen – A dann B.
             </div>
             <button id="measBtn" style="width:100%" onclick="toggleMeasure()" data-i18n="btn_measure_start">Messen starten</button>
             <div class="meas-result" id="measResult"></div>
             <button class="ghost" style="width:100%;margin-top:6px" onclick="clearMeasure()" data-i18n="btn_clear_meas">Messung löschen</button>
+            </details>
         </div>
 
         <div id="status">Bereit</div>
