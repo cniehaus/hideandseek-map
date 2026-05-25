@@ -32,15 +32,9 @@ function applyI18n() {
     document.getElementById('btnDE').className = _activeLang === 'de' ? '' : 'ghost';
     document.getElementById('btnEN').className = _activeLang === 'en' ? '' : 'ghost';
 
-    const styleFab = document.getElementById('styleFab');
-    styleFab.title = t('fab_style_title');
-    styleFab.setAttribute('aria-label', t('fab_style_title'));
-
-    const printFab = document.getElementById('printFab');
-    printFab.title = t('fab_print_title');
-    printFab.setAttribute('aria-label', t('fab_print_title'));
-
-    const permalinkFab = document.getElementById('permalinkFab');
-    permalinkFab.title = t('fab_permalink_title');
-    permalinkFab.setAttribute('aria-label', t('fab_permalink_title'));
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const text = t(el.dataset.i18nTitle);
+        el.title = text;
+        el.setAttribute('aria-label', text);
+    });
 }

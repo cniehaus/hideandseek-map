@@ -72,7 +72,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px">
                 <div>
                     <h1 data-i18n="app_title">Jet Lag Maps</h1>
-                    <small data-i18n="app_subtitle">Hide &amp; Seek Kartentools</small>
+                    <small data-i18n="app_subtitle">Hide &amp; Seek Map Tools</small>
                 </div>
                 <div style="display:flex;gap:3px;flex-shrink:0;align-items:center">
                     <button id="unitKm" style="font-size:11px;padding:3px 8px" onclick="setUnits('metric')" data-i18n="unit_km">km</button>
@@ -86,10 +86,10 @@
 
         <!-- City -->
         <div class="section">
-            <div class="section-title" data-i18n="sec_city">Stadt</div>
+            <div class="section-title" data-i18n="sec_city">City</div>
             <div class="row">
                 <input type="text" id="cityInput" value="Oldenburg" placeholder="z.B. Oldenburg, Bremen …">
-                <button onclick="searchCity()" data-i18n="btn_search">Suchen</button>
+                <button onclick="searchCity()" data-i18n="btn_search">Search</button>
             </div>
             <div id="cityHint" style="font-size:11px;color:#8b949e;margin-top:2px"></div>
         </div>
@@ -97,61 +97,61 @@
         <!-- Layers -->
         <div class="section">
             <details open class="layers-details">
-            <summary class="section-title" data-i18n="sec_layers">Layer</summary>
+            <summary class="section-title" data-i18n="sec_layers">Layers</summary>
 
             <label class="layer-row" for="lyr-hospitals">
                 <input type="checkbox" id="lyr-hospitals" onchange="toggleLayer('hospitals', this.checked)">
                 <div class="dot" style="background:#f85149"></div>
-                <span class="layer-name" data-i18n="lyr_hospitals">Krankenhäuser</span>
+                <span class="layer-name" data-i18n="lyr_hospitals">Hospitals</span>
                 <span class="layer-count" id="cnt-hospitals"></span>
             </label>
 
             <label class="layer-row" for="lyr-stations">
                 <input type="checkbox" id="lyr-stations" onchange="toggleLayer('stations', this.checked)">
                 <div class="dot" style="background:#58a6ff"></div>
-                <span class="layer-name" data-i18n="lyr_stations">Bahnhöfe &amp; Haltestellen</span>
+                <span class="layer-name" data-i18n="lyr_stations">Train &amp; Tram Stations</span>
                 <span class="layer-count" id="cnt-stations"></span>
             </label>
 
             <label class="layer-row" for="lyr-attractions">
                 <input type="checkbox" id="lyr-attractions" onchange="toggleLayer('attractions', this.checked)">
                 <div class="dot" style="background:#ffa657"></div>
-                <span class="layer-name" data-i18n="lyr_attractions">Sehenswürdigkeiten</span>
+                <span class="layer-name" data-i18n="lyr_attractions">Attractions</span>
                 <span class="layer-count" id="cnt-attractions"></span>
             </label>
 
             <label class="layer-row" for="lyr-parks">
                 <input type="checkbox" id="lyr-parks" onchange="toggleLayer('parks', this.checked)">
                 <div class="dot" style="background:#3fb950"></div>
-                <span class="layer-name" data-i18n="lyr_parks">Stadtparks</span>
+                <span class="layer-name" data-i18n="lyr_parks">City Parks</span>
                 <span class="layer-count" id="cnt-parks"></span>
             </label>
 
             <label class="layer-row" for="lyr-greenspaces">
                 <input type="checkbox" id="lyr-greenspaces" onchange="toggleLayer('greenspaces', this.checked)">
                 <div class="dot" style="background:#86efac"></div>
-                <span class="layer-name" data-i18n="lyr_greenspaces">Grünflächen</span>
+                <span class="layer-name" data-i18n="lyr_greenspaces">Green Spaces</span>
                 <span class="layer-count" id="cnt-greenspaces"></span>
             </label>
 
             <label class="layer-row" for="lyr-shopping">
                 <input type="checkbox" id="lyr-shopping" onchange="toggleLayer('shopping', this.checked)">
                 <div class="dot" style="background:#d2a8ff"></div>
-                <span class="layer-name" data-i18n="lyr_shopping">Einkaufszentren</span>
+                <span class="layer-name" data-i18n="lyr_shopping">Shopping Centres</span>
                 <span class="layer-count" id="cnt-shopping"></span>
             </label>
 
             <label class="layer-row" for="lyr-busstops">
                 <input type="checkbox" id="lyr-busstops" onchange="toggleLayer('busstops', this.checked)">
                 <div class="dot" style="background:#facc15"></div>
-                <span class="layer-name" data-i18n="lyr_busstops">Bushaltestellen</span>
+                <span class="layer-name" data-i18n="lyr_busstops">Bus Stops</span>
                 <span class="layer-count" id="cnt-busstops"></span>
             </label>
 
             <label class="layer-row" for="lyr-cinema">
                 <input type="checkbox" id="lyr-cinema" onchange="toggleLayer('cinema', this.checked)">
                 <div class="dot" style="background:#e879f9"></div>
-                <span class="layer-name" data-i18n="lyr_cinema">Kinos</span>
+                <span class="layer-name" data-i18n="lyr_cinema">Cinemas</span>
                 <span class="layer-count" id="cnt-cinema"></span>
             </label>
 
@@ -165,103 +165,103 @@
             <label class="layer-row" for="lyr-townhall">
                 <input type="checkbox" id="lyr-townhall" onchange="toggleLayer('townhall', this.checked)">
                 <div class="dot" style="background:#fb923c"></div>
-                <span class="layer-name" data-i18n="lyr_townhall">Rathäuser</span>
+                <span class="layer-name" data-i18n="lyr_townhall">Town Halls</span>
                 <span class="layer-count" id="cnt-townhall"></span>
             </label>
 
             <label class="layer-row" for="lyr-water">
                 <input type="checkbox" id="lyr-water" onchange="toggleLayer('water', this.checked)">
                 <div class="dot" style="background:#38bdf8;border:1px solid #0ea5e9"></div>
-                <span class="layer-name" data-i18n="lyr_water">Wasserflächen</span>
+                <span class="layer-name" data-i18n="lyr_water">Water Bodies</span>
                 <span class="layer-count" id="cnt-water"></span>
             </label>
 
             <label class="layer-row" for="lyr-aquarium">
                 <input type="checkbox" id="lyr-aquarium" onchange="toggleLayer('aquarium', this.checked)">
                 <div class="dot" style="background:#06b6d4"></div>
-                <span class="layer-name" data-i18n="lyr_aquarium">Aquarien</span>
+                <span class="layer-name" data-i18n="lyr_aquarium">Aquariums</span>
                 <span class="layer-count" id="cnt-aquarium"></span>
             </label>
 
             <label class="layer-row" for="lyr-library">
                 <input type="checkbox" id="lyr-library" onchange="toggleLayer('library', this.checked)">
                 <div class="dot" style="background:#a78bfa"></div>
-                <span class="layer-name" data-i18n="lyr_library">Büchereien</span>
+                <span class="layer-name" data-i18n="lyr_library">Libraries</span>
                 <span class="layer-count" id="cnt-library"></span>
             </label>
 
             <label class="layer-row" for="lyr-golf">
                 <input type="checkbox" id="lyr-golf" onchange="toggleLayer('golf', this.checked)">
                 <div class="dot" style="background:#84cc16"></div>
-                <span class="layer-name" data-i18n="lyr_golf">Golf-Plätze</span>
+                <span class="layer-name" data-i18n="lyr_golf">Golf Courses</span>
                 <span class="layer-count" id="cnt-golf"></span>
             </label>
 
             <label class="layer-row" for="lyr-stadium">
                 <input type="checkbox" id="lyr-stadium" onchange="toggleLayer('stadium', this.checked)">
                 <div class="dot" style="background:#f43f5e"></div>
-                <span class="layer-name" data-i18n="lyr_stadium">Stadien</span>
+                <span class="layer-name" data-i18n="lyr_stadium">Stadiums</span>
                 <span class="layer-count" id="cnt-stadium"></span>
             </label>
 
             <label class="layer-row" for="lyr-embassy">
                 <input type="checkbox" id="lyr-embassy" onchange="toggleLayer('embassy', this.checked)">
                 <div class="dot" style="background:#f59e0b"></div>
-                <span class="layer-name" data-i18n="lyr_embassy">Botschaften</span>
+                <span class="layer-name" data-i18n="lyr_embassy">Embassies</span>
                 <span class="layer-count" id="cnt-embassy"></span>
             </label>
 
             <label class="layer-row" for="lyr-consulate">
                 <input type="checkbox" id="lyr-consulate" onchange="toggleLayer('consulate', this.checked)">
                 <div class="dot" style="background:#d97706"></div>
-                <span class="layer-name" data-i18n="lyr_consulate">Konsulate</span>
+                <span class="layer-name" data-i18n="lyr_consulate">Consulates</span>
                 <span class="layer-count" id="cnt-consulate"></span>
             </label>
 
             <label class="layer-row" for="lyr-cemetery">
                 <input type="checkbox" id="lyr-cemetery" onchange="toggleLayer('cemetery', this.checked)">
                 <div class="dot" style="background:#6b7280"></div>
-                <span class="layer-name" data-i18n="lyr_cemetery">Friedhöfe</span>
+                <span class="layer-name" data-i18n="lyr_cemetery">Cemeteries</span>
                 <span class="layer-count" id="cnt-cemetery"></span>
             </label>
 
             <label class="layer-row" for="lyr-swimmingpool">
                 <input type="checkbox" id="lyr-swimmingpool" onchange="toggleLayer('swimmingpool', this.checked)">
                 <div class="dot" style="background:#22d3ee"></div>
-                <span class="layer-name" data-i18n="lyr_swimmingpool">Schwimmbäder</span>
+                <span class="layer-name" data-i18n="lyr_swimmingpool">Swimming Pools</span>
                 <span class="layer-count" id="cnt-swimmingpool"></span>
             </label>
 
             <label class="layer-row" for="lyr-police">
                 <input type="checkbox" id="lyr-police" onchange="toggleLayer('police', this.checked)">
                 <div class="dot" style="background:#6366f1"></div>
-                <span class="layer-name" data-i18n="lyr_police">Polizeistationen</span>
+                <span class="layer-name" data-i18n="lyr_police">Police Stations</span>
                 <span class="layer-count" id="cnt-police"></span>
             </label>
 
             <label class="layer-row" for="lyr-firestation">
                 <input type="checkbox" id="lyr-firestation" onchange="toggleLayer('firestation', this.checked)">
                 <div class="dot" style="background:#ef4444"></div>
-                <span class="layer-name" data-i18n="lyr_firestation">Feuerwachen</span>
+                <span class="layer-name" data-i18n="lyr_firestation">Fire Stations</span>
                 <span class="layer-count" id="cnt-firestation"></span>
             </label>
 
             <label class="layer-row" for="lyr-airports">
                 <input type="checkbox" id="lyr-airports" onchange="toggleLayer('airports', this.checked)">
                 <div class="dot" style="background:#60a5fa"></div>
-                <span class="layer-name" data-i18n="lyr_airports">Flughäfen</span>
+                <span class="layer-name" data-i18n="lyr_airports">Airports</span>
                 <span class="layer-count" id="cnt-airports"></span>
             </label>
 
             <label class="layer-row" for="lyr-airfields">
                 <input type="checkbox" id="lyr-airfields" onchange="toggleLayer('airfields', this.checked)">
                 <div class="dot" style="background:#94a3b8"></div>
-                <span class="layer-name" data-i18n="lyr_airfields">Flugplätze</span>
+                <span class="layer-name" data-i18n="lyr_airfields">Airfields</span>
                 <span class="layer-count" id="cnt-airfields"></span>
             </label>
 
             <div style="margin-top:10px">
-                <button class="ghost" style="width:100%" onclick="clearAllLayers()" data-i18n="btn_clear_layers">Alle Layer entfernen</button>
+                <button class="ghost" style="width:100%" onclick="clearAllLayers()" data-i18n="btn_clear_layers">Remove all layers</button>
             </div>
             </details>
         </div>
@@ -269,17 +269,17 @@
         <!-- Bus Routes -->
         <div class="section">
             <details class="layers-details">
-            <summary class="section-title" data-i18n="sec_busroutes">Bus-Linien</summary>
+            <summary class="section-title" data-i18n="sec_busroutes">Bus Routes</summary>
             <div style="font-size:11px;color:#484f58;margin:6px 0 8px" data-i18n="busroute_hint">
-                Liniennummer eingeben (z.B. 305)
+                Enter line number (e.g. 305)
             </div>
             <div class="row">
                 <input type="text" id="busRouteInput" placeholder="305" style="flex:1;max-width:90px">
-                <button onclick="addBusRoute()" data-i18n="btn_add_route">Einzeichnen</button>
+                <button onclick="addBusRoute()" data-i18n="btn_add_route">Draw</button>
             </div>
             <div id="busRouteList"></div>
             <div style="margin-top:8px">
-                <button class="ghost" style="width:100%" onclick="clearAllBusRoutes()" data-i18n="btn_clear_routes">Alle Linien entfernen</button>
+                <button class="ghost" style="width:100%" onclick="clearAllBusRoutes()" data-i18n="btn_clear_routes">Remove all routes</button>
             </div>
             </details>
         </div>
@@ -287,15 +287,15 @@
         <!-- Radius Tool -->
         <div class="section">
             <details class="layers-details">
-            <summary class="section-title" data-i18n="sec_radius">Radius-Tool</summary>
+            <summary class="section-title" data-i18n="sec_radius">Radius Tool</summary>
 
             <div class="coord-display" id="clickCoords">
                 ↖ Auf die Karte klicken, um Mittelpunkt zu setzen
             </div>
 
             <div style="display:flex;gap:4px;margin-bottom:8px">
-                <button id="tabSingle" style="flex:1;font-size:12px" onclick="setRadiusMode('single')" data-i18n="tab_single">Einzeln</button>
-                <button id="tabInterval" class="ghost" style="flex:1;font-size:12px" onclick="setRadiusMode('interval')" data-i18n="tab_interval">Intervall</button>
+                <button id="tabSingle" style="flex:1;font-size:12px" onclick="setRadiusMode('single')" data-i18n="tab_single">Single</button>
+                <button id="tabInterval" class="ghost" style="flex:1;font-size:12px" onclick="setRadiusMode('interval')" data-i18n="tab_interval">Interval</button>
             </div>
 
             <!-- Single mode -->
@@ -303,7 +303,7 @@
                 <div class="row">
                     <input type="number" id="radiusKm" value="2" min="0.1" max="100" step="0.1" placeholder="km" style="max-width:80px">
                     <span id="unitLabelRadius" style="line-height:31px;color:#8b949e;font-size:12px">km Radius</span>
-                    <button onclick="drawRadius()" style="margin-left:auto" data-i18n="btn_draw">Zeichnen</button>
+                    <button onclick="drawRadius()" style="margin-left:auto" data-i18n="btn_draw">Draw</button>
                 </div>
             </div>
 
@@ -315,21 +315,21 @@
                     <input type="number" id="intervalCount" value="5" min="2" max="10" step="1" style="max-width:50px">
                     <span data-i18n="lbl_rings" style="color:#8b949e;font-size:12px">Ringe</span>
                 </div>
-                <button style="width:100%;margin-top:4px" onclick="drawRadius()" data-i18n="btn_draw">Zeichnen</button>
+                <button style="width:100%;margin-top:4px" onclick="drawRadius()" data-i18n="btn_draw">Draw</button>
             </div>
 
             <div style="font-size:11px;color:#484f58;margin:8px 0 4px" data-i18n="manual_hint">
-                Oder Koordinaten manuell eingeben:
+                Or enter coordinates manually:
             </div>
             <div class="row">
                 <input type="text" id="manualLat" placeholder="Breite z.B. 53.1435">
                 <input type="text" id="manualLng" placeholder="Länge z.B. 8.2146">
             </div>
-            <button class="ghost" style="width:100%;margin-bottom:4px" onclick="useManualCoords()" data-i18n="btn_use_coords">Koordinaten übernehmen</button>
+            <button class="ghost" style="width:100%;margin-bottom:4px" onclick="useManualCoords()" data-i18n="btn_use_coords">Use coordinates</button>
 
             <div id="radiusList"></div>
             <div style="margin-top:8px">
-                <button class="ghost" style="width:100%" onclick="clearAllRadii()" data-i18n="btn_clear_radii">Alle Radien löschen</button>
+                <button class="ghost" style="width:100%" onclick="clearAllRadii()" data-i18n="btn_clear_radii">Remove all radii</button>
             </div>
             </details>
         </div>
@@ -337,26 +337,26 @@
         <!-- Admin Division Checker -->
         <div class="section">
             <details class="layers-details">
-            <summary class="section-title" data-i18n="sec_admin">Admin-Division</summary>
+            <summary class="section-title" data-i18n="sec_admin">Admin Division</summary>
             <div style="font-size:11px;color:#484f58;margin:6px 0 8px" data-i18n="admin_hint">
-                Zwei Punkte setzen – zeigt ob sie in denselben Admin-Ebenen liegen.
+                Set two points on the map to see if they share the same admin levels.
             </div>
-            <button id="adminBtn" style="width:100%;margin-bottom:4px" onclick="toggleAdminCheck()" data-i18n="btn_admin_start">Checker starten</button>
+            <button id="adminBtn" style="width:100%;margin-bottom:4px" onclick="toggleAdminCheck()" data-i18n="btn_admin_start">Start checker</button>
             <div id="adminResult"></div>
-            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearAdminCheck()" data-i18n="btn_admin_clear">Ergebnis löschen</button>
+            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearAdminCheck()" data-i18n="btn_admin_clear">Clear result</button>
             </details>
         </div>
 
         <!-- Distance & Direction -->
         <div class="section">
             <details class="layers-details">
-            <summary class="section-title" data-i18n="sec_measure">Distanz &amp; Richtung</summary>
+            <summary class="section-title" data-i18n="sec_measure">Distance &amp; Direction</summary>
             <div style="font-size:11px;color:#484f58;margin:6px 0 8px" data-i18n="measure_hint">
-                Zwei Punkte auf der Karte setzen – A dann B.
+                Click two points on the map – A then B.
             </div>
-            <button id="measBtn" style="width:100%" onclick="toggleMeasure()" data-i18n="btn_measure_start">Messen starten</button>
+            <button id="measBtn" style="width:100%" onclick="toggleMeasure()" data-i18n="btn_measure_start">Start measuring</button>
             <div class="meas-result" id="measResult"></div>
-            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearMeasure()" data-i18n="btn_clear_meas">Messung löschen</button>
+            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearMeasure()" data-i18n="btn_clear_meas">Clear measurement</button>
             </details>
         </div>
 
@@ -367,56 +367,56 @@
     <div id="map"></div>
 
     <!-- ════════ BOUNDARY FAB ════════ -->
-    <button id="boundaryFab" onclick="toggleBoundaryPopover()" data-i18n-title="fab_boundary_title" title="Gebiete &amp; Admin-Ebenen" aria-label="Gebiete &amp; Admin-Ebenen">🗂</button>
+    <button id="boundaryFab" onclick="toggleBoundaryPopover()" data-i18n-title="fab_boundary_title" title="Zones &amp; Admin Levels" aria-label="Zones &amp; Admin Levels">🗂</button>
 
     <div id="boundaryPopover">
-        <div class="pp-label" data-i18n="bnd_zones">Gebiete</div>
+        <div class="pp-label" data-i18n="bnd_zones">Zones</div>
         <button class="bnd-opt" id="bnd-plz" onclick="toggleBoundaryLayer('plz')">
             <span class="bnd-dot" style="background:#4ecdc4;border:1px solid #2aa8a8"></span>
-            <span data-i18n="lyr_plz">Postleitzahlen</span>
+            <span data-i18n="lyr_plz">Postal Codes</span>
         </button>
         <div class="pp-sep"></div>
-        <div class="pp-label" data-i18n="bnd_admin">Admin-Ebenen</div>
+        <div class="pp-label" data-i18n="bnd_admin">Admin Levels</div>
         <button class="bnd-opt" id="bnd-admin1" onclick="toggleBoundaryLayer('admin1')">
             <span class="bnd-dot" style="background:#facc15"></span>
-            <span data-i18n="lyr_admin1">1. Ebene (Ortsteil)</span>
+            <span data-i18n="lyr_admin1">Level 1 (Suburb)</span>
         </button>
         <button class="bnd-opt" id="bnd-admin2" onclick="toggleBoundaryLayer('admin2')">
             <span class="bnd-dot" style="background:#f0883e"></span>
-            <span data-i18n="lyr_admin2">2. Ebene (Stadt)</span>
+            <span data-i18n="lyr_admin2">Level 2 (City)</span>
         </button>
         <button class="bnd-opt" id="bnd-admin3" onclick="toggleBoundaryLayer('admin3')">
             <span class="bnd-dot" style="background:#58a6ff"></span>
-            <span data-i18n="lyr_admin3">3. Ebene (Kreis)</span>
+            <span data-i18n="lyr_admin3">Level 3 (County)</span>
         </button>
         <button class="bnd-opt" id="bnd-admin4" onclick="toggleBoundaryLayer('admin4')">
             <span class="bnd-dot" style="background:#d2a8ff"></span>
-            <span data-i18n="lyr_admin4">4. Ebene (Bundesland)</span>
+            <span data-i18n="lyr_admin4">Level 4 (State)</span>
         </button>
     </div>
 
     <!-- ════════ MAP STYLE FAB ════════ -->
-    <button id="styleFab" onclick="toggleStylePopover()" title="Kartenstil wählen" aria-label="Kartenstil wählen">🗺</button>
+    <button id="styleFab" onclick="toggleStylePopover()" data-i18n-title="fab_style_title" title="Choose map style" aria-label="Choose map style">🗺</button>
 
     <div id="stylePopover">
-        <div class="pp-label" data-i18n="style_label">Kartenstil</div>
+        <div class="pp-label" data-i18n="style_label">Map style</div>
         <button class="style-opt active" data-tile="osm"      onclick="selectStyle(this,'osm')"      data-i18n="style_osm">OSM Standard</button>
-        <button class="style-opt"        data-tile="positron"  onclick="selectStyle(this,'positron')" data-i18n="style_light">☀️ Hell (Positron)</button>
-        <button class="style-opt"        data-tile="dark"      onclick="selectStyle(this,'dark')"     data-i18n="style_dark">🌑 Dunkel</button>
+        <button class="style-opt"        data-tile="positron"  onclick="selectStyle(this,'positron')" data-i18n="style_light">☀️ Light (Positron)</button>
+        <button class="style-opt"        data-tile="dark"      onclick="selectStyle(this,'dark')"     data-i18n="style_dark">🌑 Dark</button>
         <button class="style-opt"        data-tile="voyager"   onclick="selectStyle(this,'voyager')"  data-i18n="style_voyager">🧭 Voyager</button>
-        <button class="style-opt"        data-tile="satellite" onclick="selectStyle(this,'satellite')" data-i18n="style_satellite">🛰 Satellit</button>
-        <button class="style-opt"        data-tile="opnv"      onclick="selectStyle(this,'opnv')"     data-i18n="style_opnv">🚌 ÖPNV-Karte</button>
+        <button class="style-opt"        data-tile="satellite" onclick="selectStyle(this,'satellite')" data-i18n="style_satellite">🛰 Satellite</button>
+        <button class="style-opt"        data-tile="opnv"      onclick="selectStyle(this,'opnv')"     data-i18n="style_opnv">🚌 Public Transport</button>
         <div class="pp-sep"></div>
-        <div class="pp-label" data-i18n="color_mode_label">Farbpalette</div>
-        <button class="style-opt color-mode-btn" data-mode="default"    onclick="setColorMode('default')"    data-i18n="color_mode_default">Standard</button>
-        <button class="style-opt color-mode-btn" data-mode="colorblind" onclick="setColorMode('colorblind')" data-i18n="color_mode_cb">Farbenblind-sicher</button>
+        <div class="pp-label" data-i18n="color_mode_label">Colour palette</div>
+        <button class="style-opt color-mode-btn" data-mode="default"    onclick="setColorMode('default')"    data-i18n="color_mode_default">Default</button>
+        <button class="style-opt color-mode-btn" data-mode="colorblind" onclick="setColorMode('colorblind')" data-i18n="color_mode_cb">Colour-blind safe</button>
     </div>
 
     <!-- ════════ PRINT FAB ════════ -->
-    <button id="printFab" onclick="printMap()" title="Als PDF drucken" aria-label="Als PDF drucken">🖨</button>
+    <button id="printFab" onclick="printMap()" data-i18n-title="fab_print_title" title="Print / Save as PDF" aria-label="Print / Save as PDF">🖨</button>
 
     <!-- ════════ PERMALINK FAB ════════ -->
-    <button id="permalinkFab" onclick="copyPermalink()" data-i18n-title="fab_permalink_title" title="Link kopieren" aria-label="Link kopieren">🔗</button>
+    <button id="permalinkFab" onclick="copyPermalink()" data-i18n-title="fab_permalink_title" title="Copy link" aria-label="Copy link">🔗</button>
 
     <!-- ════════ ABOUT FOOTER ════════ -->
     <footer id="about-footer">
@@ -442,11 +442,11 @@
         <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:20px 22px;max-width:480px;width:90%;box-shadow:0 8px 32px #0008">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
                 <span style="font-size:18px">⚠️</span>
-                <strong style="color:#f85149;font-size:14px" data-i18n="err_title">Fehler beim Laden</strong>
+                <strong style="color:#f85149;font-size:14px" data-i18n="err_title">Loading error</strong>
                 <button onclick="closeErrorPopup()" style="margin-left:auto;background:none;border:none;color:#8b949e;font-size:18px;cursor:pointer;padding:0 4px">✕</button>
             </div>
             <pre id="errorText" style="background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:10px;font-size:11px;color:#c9d1d9;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto;margin:0 0 12px"></pre>
-            <button id="errorCopyBtn" onclick="copyErrorText()" style="width:100%;font-size:12px" data-i18n="err_copy">📋 Fehlertext kopieren</button>
+            <button id="errorCopyBtn" onclick="copyErrorText()" style="width:100%;font-size:12px" data-i18n="err_copy">📋 Copy error text</button>
         </div>
     </div>
 
