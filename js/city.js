@@ -72,6 +72,7 @@ async function searchCity() {
 
         setStatus(tf('status_map', best.display_name.split(',')[0]), 'ok');
         updatePermalink();
+        reloadActiveBoundaryLayers();
     } catch (e) {
         setStatus(tf('status_err', e.message), 'error');
     }

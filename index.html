@@ -99,20 +99,6 @@
             <details open class="layers-details">
             <summary class="section-title" data-i18n="sec_layers">Layer</summary>
 
-            <label class="layer-row" for="lyr-cityboundary">
-                <input type="checkbox" id="lyr-cityboundary" onchange="toggleLayer('cityboundary', this.checked)">
-                <div class="dot" style="background:#f0883e"></div>
-                <span class="layer-name" data-i18n="lyr_cityboundary">Stadtgrenze</span>
-                <span class="layer-count" id="cnt-cityboundary"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-plz">
-                <input type="checkbox" id="lyr-plz" onchange="toggleLayer('plz', this.checked)">
-                <div class="dot" style="background:#4ecdc4;border:1px solid #2aa8a8"></div>
-                <span class="layer-name" data-i18n="lyr_plz">Postleitzahlen</span>
-                <span class="layer-count" id="cnt-plz"></span>
-            </label>
-
             <label class="layer-row" for="lyr-hospitals">
                 <input type="checkbox" id="lyr-hospitals" onchange="toggleLayer('hospitals', this.checked)">
                 <div class="dot" style="background:#f85149"></div>
@@ -372,6 +358,35 @@
     <!-- ════════ MAP ════════ -->
     <div id="map"></div>
 
+    <!-- ════════ BOUNDARY FAB ════════ -->
+    <button id="boundaryFab" onclick="toggleBoundaryPopover()" data-i18n-title="fab_boundary_title" title="Gebiete &amp; Admin-Ebenen" aria-label="Gebiete &amp; Admin-Ebenen">🗂</button>
+
+    <div id="boundaryPopover">
+        <div class="pp-label" data-i18n="bnd_zones">Gebiete</div>
+        <button class="bnd-opt" id="bnd-plz" onclick="toggleBoundaryLayer('plz')">
+            <span class="bnd-dot" style="background:#4ecdc4;border:1px solid #2aa8a8"></span>
+            <span data-i18n="lyr_plz">Postleitzahlen</span>
+        </button>
+        <div class="pp-sep"></div>
+        <div class="pp-label" data-i18n="bnd_admin">Admin-Ebenen</div>
+        <button class="bnd-opt" id="bnd-admin1" onclick="toggleBoundaryLayer('admin1')">
+            <span class="bnd-dot" style="background:#facc15"></span>
+            <span data-i18n="lyr_admin1">1. Ebene (Ortsteil)</span>
+        </button>
+        <button class="bnd-opt" id="bnd-admin2" onclick="toggleBoundaryLayer('admin2')">
+            <span class="bnd-dot" style="background:#f0883e"></span>
+            <span data-i18n="lyr_admin2">2. Ebene (Stadt)</span>
+        </button>
+        <button class="bnd-opt" id="bnd-admin3" onclick="toggleBoundaryLayer('admin3')">
+            <span class="bnd-dot" style="background:#58a6ff"></span>
+            <span data-i18n="lyr_admin3">3. Ebene (Kreis)</span>
+        </button>
+        <button class="bnd-opt" id="bnd-admin4" onclick="toggleBoundaryLayer('admin4')">
+            <span class="bnd-dot" style="background:#d2a8ff"></span>
+            <span data-i18n="lyr_admin4">4. Ebene (Bundesland)</span>
+        </button>
+    </div>
+
     <!-- ════════ MAP STYLE FAB ════════ -->
     <button id="styleFab" onclick="toggleStylePopover()" title="Kartenstil wählen" aria-label="Kartenstil wählen">🗺</button>
 
@@ -437,6 +452,7 @@
     <script src="js/overpass.js"></script>  <!-- overpassFetch()                             -->
     <script src="js/renderers.js"></script> <!-- renderPLZ(), renderPOIs(), renderWater()    -->
     <script src="js/layers.js"></script>    <!-- LAYER_DEFS + layer management               -->
+    <script src="js/boundarylayers.js"></script> <!-- boundary + admin level layers           -->
     <script src="js/city.js"></script>      <!-- searchCity(), units (km/mi)                 -->
     <script src="js/busroutes.js"></script> <!-- bus route lines                             -->
     <script src="js/radius.js"></script>    <!-- radius tool, clickedPoint                   -->

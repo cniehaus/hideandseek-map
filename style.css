@@ -408,6 +408,7 @@ button.meas-active:hover { background: #3b82f6; }
 /* ── FABs (floating action buttons) ──────────────── */
 #printFab,
 #styleFab,
+#boundaryFab,
 #permalinkFab {
     position: fixed;
     right: 12px;
@@ -426,17 +427,19 @@ button.meas-active:hover { background: #3b82f6; }
     align-items: center;
     justify-content: center;
 }
-#printFab         { bottom: 30px; }
-#styleFab         { bottom: 84px; }
-#permalinkFab     { bottom: 138px; }
+#printFab     { bottom: 30px; }
+#styleFab     { bottom: 84px; }
+#boundaryFab  { bottom: 138px; }
+#permalinkFab { bottom: 192px; }
 #printFab:hover,
 #styleFab:hover,
+#boundaryFab:hover,
 #permalinkFab:hover { background: #21262d; color: #fff; }
 
 /* ── Style popover ────────────────────────────────── */
 #stylePopover {
     position: fixed;
-    bottom: 192px;
+    bottom: 246px;
     right: 12px;
     z-index: 1201;
     width: 195px;
@@ -450,6 +453,51 @@ button.meas-active:hover { background: #3b82f6; }
     gap: 3px;
 }
 #stylePopover.open { display: flex; }
+
+/* ── Boundary popover ─────────────────────────────── */
+#boundaryPopover {
+    position: fixed;
+    bottom: 192px;
+    right: 12px;
+    z-index: 1201;
+    width: 210px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.7);
+    display: none;
+    flex-direction: column;
+    gap: 3px;
+}
+#boundaryPopover.open { display: flex; }
+
+.bnd-opt {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #c9d1d9;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.bnd-opt:hover { background: #21262d; color: #fff; }
+.bnd-opt.active { background: #21262d; font-weight: 600; }
+.bnd-opt.active::after { content: '✓'; margin-left: auto; color: #3fb950; font-size: 13px; }
+
+.bnd-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
 
 .pp-label {
     font-size: 10px;

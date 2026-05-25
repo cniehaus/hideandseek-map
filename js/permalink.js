@@ -90,11 +90,21 @@ async function loadFromPermalink() {
     // Search the city (uses the current input value, default or overridden)
     await searchCity();
 
-    // Load layers specified in the URL
+    // Load layers specified in the URL.
+    // A layer is only restored if it has a visible UI control (layer checkbox or
+    // boundary-panel button). This prevents orphaned layers that can't be turned off.
     const layerIds = (p.get('layers') ?? '').split(',').filter(Boolean);
     for (const id of layerIds) {
-        const cb = document.getElementById('lyr-' + id);
-        if (cb) { cb.checked = true; await loadLayer(id); }
+        const cb     = document.getElementById('lyr-' + id);
+        const bndBtn = document.getElementById('bnd-' + id);
+        if (cb) {
+            cb.checked = true;
+            await loadLayer(id);
+        } else if (bndBtn && LAYER_DEFS[id]) {
+            // Layer migrated to boundary panel (e.g. PLZ)
+            await loadLayer(id);
+            bndBtn.classList.add('active');
+        }
     }
 
     // Restore exact map view (overrides the city-fit done by searchCity)
