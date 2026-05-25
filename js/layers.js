@@ -146,9 +146,9 @@ out center bb tags;`,
         color: '#38bdf8',
         buildQuery: (bb) => `[out:json][timeout:90];
 (
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["natural"="water"];
-  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["natural"="water"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["waterway"="riverbank"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["natural"="water"]["name"];
+  relation(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["natural"="water"]["name"];
+  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["waterway"="riverbank"]["name"];
 );
 out geom;`,
         render: renderWater,
