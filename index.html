@@ -344,6 +344,17 @@
             </div>
         </div>
 
+        <!-- Admin Division Checker -->
+        <div class="section">
+            <div class="section-title" data-i18n="sec_admin">Admin-Division</div>
+            <div style="font-size:11px;color:#484f58;margin-bottom:8px" data-i18n="admin_hint">
+                Zwei Punkte setzen – zeigt ob sie in denselben Admin-Ebenen liegen.
+            </div>
+            <button id="adminBtn" style="width:100%;margin-bottom:4px" onclick="toggleAdminCheck()" data-i18n="btn_admin_start">Checker starten</button>
+            <div id="adminResult"></div>
+            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearAdminCheck()" data-i18n="btn_admin_clear">Ergebnis löschen</button>
+        </div>
+
         <!-- Distance & Direction -->
         <div class="section">
             <div class="section-title" data-i18n="sec_measure">Distanz &amp; Richtung</div>
@@ -430,6 +441,7 @@
     <script src="js/busroutes.js"></script> <!-- bus route lines                             -->
     <script src="js/radius.js"></script>    <!-- radius tool, clickedPoint                   -->
     <script src="js/measure.js"></script>   <!-- distance & direction, map.on('click', …)    -->
+    <script src="js/admin.js"></script>    <!-- admin division checker                       -->
     <script src="js/ui.js"></script>        <!-- sidebar, print, error popup, helpers        -->
     <script src="js/permalink.js"></script> <!-- URL state serialisation / restore           -->
 

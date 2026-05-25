@@ -387,6 +387,24 @@ button.meas-active:hover { background: #3b82f6; }
 .zone-label-1 { background: #f97316; }
 .zone-label-2 { background: #38bdf8; color: #0d1117; }
 
+/* ── Admin Division Checker ──────────────────────── */
+.admin-row {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    padding: 4px 0;
+    font-size: 12px;
+    border-bottom: 1px solid #21262d;
+}
+.admin-row:last-child { border: none; }
+.admin-icon { font-size: 12px; width: 14px; text-align: center; flex-shrink: 0; line-height: 1.6; }
+.admin-n    { color: #8b949e; font-size: 11px; flex-shrink: 0; }
+.admin-val  { flex: 1; word-break: break-word; }
+.admin-match .admin-icon { color: #3fb950; }
+.admin-miss  .admin-icon { color: #f85149; }
+.admin-na    .admin-icon,.admin-na .admin-val { color: #484f58; }
+.admin-loading { font-size: 11px; color: #8b949e; padding: 6px 0; }
+
 /* ── FABs (floating action buttons) ──────────────── */
 #printFab,
 #styleFab,
