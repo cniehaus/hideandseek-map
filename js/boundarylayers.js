@@ -1,5 +1,26 @@
 'use strict';
 
+// ── Shared Nominatim polygon helper ──────────────────────────────────────────
+// Fetches a reverse-geocode polygon for `latlng` at `zoom` and adds it to the
+// map with `style`. Returns { layer, uid } or null on any failure.
+async function nominatimBoundaryLayer(latlng, zoom, style) {
+    try {
+        const res = await fetch(
+            'https://nominatim.openstreetmap.org/reverse?' + new URLSearchParams({
+                lat: latlng.lat, lon: latlng.lng,
+                format: 'json', polygon_geojson: 1, zoom,
+            })
+        );
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (!data.geojson) return null;
+        return {
+            layer: L.geoJSON(data.geojson, { style }).addTo(map),
+            uid:   `${data.osm_type}${data.osm_id}`,
+        };
+    } catch (_) { return null; }
+}
+
 // ── Admin boundary layers (Nominatim polygon) ─────────────────────────────────
 const adminBoundaryMap = {};   // id → L.Layer | null
 
@@ -46,7 +67,7 @@ async function toggleBoundaryLayer(id) {
     setStatus(t('status_admin_loading'), 'loading');
 
     try {
-        adminBoundaryMap[id] = await _fetchAdminBoundaryLayer(id);
+        adminBoundaryMap[id] = await _loadAdminBoundaryLayer(id);
         setStatus(t('status_ready'), '');
     } catch (e) {
         delete adminBoundaryMap[id];
@@ -55,38 +76,22 @@ async function toggleBoundaryLayer(id) {
     }
 }
 
-// ── Internal: fetch + draw one admin boundary via Nominatim ──────────────────
-async function _fetchAdminBoundaryLayer(id) {
+// ── Internal: fetch + draw one panel boundary layer ──────────────────────────
+async function _loadAdminBoundaryLayer(id) {
     const def = ADMIN_BOUNDARY_DEFS[id];
-    const ref = currentCity
-        ? { lat: currentCity.lat, lng: currentCity.lng }
-        : map.getCenter();
-
-    const res = await fetch(
-        'https://nominatim.openstreetmap.org/reverse?' + new URLSearchParams({
-            lat: ref.lat, lon: ref.lng,
-            format: 'json', polygon_geojson: 1, zoom: def.zoom,
-        })
+    const ref = currentCity ?? map.getCenter();
+    const result = await nominatimBoundaryLayer(
+        { lat: ref.lat, lng: ref.lng },
+        def.zoom,
+        { color: def.color, weight: 2.5, opacity: 0.85,
+          fillColor: def.color, fillOpacity: def.fillOpacity }
     );
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    if (!data.geojson) throw new Error(t('err_no_geojson'));
-
-    return L.geoJSON(data.geojson, {
-        style: {
-            color:       def.color,
-            weight:      2.5,
-            opacity:     0.85,
-            fillColor:   def.color,
-            fillOpacity: def.fillOpacity,
-        },
-    }).addTo(map);
+    if (!result) throw new Error(t('err_no_geojson'));
+    return result.layer;
 }
 
 // ── Reload all active admin boundary layers after city change ─────────────────
 async function reloadActiveBoundaryLayers() {
-    // PLZ is handled by city.js via activeLayers tracking
-    // Sync the PLZ button state
     const plzBtn = document.getElementById('bnd-plz');
     if (plzBtn) plzBtn.classList.toggle('active', !!activeLayers.plz);
 
@@ -95,7 +100,7 @@ async function reloadActiveBoundaryLayers() {
         map.removeLayer(adminBoundaryMap[id]);
         delete adminBoundaryMap[id];
         try {
-            adminBoundaryMap[id] = await _fetchAdminBoundaryLayer(id);
+            adminBoundaryMap[id] = await _loadAdminBoundaryLayer(id);
         } catch (_) { /* skip silently */ }
     }
 }

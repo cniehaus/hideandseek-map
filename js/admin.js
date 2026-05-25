@@ -52,27 +52,11 @@ function extractAdminLevel(address, fields) {
 
 // Fetch + draw the level-1 (suburb/neighbourhood, zoom=14) highlight polygon
 async function fetchAndDrawHighlight(latlng, color) {
-    try {
-        const res = await fetch(
-            'https://nominatim.openstreetmap.org/reverse?' + new URLSearchParams({
-                lat: latlng.lat, lon: latlng.lng,
-                format: 'json', polygon_geojson: 1, zoom: 14,
-            })
-        );
-        if (!res.ok) return null;
-        const data = await res.json();
-        if (!data.geojson) return null;
-
-        return L.geoJSON(data.geojson, {
-            style: {
-                color,
-                weight:      3.5,
-                opacity:     1,
-                fillColor:   color,
-                fillOpacity: 0.38,
-            },
-        }).addTo(map);
-    } catch (_) { return null; }
+    const result = await nominatimBoundaryLayer(
+        latlng, 14,
+        { color, weight: 3.5, opacity: 1, fillColor: color, fillOpacity: 0.38 }
+    );
+    return result?.layer ?? null;
 }
 
 function clearHighlights() {
@@ -86,33 +70,15 @@ async function fetchAndDrawBoundaries(latlng) {
     const seen = new Set();
 
     for (const { zoom, color, fillOpacity } of BOUNDARY_STYLES) {
-        try {
-            const res = await fetch(
-                'https://nominatim.openstreetmap.org/reverse?' + new URLSearchParams({
-                    lat: latlng.lat, lon: latlng.lng,
-                    format: 'json', polygon_geojson: 1, zoom,
-                })
-            );
-            if (!res.ok) continue;
-            const data = await res.json();
-            if (!data.geojson) continue;
-
-            // Skip if same OSM entity already drawn (e.g. Kreisfreie Stadt = city & county)
-            const uid = `${data.osm_type}${data.osm_id}`;
-            if (seen.has(uid)) continue;
-            seen.add(uid);
-
-            const layer = L.geoJSON(data.geojson, {
-                style: {
-                    color,
-                    weight:      2.5,
-                    opacity:     0.85,
-                    fillColor:   color,
-                    fillOpacity,
-                },
-            }).addTo(map);
-            adminBoundaryLayers.push(layer);
-        } catch (_) { /* skip failed level silently */ }
+        const result = await nominatimBoundaryLayer(
+            latlng, zoom,
+            { color, weight: 2.5, opacity: 0.85, fillColor: color, fillOpacity }
+        );
+        if (!result) continue;
+        // Skip if same OSM entity already drawn (e.g. Kreisfreie Stadt = city & county)
+        if (seen.has(result.uid)) { map.removeLayer(result.layer); continue; }
+        seen.add(result.uid);
+        adminBoundaryLayers.push(result.layer);
     }
 }
 
