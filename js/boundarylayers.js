@@ -15,7 +15,7 @@ async function nominatimBoundaryLayer(latlng, zoom, style) {
         const data = await res.json();
         if (!data.geojson) return null;
         return {
-            layer: L.geoJSON(data.geojson, { style }).addTo(map),
+            layer: L.geoJSON(data.geojson, { style, interactive: false }).addTo(map),
             uid:   `${data.osm_type}${data.osm_id}`,
         };
     } catch (_) { return null; }
