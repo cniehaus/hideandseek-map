@@ -23,14 +23,6 @@ const BOUNDARY_STYLES = [
     { zoom:  5, color: '#d2a8ff', fillOpacity: 0.03 },  // 4. state
 ];
 
-function adminIcon(letter) {
-    return L.divIcon({
-        className: 'meas-icon',
-        html:      letter,
-        iconSize:  [22, 22],
-        iconAnchor:[11, 11],
-    });
-}
 
 async function reverseGeocode(latlng) {
     const res = await fetch(
@@ -169,7 +161,7 @@ function adminHandleClick(e) {
     if (adminMode === 'A') {
         adminMode = 'B';
         adminA    = { latlng, address: null };
-        adminMarkers.push(L.marker(latlng, { icon: adminIcon('A') }).addTo(map));
+        adminMarkers.push(L.marker(latlng, { icon: measIcon('A') }).addTo(map));
         setStatus(t('status_admin_b'), 'loading');
 
         // Text comparison data
@@ -186,7 +178,7 @@ function adminHandleClick(e) {
     if (adminMode === 'B') {
         adminMode = null;
         adminB    = { latlng, address: null };
-        adminMarkers.push(L.marker(latlng, { icon: adminIcon('B') }).addTo(map));
+        adminMarkers.push(L.marker(latlng, { icon: measIcon('B') }).addTo(map));
         document.getElementById('adminBtn').textContent = t('btn_admin_start');
         document.getElementById('adminBtn').classList.remove('meas-active');
         setStatus(t('status_admin_loading'), 'loading');
