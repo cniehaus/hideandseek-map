@@ -63,14 +63,7 @@ function selectStyle(btn, key) {
     updatePermalink();
 }
 
-// Close popover when clicking outside
-document.addEventListener('click', (e) => {
-    const pop = document.getElementById('stylePopover');
-    const fab = document.getElementById('styleFab');
-    if (pop.classList.contains('open') && !pop.contains(e.target) && e.target !== fab) {
-        pop.classList.remove('open');
-    }
-});
+registerPopoverClickOutside('stylePopover', 'styleFab');
 
 // ── Mobile sidebar ────────────────────────────────────────────────────────────
 function openSidebar() {

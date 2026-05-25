@@ -36,14 +36,7 @@ function toggleBoundaryPopover() {
     document.getElementById('boundaryPopover').classList.toggle('open');
 }
 
-document.addEventListener('click', (e) => {
-    const pop = document.getElementById('boundaryPopover');
-    const fab = document.getElementById('boundaryFab');
-    if (pop && pop.classList.contains('open') &&
-        !pop.contains(e.target) && e.target !== fab) {
-        pop.classList.remove('open');
-    }
-});
+registerPopoverClickOutside('boundaryPopover', 'boundaryFab');
 
 // ── Toggle a boundary layer on/off ───────────────────────────────────────────
 async function toggleBoundaryLayer(id) {

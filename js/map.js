@@ -11,6 +11,18 @@ let currentTileLayer = L.tileLayer(TILE_LAYERS.osm.url, {
     maxZoom:     TILE_LAYERS.osm.maxZoom,
 }).addTo(map);
 
+// ── Close a popover when clicking outside it or its trigger button ────────────
+function registerPopoverClickOutside(popId, fabId) {
+    document.addEventListener('click', (e) => {
+        const pop = document.getElementById(popId);
+        const fab = document.getElementById(fabId);
+        if (pop?.classList.contains('open') &&
+            !pop.contains(e.target) && e.target !== fab) {
+            pop.classList.remove('open');
+        }
+    });
+}
+
 // ── Switch map style ──────────────────────────────────────────────────────────
 function setTileLayer(key) {
     const def = TILE_LAYERS[key];
