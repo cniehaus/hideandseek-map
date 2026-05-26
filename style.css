@@ -703,3 +703,44 @@ button.meas-active:hover { background: #3b82f6; }
     flex-shrink: 0;
 }
 .s-header-close:hover { color: #fff; background: none; }
+
+/* ── Changelog ───────────────────────────────────── */
+.cl-section { margin-top: auto; }
+
+.cl-badge {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: #484f58;
+    margin-top: 2px;
+}
+
+.cl-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cl-entry {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 5px 7px;
+    background: #0d1117;
+    border: 1px solid #21262d;
+    border-radius: 5px;
+}
+
+.cl-date {
+    font-size: 10px;
+    color: #484f58;
+}
+
+.cl-text {
+    font-size: 12px;
+    color: #c9d1d9;
+    line-height: 1.4;
+}

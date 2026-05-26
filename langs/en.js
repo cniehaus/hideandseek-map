@@ -123,4 +123,6 @@ const LANG_EN = {
     err_copied:           '✅ Copied!',
     err_copy_fail:        '✗ Copy failed',
     err_layer:            'Layer: {0}\n\n{1}',
+    sec_changelog:        'Changelog',
+    changelog_last:       'Last update:',
 };
