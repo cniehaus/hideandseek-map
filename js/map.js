@@ -23,6 +23,13 @@ function registerPopoverClickOutside(popId, fabId) {
     });
 }
 
+// ── Map click hook registry ───────────────────────────────────────────────────
+// Feature files call addMapClickHook(fn) to register handlers that run before
+// the default click behaviour (radius centre). A handler returning true consumes
+// the click.
+const _mapClickHooks = [];
+function addMapClickHook(fn) { _mapClickHooks.push(fn); }
+
 // ── Switch map style ──────────────────────────────────────────────────────────
 function setTileLayer(key) {
     const def = TILE_LAYERS[key];

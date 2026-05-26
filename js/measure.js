@@ -132,6 +132,8 @@ map.on('click', (e) => {
 
     // Admin division checker takes priority
     if (adminHandleClick(e)) return;
+    // Feature-registered click hooks (nearestchecker, nearestpoi, …)
+    for (const hook of _mapClickHooks) { if (hook(e)) return; }
 
     // Set point A
     if (measMode === 'A') {
