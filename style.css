@@ -721,6 +721,30 @@ button.meas-active:hover { background: #3b82f6; }
 .np-name  { color: #c9d1d9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
 .np-dist  { color: #f0883e; font-size: 11px; font-weight: 600; white-space: nowrap; text-align: right; }
 
+/* ── Same Nearest Checker ────────────────────────── */
+.nc-result {
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 6px 0 4px;
+    text-align: center;
+}
+.nc-match { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid #3fb950; }
+.nc-miss  { background: rgba(248,81,73,0.15); color: #f85149; border: 1px solid #f85149; }
+.nc-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+    font-size: 12px;
+    border-bottom: 1px solid #21262d;
+}
+.nc-row:last-child { border: none; }
+.nc-label { font-weight: 700; color: #8b949e; flex-shrink: 0; width: 14px; }
+.nc-name  { flex: 1; color: #c9d1d9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nc-dist  { flex-shrink: 0; color: #8b949e; font-size: 11px; }
+
 /* ── Changelog ───────────────────────────────────── */
 .cl-section { margin-top: auto; }
 
