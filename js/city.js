@@ -11,6 +11,7 @@ function fromKm(km)      { return units === 'imperial' ? km / KM_PER_MILE : km; 
 function unitStr()       { return units === 'imperial' ? 'mi' : 'km'; }
 function fmtDist(km)     { const v = fromKm(km); return `${v % 1 === 0 ? v : v.toFixed(2)} ${unitStr()}`; }
 function fmtDistShort(km){ const v = fromKm(km); return `${v % 1 === 0 ? v : v.toFixed(1)} ${unitStr()}`; }
+function fmtNearDist(km)  { return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(2)} km`; }
 
 function setUnits(u) {
     units = u;

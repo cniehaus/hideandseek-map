@@ -56,16 +56,6 @@ addMapClickHook(npHandleClick);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function npGetCenter(el) {
-    if (el.type === 'node') return { lat: el.lat,        lng: el.lon };
-    if (el.center)          return { lat: el.center.lat, lng: el.center.lon };
-    if (el.bounds)          return {
-        lat: (el.bounds.minlat + el.bounds.maxlat) / 2,
-        lng: (el.bounds.minlon + el.bounds.maxlon) / 2,
-    };
-    return null;
-}
-
 // ── Main lookup ───────────────────────────────────────────────────────────────
 
 async function fetchNearestPOIs(point) {
@@ -94,10 +84,6 @@ out center tags;`;
         const data = await overpassFetch(query);
         const elements = data.elements ?? [];
 
-        const fmt = km => km < 1
-            ? `${Math.round(km * 1000)} m`
-            : `${km.toFixed(2)} km`;
-
         const rows = NP_TYPES.map(({ key, icon, label, match }) => {
             // Prefer already-loaded layer cache; fall back to freshly fetched elements
             const pool = layerDataCache[key]?.elements?.length
@@ -106,7 +92,7 @@ out center tags;`;
 
             let best = null, bestDist = Infinity;
             for (const el of pool) {
-                const c = npGetCenter(el);
+                const c = getElementCenter(el);
                 if (!c) continue;
                 const d = haversineKm(point, c);
                 if (d < bestDist) { bestDist = d; best = el; }
@@ -125,7 +111,7 @@ out center tags;`;
                     <span class="np-icon">${icon}</span>
                     <span class="np-label">${t(label)}</span>
                     <span class="np-name">${esc(name)}</span>
-                    <span class="np-dist">${fmt(bestDist)}</span>
+                    <span class="np-dist">${fmtNearDist(bestDist)}</span>
                 </div>`;
         }).join('');
 

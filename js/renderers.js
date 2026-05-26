@@ -106,6 +106,16 @@ function deduplicateNearby(elements, maxMeters) {
 
 // ── POI points (hospitals, train stations, …) ────────────────────────────────
 // Draws each OSM node/way/relation as a coloured CircleMarker.
+function getElementCenter(el) {
+    if (el.type === 'node') return { lat: el.lat,        lng: el.lon };
+    if (el.center)          return { lat: el.center.lat, lng: el.center.lon };
+    if (el.bounds)          return {
+        lat: (el.bounds.minlat + el.bounds.maxlat) / 2,
+        lng: (el.bounds.minlon + el.bounds.maxlon) / 2,
+    };
+    return null;
+}
+
 function renderPOIs(id, data, def) {
     const result = [];
 
@@ -115,12 +125,9 @@ function renderPOIs(id, data, def) {
     if (id === 'swimmingpool') elements = deduplicateNearby(elements, 80);
 
     elements.forEach(el => {
-        let lat, lng;
-        if      (el.type === 'node') { lat = el.lat;                                lng = el.lon; }
-        else if (el.center)          { lat = el.center.lat;                         lng = el.center.lon; }
-        else if (el.bounds)          { lat = (el.bounds.minlat + el.bounds.maxlat) / 2;
-                                       lng = (el.bounds.minlon + el.bounds.maxlon) / 2; }
-        else return;
+        const center = getElementCenter(el);
+        if (!center) return;
+        const { lat, lng } = center;
 
         const name = el.tags?.name ?? el.tags?.['name:de'] ?? t(def.label);
         const type = el.tags?.amenity  ?? el.tags?.railway  ?? el.tags?.tourism

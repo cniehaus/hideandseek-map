@@ -82,20 +82,10 @@ addMapClickHook(ncHandleClick);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function ncGetCenter(el) {
-    if (el.type === 'node') return { lat: el.lat,        lng: el.lon };
-    if (el.center)          return { lat: el.center.lat, lng: el.center.lon };
-    if (el.bounds)          return {
-        lat: (el.bounds.minlat + el.bounds.maxlat) / 2,
-        lng: (el.bounds.minlon + el.bounds.maxlon) / 2,
-    };
-    return null;
-}
-
 function ncFindNearest(point, elements) {
     let best = null, bestDist = Infinity;
     for (const el of elements) {
-        const c = ncGetCenter(el);
+        const c = getElementCenter(el);
         if (!c) continue;
         const d = haversineKm(point, c);
         if (d < bestDist) { bestDist = d; best = el; }
@@ -146,9 +136,7 @@ async function runNearestCheck() {
 
         const nameA = nearA.el.tags?.name ?? '?';
         const nameB = nearB.el.tags?.name ?? '?';
-        const same  = haversineKm(ncGetCenter(nearA.el), ncGetCenter(nearB.el)) < 0.1;
-        const fmt   = km => km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(2)} km`;
-
+        const same  = haversineKm(getElementCenter(nearA.el), getElementCenter(nearB.el)) < 0.1;
         resultEl.innerHTML = `
             <div class="nc-result ${same ? 'nc-match' : 'nc-miss'}">
                 ${same ? '✅ ' + t('nc_same') : '❌ ' + t('nc_diff')}
@@ -156,12 +144,12 @@ async function runNearestCheck() {
             <div class="nc-row">
                 <span class="nc-label">A</span>
                 <span class="nc-name">${esc(nameA)}</span>
-                <span class="nc-dist">${fmt(nearA.dist)}</span>
+                <span class="nc-dist">${fmtNearDist(nearA.dist)}</span>
             </div>
             <div class="nc-row">
                 <span class="nc-label">B</span>
                 <span class="nc-name">${esc(nameB)}</span>
-                <span class="nc-dist">${fmt(nearB.dist)}</span>
+                <span class="nc-dist">${fmtNearDist(nearB.dist)}</span>
             </div>`;
         setStatus(t('status_admin_done'), 'ok');
     } catch (err) {
