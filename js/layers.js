@@ -371,6 +371,34 @@ out center bb tags;`,
 out center bb tags;`,
         render: renderPOIs,
     },
+
+    museum: {
+        label: 'lyr_museum',
+        color: '#ca8a04',
+        icon:  '🏛️',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bbStr(bb)})["tourism"="museum"];
+  way(${bbStr(bb)})["tourism"="museum"];
+  relation(${bbStr(bb)})["tourism"="museum"];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
+
+    amusementpark: {
+        label: 'lyr_amusementpark',
+        color: '#db2777',
+        icon:  '🎡',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bbStr(bb)})["leisure"="amusement_park"];
+  way(${bbStr(bb)})["leisure"="amusement_park"];
+  relation(${bbStr(bb)})["leisure"="amusement_park"];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
 };
 
 // ── Layer state ───────────────────────────────────────────────────────────────

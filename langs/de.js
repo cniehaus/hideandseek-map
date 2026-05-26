@@ -35,6 +35,8 @@ const LANG_DE = {
     lyr_airports:         'Flughäfen',
     lyr_airfields:        'Flugplätze',
     lyr_fastfood:         'Fast-Food-Ketten',
+    lyr_museum:           'Museen',
+    lyr_amusementpark:    'Freizeitparks',
     btn_clear_layers:     'Alle Layer entfernen',
     sec_busroutes:        'Bus-Linien',
     busroute_hint:        'Liniennummer eingeben (z.B. 305)',

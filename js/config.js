@@ -44,6 +44,8 @@ const COLOR_THEMES = {
             police:       '#6366f1',
             firestation:  '#ef4444',
             fastfood:     '#fbbf24',
+            museum:       '#ca8a04',
+            amusementpark:'#db2777',
         },
     },
     colorblind: {
@@ -86,6 +88,8 @@ const COLOR_THEMES = {
             police:       '#332288',
             firestation:  '#EE8866',
             fastfood:     '#F0E442',
+            museum:       '#88CCEE',
+            amusementpark:'#CC6677',
         },
     },
 };

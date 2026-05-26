@@ -267,6 +267,20 @@
                 <span class="layer-count" id="cnt-fastfood"></span>
             </label>
 
+            <label class="layer-row" for="lyr-museum">
+                <input type="checkbox" id="lyr-museum" onchange="toggleLayer('museum', this.checked)">
+                <div class="dot" style="background:#ca8a04"></div>
+                <span class="layer-name" data-i18n="lyr_museum">Museums</span>
+                <span class="layer-count" id="cnt-museum"></span>
+            </label>
+
+            <label class="layer-row" for="lyr-amusementpark">
+                <input type="checkbox" id="lyr-amusementpark" onchange="toggleLayer('amusementpark', this.checked)">
+                <div class="dot" style="background:#db2777"></div>
+                <span class="layer-name" data-i18n="lyr_amusementpark">Amusement Parks</span>
+                <span class="layer-count" id="cnt-amusementpark"></span>
+            </label>
+
             <div style="margin-top:10px">
                 <button class="ghost" style="width:100%" onclick="clearAllLayers()" data-i18n="btn_clear_layers">Remove all layers</button>
             </div>
