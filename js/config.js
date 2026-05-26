@@ -43,6 +43,8 @@ const COLOR_THEMES = {
             swimmingpool: '#22d3ee',
             police:       '#6366f1',
             firestation:  '#ef4444',
+            museum:       '#ca8a04',
+            amusementpark:'#db2777',
         },
     },
     colorblind: {
@@ -84,6 +86,8 @@ const COLOR_THEMES = {
             swimmingpool: '#0072B2',
             police:       '#332288',
             firestation:  '#EE8866',
+            museum:       '#88CCEE',
+            amusementpark:'#CC6677',
         },
     },
 };
