@@ -123,6 +123,12 @@ const LANG_DE = {
     err_copied:           '✅ Kopiert!',
     err_copy_fail:        '✗ Kopieren fehlgeschlagen',
     err_layer:            'Layer: {0}\n\n{1}',
+    sec_nearest_poi:      'Nächste POIs',
+    nearest_poi_hint:     'Auf die Karte klicken – zeigt Abstände zu nahen POIs.',
+    btn_np_start:         'Nächste POIs finden',
+    btn_np_stop:          'Abbrechen',
+    btn_np_clear:         'Löschen',
+    status_np_click:      'Auf die Karte klicken',
     sec_changelog:        'Changelog',
     changelog_last:       'Letztes Update:',
 };

@@ -347,6 +347,19 @@
             </details>
         </div>
 
+        <!-- Nearest POI -->
+        <div class="section">
+            <details class="layers-details">
+            <summary class="section-title" data-i18n="sec_nearest_poi">Nearest POIs</summary>
+            <div style="font-size:11px;color:#484f58;margin:6px 0 8px" data-i18n="nearest_poi_hint">
+                Click a point on the map to see distances to nearby POIs.
+            </div>
+            <button id="npBtn" style="width:100%;margin-bottom:4px" onclick="toggleNearestPOI()" data-i18n="btn_np_start">Find nearest POIs</button>
+            <div id="npResult"></div>
+            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearNearestPOI()" data-i18n="btn_np_clear">Clear</button>
+            </details>
+        </div>
+
         <!-- Distance & Direction -->
         <div class="section">
             <details class="layers-details">
@@ -477,6 +490,7 @@
     <script src="js/radius.js"></script>    <!-- radius tool, clickedPoint                   -->
     <script src="js/measure.js"></script>   <!-- distance & direction, map.on('click', …)    -->
     <script src="js/admin.js"></script>    <!-- admin division checker                       -->
+    <script src="js/nearestpoi.js"></script>     <!-- nearest POI distances                  -->
     <script src="js/ui.js"></script>        <!-- sidebar, print, error popup, helpers        -->
     <script src="js/permalink.js"></script> <!-- URL state serialisation / restore           -->
     <script src="js/changelog.js"></script> <!-- changelog entries                           -->

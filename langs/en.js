@@ -123,6 +123,12 @@ const LANG_EN = {
     err_copied:           '✅ Copied!',
     err_copy_fail:        '✗ Copy failed',
     err_layer:            'Layer: {0}\n\n{1}',
+    sec_nearest_poi:      'Nearest POIs',
+    nearest_poi_hint:     'Click a point on the map to see distances to nearby POIs.',
+    btn_np_start:         'Find nearest POIs',
+    btn_np_stop:          'Cancel',
+    btn_np_clear:         'Clear',
+    status_np_click:      'Click a point on the map',
     sec_changelog:        'Changelog',
     changelog_last:       'Last update:',
 };

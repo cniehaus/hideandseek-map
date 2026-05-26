@@ -704,6 +704,23 @@ button.meas-active:hover { background: #3b82f6; }
 }
 .s-header-close:hover { color: #fff; background: none; }
 
+/* ── Nearest POI display ─────────────────────────── */
+.np-row {
+    display: grid;
+    grid-template-columns: 22px 1fr auto auto;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 0;
+    font-size: 12px;
+    border-bottom: 1px solid #21262d;
+}
+.np-row:last-child { border: none; }
+.np-row.np-na { opacity: 0.35; }
+.np-icon  { text-align: center; font-size: 13px; }
+.np-label { color: #8b949e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-name  { color: #c9d1d9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
+.np-dist  { color: #f0883e; font-size: 11px; font-weight: 600; white-space: nowrap; text-align: right; }
+
 /* ── Changelog ───────────────────────────────────── */
 .cl-section { margin-top: auto; }
 
