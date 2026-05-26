@@ -345,6 +345,19 @@ out center bb tags;`,
         render: renderPOIs,
     },
 
+    fastfood: {
+        label: 'lyr_fastfood',
+        color: '#fbbf24',
+        icon:  '🍔',
+        buildQuery: (bb) => `[out:json][timeout:60];
+(
+  node(${bbStr(bb)})["amenity"="fast_food"]["name"~"McDonald|Burger King|KFC|Subway|7-Eleven|7 Eleven|Starbucks|Domino|Pizza Hut|Wendy|Popeye",i];
+  way(${bbStr(bb)})["amenity"="fast_food"]["name"~"McDonald|Burger King|KFC|Subway|7-Eleven|7 Eleven|Starbucks|Domino|Pizza Hut|Wendy|Popeye",i];
+);
+out center bb tags;`,
+        render: renderPOIs,
+    },
+
     airfields: {
         label: 'lyr_airfields',
         color: '#94a3b8',

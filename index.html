@@ -260,6 +260,13 @@
                 <span class="layer-count" id="cnt-airfields"></span>
             </label>
 
+            <label class="layer-row" for="lyr-fastfood">
+                <input type="checkbox" id="lyr-fastfood" onchange="toggleLayer('fastfood', this.checked)">
+                <div class="dot" style="background:#fbbf24"></div>
+                <span class="layer-name" data-i18n="lyr_fastfood">Fast Food Chains</span>
+                <span class="layer-count" id="cnt-fastfood"></span>
+            </label>
+
             <div style="margin-top:10px">
                 <button class="ghost" style="width:100%" onclick="clearAllLayers()" data-i18n="btn_clear_layers">Remove all layers</button>
             </div>
