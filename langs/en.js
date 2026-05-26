@@ -21,6 +21,7 @@ const LANG_EN = {
     lyr_cinema:           'Cinemas',
     lyr_zoo:              'Zoos',
     lyr_townhall:         'Town Halls',
+    lyr_coastline:        'Coastline',
     lyr_water:            'Water Bodies',
     lyr_aquarium:         'Aquariums',
     lyr_library:          'Libraries',

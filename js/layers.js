@@ -182,6 +182,15 @@ out center bb tags;`,
         render: renderPOIs,
     },
 
+    coastline: {
+        label: 'lyr_coastline',
+        color: '#1e40af',
+        buildQuery: (bb) => `[out:json][timeout:60];
+way(${bbStr(bb)})["natural"="coastline"];
+out geom;`,
+        render: renderCoastline,
+    },
+
     water: {
         label: 'lyr_water',
         color: '#38bdf8',

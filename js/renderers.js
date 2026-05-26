@@ -190,6 +190,22 @@ out tags;`
     return result;
 }
 
+// ── Coastline ─────────────────────────────────────────────────────────────────
+// Renders natural=coastline ways as polylines using the raw Overpass geometry.
+function renderCoastline(id, data, def) {
+    const result = [];
+    (data.elements ?? []).forEach(el => {
+        if (el.type !== 'way' || !el.geometry?.length) return;
+        const line = L.polyline(
+            el.geometry.map(n => [n.lat, n.lon]),
+            { color: def.color, weight: 4.5, opacity: 1.0 }
+        );
+        if (el.tags?.name) line.bindPopup(`<div class="popup-name">🏖️ ${esc(el.tags.name)}</div>`);
+        result.push(line);
+    });
+    return result;
+}
+
 // ── Water bodies ─────────────────────────────────────────────────────────────
 // Converts OSM ways/relations to blue GeoJSON polygons.
 function renderWater(id, data, def) {

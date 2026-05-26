@@ -21,6 +21,7 @@ const LANG_DE = {
     lyr_cinema:           'Kinos',
     lyr_zoo:              'Zoos',
     lyr_townhall:         'Rathäuser',
+    lyr_coastline:        'Küstenlinie',
     lyr_water:            'Wasserflächen',
     lyr_aquarium:         'Aquarien',
     lyr_library:          'Büchereien',
