@@ -351,8 +351,8 @@ out center bb tags;`,
         icon:  '🍔',
         buildQuery: (bb) => `[out:json][timeout:60];
 (
-  node(${bbStr(bb)})["amenity"="fast_food"]["name"~"McDonald|Burger King|KFC|Subway|7-Eleven|7 Eleven|Starbucks|Domino|Pizza Hut|Wendy|Popeye",i];
-  way(${bbStr(bb)})["amenity"="fast_food"]["name"~"McDonald|Burger King|KFC|Subway|7-Eleven|7 Eleven|Starbucks|Domino|Pizza Hut|Wendy|Popeye",i];
+  node(${bbStr(bb)})["amenity"="fast_food"];
+  way(${bbStr(bb)})["amenity"="fast_food"];
 );
 out center bb tags;`,
         render: renderPOIs,
