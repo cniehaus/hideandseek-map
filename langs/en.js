@@ -34,6 +34,7 @@ const LANG_EN = {
     lyr_firestation:      'Fire Stations',
     lyr_airports:         'Airports',
     lyr_airfields:        'Airfields',
+    lyr_fastfood:         'Fast Food Chains',
     btn_clear_layers:     'Remove all layers',
     sec_busroutes:        'Bus Routes',
     busroute_hint:        'Enter line number (e.g. 305)',

@@ -43,6 +43,7 @@ const COLOR_THEMES = {
             swimmingpool: '#22d3ee',
             police:       '#6366f1',
             firestation:  '#ef4444',
+            fastfood:     '#fbbf24',
         },
     },
     colorblind: {
@@ -84,6 +85,7 @@ const COLOR_THEMES = {
             swimmingpool: '#0072B2',
             police:       '#332288',
             firestation:  '#EE8866',
+            fastfood:     '#F0E442',
         },
     },
 };
