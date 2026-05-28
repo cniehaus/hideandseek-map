@@ -37,4 +37,7 @@ function applyI18n() {
         el.title = text;
         el.setAttribute('aria-label', text);
     });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        el.placeholder = t(el.dataset.i18nPlaceholder);
+    });
 }

@@ -180,22 +180,25 @@
             <details class="layers-details">
             <summary class="section-title" data-i18n="sec_nearest">Same Nearest</summary>
             <div style="font-size:11px;color:#484f58;margin:6px 0 8px" data-i18n="nearest_hint">
-                Set two points to check if they share the same nearest POI.
+                Layer im Layer-Panel wählen, dann zwei Punkte eingeben.
             </div>
-            <select id="ncTypeSelect" style="width:100%;background:#0d1117;border:1px solid #30363d;color:#c9d1d9;padding:5px 9px;border-radius:6px;font-size:13px;margin-bottom:8px">
-                <option value="hospitals"     data-i18n="lyr_hospitals">Hospitals</option>
-                <option value="stations"      data-i18n="lyr_stations">Stations</option>
-                <option value="cinema"        data-i18n="lyr_cinema">Cinemas</option>
-                <option value="zoo"           data-i18n="lyr_zoo">Zoos</option>
-                <option value="aquarium"      data-i18n="lyr_aquarium">Aquariums</option>
-                <option value="golf"          data-i18n="lyr_golf">Golf Courses</option>
-                <option value="museum"        data-i18n="lyr_museum">Museums</option>
-                <option value="amusementpark" data-i18n="lyr_amusementpark">Amusement Parks</option>
-                <option value="library"       data-i18n="lyr_library">Libraries</option>
-            </select>
-            <button id="ncBtn" style="width:100%;margin-bottom:4px" onclick="toggleNearestChecker()" data-i18n="btn_nc_start">Start checker</button>
+
+            <div class="nc-point-row">
+                <span class="nc-point-lbl">A</span>
+                <input type="text" id="ncLatA" data-i18n-placeholder="lat_placeholder" placeholder="Lat" style="flex:1;min-width:0">
+                <input type="text" id="ncLngA" data-i18n-placeholder="lng_placeholder" placeholder="Lng" style="flex:1;min-width:0">
+                <button id="ncPickA" class="nc-pick-btn" onclick="event.stopPropagation();ncStartPick('A')" data-i18n-title="nc_pick_title" title="Auf Karte klicken">📍</button>
+            </div>
+            <div class="nc-point-row">
+                <span class="nc-point-lbl">B</span>
+                <input type="text" id="ncLatB" data-i18n-placeholder="lat_placeholder" placeholder="Lat" style="flex:1;min-width:0">
+                <input type="text" id="ncLngB" data-i18n-placeholder="lng_placeholder" placeholder="Lng" style="flex:1;min-width:0">
+                <button id="ncPickB" class="nc-pick-btn" onclick="event.stopPropagation();ncStartPick('B')" data-i18n-title="nc_pick_title" title="Auf Karte klicken">📍</button>
+            </div>
+
+            <button id="ncBtn" style="width:100%;margin:6px 0 4px" onclick="runNearestCheck()" data-i18n="btn_nc_start">Prüfen</button>
             <div id="ncResult"></div>
-            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearNearestChecker()" data-i18n="btn_nc_clear">Clear</button>
+            <button class="ghost" style="width:100%;margin-top:6px" onclick="clearNearestChecker()" data-i18n="btn_nc_clear">Löschen</button>
             </details>
         </div>
 

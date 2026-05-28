@@ -787,6 +787,7 @@ button.meas-active:hover { background: #3b82f6; }
 .np-dist  { color: #f0883e; font-size: 11px; font-weight: 600; white-space: nowrap; text-align: right; }
 
 /* ── Same Nearest Checker ────────────────────────── */
+/* Keep .nc-result/.nc-match/.nc-miss for error/no-data states */
 .nc-result {
     padding: 6px 8px;
     border-radius: 6px;
@@ -797,18 +798,108 @@ button.meas-active:hover { background: #3b82f6; }
 }
 .nc-match { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid #3fb950; }
 .nc-miss  { background: rgba(248,81,73,0.15); color: #f85149; border: 1px solid #f85149; }
-.nc-row {
+
+/* ── Coordinate input row ─────────────────────────── */
+.nc-point-row {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 3px 0;
+    gap: 4px;
+    margin-bottom: 5px;
+}
+.nc-point-lbl {
+    font-weight: 700;
+    color: #f0883e;
+    font-size: 12px;
+    width: 14px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+/* ── Map-pick button ──────────────────────────────── */
+.nc-pick-btn {
+    padding: 4px 7px;
+    flex-shrink: 0;
+    background: transparent;
+    color: #58a6ff;
+    border: 1px solid #388bfd55;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.nc-pick-btn:hover {
+    background: rgba(88,166,255,0.12);
+    border-color: #58a6ff;
+}
+.nc-pick-btn.meas-active {
+    background: #58a6ff;
+    color: #0d1117;
+    border-color: #58a6ff;
+}
+.nc-pick-btn.meas-active:hover { background: #3b82f6; }
+
+/* ── Loading placeholder ──────────────────────────── */
+.nc-loading {
+    font-size: 12px;
+    color: #8b949e;
+    padding: 4px 0;
+}
+
+/* ── Summary bar ──────────────────────────────────── */
+.nc-summary {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    margin: 4px 0 8px;
+    background: #21262d;
+    color: #c9d1d9;
+    letter-spacing: 0.3px;
+}
+.nc-summary.all-match  { background: rgba(63,185,80,0.15);  color: #3fb950; }
+.nc-summary.no-match   { background: rgba(248,81,73,0.15);  color: #f85149; }
+.nc-summary.part-match { background: rgba(240,136,62,0.12); color: #f0883e; }
+
+/* ── Result rows ──────────────────────────────────── */
+.nc-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 5px 0;
     font-size: 12px;
     border-bottom: 1px solid #21262d;
 }
 .nc-row:last-child { border: none; }
-.nc-label { font-weight: 700; color: #8b949e; flex-shrink: 0; width: 14px; }
-.nc-name  { flex: 1; color: #c9d1d9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.nc-dist  { flex-shrink: 0; color: #8b949e; font-size: 11px; }
+.nc-row-na { opacity: 0.38; }
+.nc-st { font-size: 12px; flex-shrink: 0; width: 16px; line-height: 1.5; }
+.nc-ic { font-size: 13px; flex-shrink: 0; width: 20px; line-height: 1.4; }
+.nc-body { flex: 1; min-width: 0; }
+.nc-lbl { color: #8b949e; line-height: 1.4; }
+.nc-nm {
+    font-size: 11px;
+    color: #c9d1d9;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.nc-nm-same { color: #3fb950; }
+.nc-nm-na   { color: #484f58; }
+.nc-d {
+    color: #484f58;
+    font-size: 10px;
+    margin-left: 5px;
+}
+.nc-pa, .nc-pb {
+    display: inline-block;
+    width: 16px;
+    font-weight: 700;
+    font-size: 10px;
+    flex-shrink: 0;
+}
+.nc-pa { color: #f0883e; }
+.nc-pb { color: #58a6ff; }
 
 /* ── Changelog ───────────────────────────────────── */
 .cl-section { margin-top: auto; }
