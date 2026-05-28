@@ -409,7 +409,8 @@ button.meas-active:hover { background: #3b82f6; }
 #printFab,
 #styleFab,
 #boundaryFab,
-#permalinkFab {
+#permalinkFab,
+#layerFab {
     position: fixed;
     right: 12px;
     z-index: 1200;
@@ -426,20 +427,82 @@ button.meas-active:hover { background: #3b82f6; }
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: visible;
 }
 #printFab     { bottom: 30px; }
 #styleFab     { bottom: 84px; }
 #boundaryFab  { bottom: 138px; }
 #permalinkFab { bottom: 192px; }
+#layerFab     { bottom: 246px; }
 #printFab:hover,
 #styleFab:hover,
 #boundaryFab:hover,
-#permalinkFab:hover { background: #21262d; color: #fff; }
+#permalinkFab:hover,
+#layerFab:hover { background: #21262d; color: #fff; }
+#layerFab.lp-active {
+    background: rgba(240,136,62,0.12);
+    border-color: #f0883e;
+    color: #f0883e;
+}
+
+/* ── Layer FAB badge ──────────────────────────────── */
+.layer-fab-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    background: #f0883e;
+    color: #0d1117;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 9px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    line-height: 1;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    pointer-events: none;
+}
+
+/* ── Layer panel ──────────────────────────────────── */
+#layerPanel {
+    position: fixed;
+    right: 64px;
+    top: 10px;
+    bottom: 50px;
+    z-index: 1201;
+    width: 240px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.7);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+#layerPanel.open { display: flex; }
+
+.lp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px 8px;
+    border-bottom: 1px solid #21262d;
+    flex-shrink: 0;
+    gap: 6px;
+}
+.lp-body {
+    overflow-y: auto;
+    flex: 1;
+    padding: 6px 12px 10px;
+}
 
 /* ── Style popover ────────────────────────────────── */
 #stylePopover {
     position: fixed;
-    bottom: 246px;
+    bottom: 300px;
     right: 12px;
     z-index: 1201;
     width: 195px;
@@ -541,7 +604,9 @@ button.meas-active:hover { background: #3b82f6; }
     #errorOverlay,
     #printFab,
     #styleFab,
-    #stylePopover {
+    #stylePopover,
+    #layerFab,
+    #layerPanel {
         display: none !important;
     }
 

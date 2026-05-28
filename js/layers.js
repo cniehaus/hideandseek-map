@@ -424,6 +424,7 @@ async function toggleLayer(id, enabled) {
         delete layerDataCache[id];
     }
     updatePermalink();
+    updateLayerFabBadge();
 }
 
 // ── Load layer (Overpass query → renderer → map) ──────────────────────────────
@@ -501,4 +502,5 @@ function clearAllLayers() {
     Object.keys(activeLayers).forEach(removeLayer);
     document.querySelectorAll('[id^="lyr-"]').forEach(cb => cb.checked = false);
     updatePermalink();
+    updateLayerFabBadge();
 }

@@ -94,206 +94,6 @@
             <div id="cityHint" style="font-size:11px;color:#8b949e;margin-top:2px"></div>
         </div>
 
-        <!-- Layers -->
-        <div class="section">
-            <details open class="layers-details">
-            <summary class="section-title" data-i18n="sec_layers">Layers</summary>
-
-            <label class="layer-row" for="lyr-hospitals">
-                <input type="checkbox" id="lyr-hospitals" onchange="toggleLayer('hospitals', this.checked)">
-                <div class="dot" style="background:#f85149"></div>
-                <span class="layer-name" data-i18n="lyr_hospitals">Hospitals</span>
-                <span class="layer-count" id="cnt-hospitals"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-stations">
-                <input type="checkbox" id="lyr-stations" onchange="toggleLayer('stations', this.checked)">
-                <div class="dot" style="background:#58a6ff"></div>
-                <span class="layer-name" data-i18n="lyr_stations">Train &amp; Tram Stations</span>
-                <span class="layer-count" id="cnt-stations"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-attractions">
-                <input type="checkbox" id="lyr-attractions" onchange="toggleLayer('attractions', this.checked)">
-                <div class="dot" style="background:#ffa657"></div>
-                <span class="layer-name" data-i18n="lyr_attractions">Attractions</span>
-                <span class="layer-count" id="cnt-attractions"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-parks">
-                <input type="checkbox" id="lyr-parks" onchange="toggleLayer('parks', this.checked)">
-                <div class="dot" style="background:#3fb950"></div>
-                <span class="layer-name" data-i18n="lyr_parks">City Parks</span>
-                <span class="layer-count" id="cnt-parks"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-greenspaces">
-                <input type="checkbox" id="lyr-greenspaces" onchange="toggleLayer('greenspaces', this.checked)">
-                <div class="dot" style="background:#86efac"></div>
-                <span class="layer-name" data-i18n="lyr_greenspaces">Green Spaces</span>
-                <span class="layer-count" id="cnt-greenspaces"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-shopping">
-                <input type="checkbox" id="lyr-shopping" onchange="toggleLayer('shopping', this.checked)">
-                <div class="dot" style="background:#d2a8ff"></div>
-                <span class="layer-name" data-i18n="lyr_shopping">Shopping Centres</span>
-                <span class="layer-count" id="cnt-shopping"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-busstops">
-                <input type="checkbox" id="lyr-busstops" onchange="toggleLayer('busstops', this.checked)">
-                <div class="dot" style="background:#facc15"></div>
-                <span class="layer-name" data-i18n="lyr_busstops">Bus Stops</span>
-                <span class="layer-count" id="cnt-busstops"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-cinema">
-                <input type="checkbox" id="lyr-cinema" onchange="toggleLayer('cinema', this.checked)">
-                <div class="dot" style="background:#e879f9"></div>
-                <span class="layer-name" data-i18n="lyr_cinema">Cinemas</span>
-                <span class="layer-count" id="cnt-cinema"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-zoo">
-                <input type="checkbox" id="lyr-zoo" onchange="toggleLayer('zoo', this.checked)">
-                <div class="dot" style="background:#a3e635"></div>
-                <span class="layer-name" data-i18n="lyr_zoo">Zoos</span>
-                <span class="layer-count" id="cnt-zoo"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-townhall">
-                <input type="checkbox" id="lyr-townhall" onchange="toggleLayer('townhall', this.checked)">
-                <div class="dot" style="background:#fb923c"></div>
-                <span class="layer-name" data-i18n="lyr_townhall">Town Halls</span>
-                <span class="layer-count" id="cnt-townhall"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-coastline">
-                <input type="checkbox" id="lyr-coastline" onchange="toggleLayer('coastline', this.checked)">
-                <div class="dot" style="background:#1e40af"></div>
-                <span class="layer-name" data-i18n="lyr_coastline">Coastline</span>
-                <span class="layer-count" id="cnt-coastline"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-water">
-                <input type="checkbox" id="lyr-water" onchange="toggleLayer('water', this.checked)">
-                <div class="dot" style="background:#38bdf8;border:1px solid #0ea5e9"></div>
-                <span class="layer-name" data-i18n="lyr_water">Water Bodies</span>
-                <span class="layer-count" id="cnt-water"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-aquarium">
-                <input type="checkbox" id="lyr-aquarium" onchange="toggleLayer('aquarium', this.checked)">
-                <div class="dot" style="background:#06b6d4"></div>
-                <span class="layer-name" data-i18n="lyr_aquarium">Aquariums</span>
-                <span class="layer-count" id="cnt-aquarium"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-library">
-                <input type="checkbox" id="lyr-library" onchange="toggleLayer('library', this.checked)">
-                <div class="dot" style="background:#a78bfa"></div>
-                <span class="layer-name" data-i18n="lyr_library">Libraries</span>
-                <span class="layer-count" id="cnt-library"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-golf">
-                <input type="checkbox" id="lyr-golf" onchange="toggleLayer('golf', this.checked)">
-                <div class="dot" style="background:#84cc16"></div>
-                <span class="layer-name" data-i18n="lyr_golf">Golf Courses</span>
-                <span class="layer-count" id="cnt-golf"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-stadium">
-                <input type="checkbox" id="lyr-stadium" onchange="toggleLayer('stadium', this.checked)">
-                <div class="dot" style="background:#f43f5e"></div>
-                <span class="layer-name" data-i18n="lyr_stadium">Stadiums</span>
-                <span class="layer-count" id="cnt-stadium"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-embassy">
-                <input type="checkbox" id="lyr-embassy" onchange="toggleLayer('embassy', this.checked)">
-                <div class="dot" style="background:#f59e0b"></div>
-                <span class="layer-name" data-i18n="lyr_embassy">Embassies</span>
-                <span class="layer-count" id="cnt-embassy"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-consulate">
-                <input type="checkbox" id="lyr-consulate" onchange="toggleLayer('consulate', this.checked)">
-                <div class="dot" style="background:#d97706"></div>
-                <span class="layer-name" data-i18n="lyr_consulate">Consulates</span>
-                <span class="layer-count" id="cnt-consulate"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-cemetery">
-                <input type="checkbox" id="lyr-cemetery" onchange="toggleLayer('cemetery', this.checked)">
-                <div class="dot" style="background:#6b7280"></div>
-                <span class="layer-name" data-i18n="lyr_cemetery">Cemeteries</span>
-                <span class="layer-count" id="cnt-cemetery"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-swimmingpool">
-                <input type="checkbox" id="lyr-swimmingpool" onchange="toggleLayer('swimmingpool', this.checked)">
-                <div class="dot" style="background:#22d3ee"></div>
-                <span class="layer-name" data-i18n="lyr_swimmingpool">Swimming Pools</span>
-                <span class="layer-count" id="cnt-swimmingpool"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-police">
-                <input type="checkbox" id="lyr-police" onchange="toggleLayer('police', this.checked)">
-                <div class="dot" style="background:#6366f1"></div>
-                <span class="layer-name" data-i18n="lyr_police">Police Stations</span>
-                <span class="layer-count" id="cnt-police"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-firestation">
-                <input type="checkbox" id="lyr-firestation" onchange="toggleLayer('firestation', this.checked)">
-                <div class="dot" style="background:#ef4444"></div>
-                <span class="layer-name" data-i18n="lyr_firestation">Fire Stations</span>
-                <span class="layer-count" id="cnt-firestation"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-airports">
-                <input type="checkbox" id="lyr-airports" onchange="toggleLayer('airports', this.checked)">
-                <div class="dot" style="background:#60a5fa"></div>
-                <span class="layer-name" data-i18n="lyr_airports">Airports</span>
-                <span class="layer-count" id="cnt-airports"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-airfields">
-                <input type="checkbox" id="lyr-airfields" onchange="toggleLayer('airfields', this.checked)">
-                <div class="dot" style="background:#94a3b8"></div>
-                <span class="layer-name" data-i18n="lyr_airfields">Airfields</span>
-                <span class="layer-count" id="cnt-airfields"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-fastfood">
-                <input type="checkbox" id="lyr-fastfood" onchange="toggleLayer('fastfood', this.checked)">
-                <div class="dot" style="background:#fbbf24"></div>
-                <span class="layer-name" data-i18n="lyr_fastfood">Fast Food Chains</span>
-                <span class="layer-count" id="cnt-fastfood"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-museum">
-                <input type="checkbox" id="lyr-museum" onchange="toggleLayer('museum', this.checked)">
-                <div class="dot" style="background:#ca8a04"></div>
-                <span class="layer-name" data-i18n="lyr_museum">Museums</span>
-                <span class="layer-count" id="cnt-museum"></span>
-            </label>
-
-            <label class="layer-row" for="lyr-amusementpark">
-                <input type="checkbox" id="lyr-amusementpark" onchange="toggleLayer('amusementpark', this.checked)">
-                <div class="dot" style="background:#db2777"></div>
-                <span class="layer-name" data-i18n="lyr_amusementpark">Amusement Parks</span>
-                <span class="layer-count" id="cnt-amusementpark"></span>
-            </label>
-
-            <div style="margin-top:10px">
-                <button class="ghost" style="width:100%" onclick="clearAllLayers()" data-i18n="btn_clear_layers">Remove all layers</button>
-            </div>
-            </details>
-        </div>
-
         <!-- Bus Routes -->
         <div class="section">
             <details class="layers-details">
@@ -493,6 +293,183 @@
 
     <!-- ════════ PERMALINK FAB ════════ -->
     <button id="permalinkFab" onclick="copyPermalink()" data-i18n-title="fab_permalink_title" title="Copy link" aria-label="Copy link">🔗</button>
+
+    <!-- ════════ LAYER FAB ════════ -->
+    <button id="layerFab" onclick="toggleLayerPanel()" data-i18n-title="fab_layer_title" title="POI-Layer" aria-label="POI-Layer">📍<span id="layerFabBadge" class="layer-fab-badge"></span></button>
+
+    <div id="layerPanel">
+        <div class="lp-header">
+            <span class="pp-label" style="margin:0" data-i18n="sec_layers">Layers</span>
+            <div style="display:flex;gap:5px;align-items:center">
+                <button class="ghost" style="font-size:11px;padding:2px 8px;white-space:nowrap" onclick="clearAllLayers()" data-i18n="btn_clear_layers">Remove all layers</button>
+                <button onclick="toggleLayerPanel()" style="background:none;border:none;color:#8b949e;font-size:16px;cursor:pointer;padding:0 4px;font-weight:400;line-height:1">✕</button>
+            </div>
+        </div>
+        <div class="lp-body">
+            <label class="layer-row" for="lyr-hospitals">
+                <input type="checkbox" id="lyr-hospitals" onchange="toggleLayer('hospitals', this.checked)">
+                <div class="dot" style="background:#f85149"></div>
+                <span class="layer-name" data-i18n="lyr_hospitals">Hospitals</span>
+                <span class="layer-count" id="cnt-hospitals"></span>
+            </label>
+            <label class="layer-row" for="lyr-stations">
+                <input type="checkbox" id="lyr-stations" onchange="toggleLayer('stations', this.checked)">
+                <div class="dot" style="background:#58a6ff"></div>
+                <span class="layer-name" data-i18n="lyr_stations">Train &amp; Tram Stations</span>
+                <span class="layer-count" id="cnt-stations"></span>
+            </label>
+            <label class="layer-row" for="lyr-attractions">
+                <input type="checkbox" id="lyr-attractions" onchange="toggleLayer('attractions', this.checked)">
+                <div class="dot" style="background:#ffa657"></div>
+                <span class="layer-name" data-i18n="lyr_attractions">Attractions</span>
+                <span class="layer-count" id="cnt-attractions"></span>
+            </label>
+            <label class="layer-row" for="lyr-parks">
+                <input type="checkbox" id="lyr-parks" onchange="toggleLayer('parks', this.checked)">
+                <div class="dot" style="background:#3fb950"></div>
+                <span class="layer-name" data-i18n="lyr_parks">City Parks</span>
+                <span class="layer-count" id="cnt-parks"></span>
+            </label>
+            <label class="layer-row" for="lyr-greenspaces">
+                <input type="checkbox" id="lyr-greenspaces" onchange="toggleLayer('greenspaces', this.checked)">
+                <div class="dot" style="background:#86efac"></div>
+                <span class="layer-name" data-i18n="lyr_greenspaces">Green Spaces</span>
+                <span class="layer-count" id="cnt-greenspaces"></span>
+            </label>
+            <label class="layer-row" for="lyr-shopping">
+                <input type="checkbox" id="lyr-shopping" onchange="toggleLayer('shopping', this.checked)">
+                <div class="dot" style="background:#d2a8ff"></div>
+                <span class="layer-name" data-i18n="lyr_shopping">Shopping Centres</span>
+                <span class="layer-count" id="cnt-shopping"></span>
+            </label>
+            <label class="layer-row" for="lyr-busstops">
+                <input type="checkbox" id="lyr-busstops" onchange="toggleLayer('busstops', this.checked)">
+                <div class="dot" style="background:#facc15"></div>
+                <span class="layer-name" data-i18n="lyr_busstops">Bus Stops</span>
+                <span class="layer-count" id="cnt-busstops"></span>
+            </label>
+            <label class="layer-row" for="lyr-cinema">
+                <input type="checkbox" id="lyr-cinema" onchange="toggleLayer('cinema', this.checked)">
+                <div class="dot" style="background:#e879f9"></div>
+                <span class="layer-name" data-i18n="lyr_cinema">Cinemas</span>
+                <span class="layer-count" id="cnt-cinema"></span>
+            </label>
+            <label class="layer-row" for="lyr-zoo">
+                <input type="checkbox" id="lyr-zoo" onchange="toggleLayer('zoo', this.checked)">
+                <div class="dot" style="background:#a3e635"></div>
+                <span class="layer-name" data-i18n="lyr_zoo">Zoos</span>
+                <span class="layer-count" id="cnt-zoo"></span>
+            </label>
+            <label class="layer-row" for="lyr-townhall">
+                <input type="checkbox" id="lyr-townhall" onchange="toggleLayer('townhall', this.checked)">
+                <div class="dot" style="background:#fb923c"></div>
+                <span class="layer-name" data-i18n="lyr_townhall">Town Halls</span>
+                <span class="layer-count" id="cnt-townhall"></span>
+            </label>
+            <label class="layer-row" for="lyr-coastline">
+                <input type="checkbox" id="lyr-coastline" onchange="toggleLayer('coastline', this.checked)">
+                <div class="dot" style="background:#1e40af"></div>
+                <span class="layer-name" data-i18n="lyr_coastline">Coastline</span>
+                <span class="layer-count" id="cnt-coastline"></span>
+            </label>
+            <label class="layer-row" for="lyr-water">
+                <input type="checkbox" id="lyr-water" onchange="toggleLayer('water', this.checked)">
+                <div class="dot" style="background:#38bdf8;border:1px solid #0ea5e9"></div>
+                <span class="layer-name" data-i18n="lyr_water">Water Bodies</span>
+                <span class="layer-count" id="cnt-water"></span>
+            </label>
+            <label class="layer-row" for="lyr-aquarium">
+                <input type="checkbox" id="lyr-aquarium" onchange="toggleLayer('aquarium', this.checked)">
+                <div class="dot" style="background:#06b6d4"></div>
+                <span class="layer-name" data-i18n="lyr_aquarium">Aquariums</span>
+                <span class="layer-count" id="cnt-aquarium"></span>
+            </label>
+            <label class="layer-row" for="lyr-library">
+                <input type="checkbox" id="lyr-library" onchange="toggleLayer('library', this.checked)">
+                <div class="dot" style="background:#a78bfa"></div>
+                <span class="layer-name" data-i18n="lyr_library">Libraries</span>
+                <span class="layer-count" id="cnt-library"></span>
+            </label>
+            <label class="layer-row" for="lyr-golf">
+                <input type="checkbox" id="lyr-golf" onchange="toggleLayer('golf', this.checked)">
+                <div class="dot" style="background:#84cc16"></div>
+                <span class="layer-name" data-i18n="lyr_golf">Golf Courses</span>
+                <span class="layer-count" id="cnt-golf"></span>
+            </label>
+            <label class="layer-row" for="lyr-stadium">
+                <input type="checkbox" id="lyr-stadium" onchange="toggleLayer('stadium', this.checked)">
+                <div class="dot" style="background:#f43f5e"></div>
+                <span class="layer-name" data-i18n="lyr_stadium">Stadiums</span>
+                <span class="layer-count" id="cnt-stadium"></span>
+            </label>
+            <label class="layer-row" for="lyr-embassy">
+                <input type="checkbox" id="lyr-embassy" onchange="toggleLayer('embassy', this.checked)">
+                <div class="dot" style="background:#f59e0b"></div>
+                <span class="layer-name" data-i18n="lyr_embassy">Embassies</span>
+                <span class="layer-count" id="cnt-embassy"></span>
+            </label>
+            <label class="layer-row" for="lyr-consulate">
+                <input type="checkbox" id="lyr-consulate" onchange="toggleLayer('consulate', this.checked)">
+                <div class="dot" style="background:#d97706"></div>
+                <span class="layer-name" data-i18n="lyr_consulate">Consulates</span>
+                <span class="layer-count" id="cnt-consulate"></span>
+            </label>
+            <label class="layer-row" for="lyr-cemetery">
+                <input type="checkbox" id="lyr-cemetery" onchange="toggleLayer('cemetery', this.checked)">
+                <div class="dot" style="background:#6b7280"></div>
+                <span class="layer-name" data-i18n="lyr_cemetery">Cemeteries</span>
+                <span class="layer-count" id="cnt-cemetery"></span>
+            </label>
+            <label class="layer-row" for="lyr-swimmingpool">
+                <input type="checkbox" id="lyr-swimmingpool" onchange="toggleLayer('swimmingpool', this.checked)">
+                <div class="dot" style="background:#22d3ee"></div>
+                <span class="layer-name" data-i18n="lyr_swimmingpool">Swimming Pools</span>
+                <span class="layer-count" id="cnt-swimmingpool"></span>
+            </label>
+            <label class="layer-row" for="lyr-police">
+                <input type="checkbox" id="lyr-police" onchange="toggleLayer('police', this.checked)">
+                <div class="dot" style="background:#6366f1"></div>
+                <span class="layer-name" data-i18n="lyr_police">Police Stations</span>
+                <span class="layer-count" id="cnt-police"></span>
+            </label>
+            <label class="layer-row" for="lyr-firestation">
+                <input type="checkbox" id="lyr-firestation" onchange="toggleLayer('firestation', this.checked)">
+                <div class="dot" style="background:#ef4444"></div>
+                <span class="layer-name" data-i18n="lyr_firestation">Fire Stations</span>
+                <span class="layer-count" id="cnt-firestation"></span>
+            </label>
+            <label class="layer-row" for="lyr-airports">
+                <input type="checkbox" id="lyr-airports" onchange="toggleLayer('airports', this.checked)">
+                <div class="dot" style="background:#60a5fa"></div>
+                <span class="layer-name" data-i18n="lyr_airports">Airports</span>
+                <span class="layer-count" id="cnt-airports"></span>
+            </label>
+            <label class="layer-row" for="lyr-airfields">
+                <input type="checkbox" id="lyr-airfields" onchange="toggleLayer('airfields', this.checked)">
+                <div class="dot" style="background:#94a3b8"></div>
+                <span class="layer-name" data-i18n="lyr_airfields">Airfields</span>
+                <span class="layer-count" id="cnt-airfields"></span>
+            </label>
+            <label class="layer-row" for="lyr-fastfood">
+                <input type="checkbox" id="lyr-fastfood" onchange="toggleLayer('fastfood', this.checked)">
+                <div class="dot" style="background:#fbbf24"></div>
+                <span class="layer-name" data-i18n="lyr_fastfood">Fast Food Chains</span>
+                <span class="layer-count" id="cnt-fastfood"></span>
+            </label>
+            <label class="layer-row" for="lyr-museum">
+                <input type="checkbox" id="lyr-museum" onchange="toggleLayer('museum', this.checked)">
+                <div class="dot" style="background:#ca8a04"></div>
+                <span class="layer-name" data-i18n="lyr_museum">Museums</span>
+                <span class="layer-count" id="cnt-museum"></span>
+            </label>
+            <label class="layer-row" for="lyr-amusementpark">
+                <input type="checkbox" id="lyr-amusementpark" onchange="toggleLayer('amusementpark', this.checked)">
+                <div class="dot" style="background:#db2777"></div>
+                <span class="layer-name" data-i18n="lyr_amusementpark">Amusement Parks</span>
+                <span class="layer-count" id="cnt-amusementpark"></span>
+            </label>
+        </div>
+    </div>
 
     <!-- ════════ ABOUT FOOTER ════════ -->
     <footer id="about-footer">

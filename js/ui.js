@@ -65,6 +65,27 @@ function selectStyle(btn, key) {
 
 registerPopoverClickOutside('stylePopover', 'styleFab');
 
+// ── Layer panel ───────────────────────────────────────────────────────────────
+function toggleLayerPanel() {
+    document.getElementById('layerPanel').classList.toggle('open');
+}
+
+function updateLayerFabBadge() {
+    const count  = document.querySelectorAll('[id^="lyr-"]:checked').length;
+    const badge  = document.getElementById('layerFabBadge');
+    const fab    = document.getElementById('layerFab');
+    if (count > 0) {
+        badge.textContent  = count;
+        badge.style.display = 'flex';
+        fab.classList.add('lp-active');
+    } else {
+        badge.style.display = 'none';
+        fab.classList.remove('lp-active');
+    }
+}
+
+registerPopoverClickOutside('layerPanel', 'layerFab');
+
 // ── Mobile sidebar ────────────────────────────────────────────────────────────
 function openSidebar() {
     document.getElementById('sidebar').classList.add('open');

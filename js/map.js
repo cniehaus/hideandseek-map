@@ -17,7 +17,7 @@ function registerPopoverClickOutside(popId, fabId) {
         const pop = document.getElementById(popId);
         const fab = document.getElementById(fabId);
         if (pop?.classList.contains('open') &&
-            !pop.contains(e.target) && e.target !== fab) {
+            !pop.contains(e.target) && !fab.contains(e.target)) {
             pop.classList.remove('open');
         }
     });

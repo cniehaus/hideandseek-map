@@ -72,6 +72,7 @@ const LANG_EN = {
     lyr_admin3:           'Level 3 (County)',
     lyr_admin4:           'Level 4 (State)',
     fab_boundary_title:   'Zones & Admin Levels',
+    fab_layer_title:      'POI Layers',
     err_no_geojson:       'No polygon data available',
     sec_admin:            'Admin Division',
     admin_hint:           'Set two points on the map to see if they share the same admin levels.',

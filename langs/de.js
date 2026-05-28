@@ -72,6 +72,7 @@ const LANG_DE = {
     lyr_admin3:           '3. Ebene (Kreis)',
     lyr_admin4:           '4. Ebene (Bundesland)',
     fab_boundary_title:   'Gebiete & Admin-Ebenen',
+    fab_layer_title:      'POI-Layer',
     err_no_geojson:       'Keine Polygon-Daten verfügbar',
     sec_admin:            'Admin-Division',
     admin_hint:           'Zwei Punkte setzen – zeigt ob sie in denselben Admin-Ebenen liegen.',
