@@ -109,6 +109,46 @@ async function _tentFetchPOIs(id) {
     }
 }
 
+// ── Geodesically-correct Voronoi via equirectangular projection ───────────────
+// turf.voronoi works in Euclidean (x,y) space. Geographic lat/lng is NOT
+// Euclidean: at 53°N a degree of longitude is only ~67 km, not 111 km.
+// Fix: project to local km coords → compute Voronoi → reproject to lat/lng.
+function _tentProjectedVoronoi(pois, centerLat, centerLng, radiusKm) {
+    const KM_PER_DEG = 111;
+    const cosLat = Math.cos(centerLat * Math.PI / 180);
+
+    // Project each POI to local km plane centered on (centerLat, centerLng)
+    const proj = pois.map(p => ({
+        id: p.id,
+        px: (p.lng - centerLng) * cosLat * KM_PER_DEG,
+        py: (p.lat - centerLat) * KM_PER_DEG,
+    }));
+
+    const turfPts = turf.featureCollection(
+        proj.map(p => turf.point([p.px, p.py], { id: p.id }))
+    );
+
+    const ext     = radiusKm * 2.5;
+    const voronoi = turf.voronoi(turfPts, { bbox: [-ext, -ext, ext, ext] });
+    if (!voronoi?.features) return null;
+
+    // Reproject polygon vertices back to lat/lng
+    return turf.featureCollection(
+        voronoi.features.map(f => {
+            if (!f?.geometry?.coordinates) return null;
+            return turf.polygon(
+                f.geometry.coordinates.map(ring =>
+                    ring.map(([px, py]) => [
+                        centerLng + px / (cosLat * KM_PER_DEG),
+                        centerLat + py / KM_PER_DEG,
+                    ])
+                ),
+                f.properties
+            );
+        }).filter(Boolean)
+    );
+}
+
 // ── Compute Voronoi and draw tentacle polygon ─────────────────────────────────
 async function _tentDraw(id) {
     const q = _tentQuestions.find(x => x.id === id);
@@ -129,20 +169,9 @@ async function _tentDraw(id) {
             }).addTo(map)
         );
     } else {
-        // Build Voronoi with a bbox 2.5x larger than the search radius
-        const degLat = radiusKm / 111;
-        const degLng = radiusKm / (111 * Math.cos(q.centerLat * Math.PI / 180));
-        const bbox   = [
-            q.centerLng - degLng * 2.5,   // west
-            q.centerLat - degLat * 2.5,   // south
-            q.centerLng + degLng * 2.5,   // east
-            q.centerLat + degLat * 2.5,   // north
-        ];
-
-        const turfPts = turf.featureCollection(
-            q.fetchedPOIs.map(p => turf.point([p.lng, p.lat], { id: p.id }))
+        const voronoi = _tentProjectedVoronoi(
+            q.fetchedPOIs, q.centerLat, q.centerLng, radiusKm
         );
-        const voronoi = turf.voronoi(turfPts, { bbox });
         if (!voronoi?.features?.length) return;
 
         const selIdx = q.fetchedPOIs.findIndex(p => p.id === q.selectedPOI.id);
