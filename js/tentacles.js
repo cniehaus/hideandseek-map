@@ -74,8 +74,8 @@ async function _tentFetchPOIs(id) {
     const query    = _tentBuildQuery(q.poiType, q.centerLat, q.centerLng, radiusKm * 1000);
 
     const sel = document.getElementById(`tent-poi-select-${id}`);
-    if (sel) { sel.innerHTML = '<option>Loading…</option>'; sel.disabled = true; }
-    setStatus(`Loading ${TENT_TYPES[q.poiType].label}…`, 'loading');
+    if (sel) { sel.innerHTML = `<option>${t('tent_loading')}</option>`; sel.disabled = true; }
+    setStatus(tf('tent_status_loading', TENT_TYPES[q.poiType].label), 'loading');
 
     try {
         const data = await overpassFetch(query);
@@ -95,15 +95,15 @@ async function _tentFetchPOIs(id) {
             .sort((a, b) => a.name.localeCompare(b.name));
 
         if (sel) {
-            sel.innerHTML = '<option value="">– Select POI –</option>' +
+            sel.innerHTML = `<option value="">${t('tent_select_poi')}</option>` +
                 q.fetchedPOIs.map(p =>
                     `<option value="${p.id}"${q.selectedPOI?.id === p.id ? ' selected' : ''}>${esc(p.name)}</option>`
                 ).join('');
             sel.disabled = false;
         }
-        setStatus(`${q.fetchedPOIs.length} ${TENT_TYPES[q.poiType].label} found`, 'ok');
+        setStatus(tf('tent_status_found', q.fetchedPOIs.length, TENT_TYPES[q.poiType].label), 'ok');
     } catch (err) {
-        if (sel) { sel.innerHTML = '<option value="">Error</option>'; sel.disabled = false; }
+        if (sel) { sel.innerHTML = `<option value="">${t('tent_error')}</option>`; sel.disabled = false; }
         showErrorPopup(err.message);
         setStatus('Error loading POIs', 'error');
     }
@@ -284,7 +284,7 @@ function tentSetType(id, type) {
 function tentStartPick(id) {
     _tentPickingId = id;
     document.getElementById(`tent-pick-btn-${id}`)?.classList.add('meas-active');
-    setStatus('Click on the map to set the tentacle center point', 'loading');
+    setStatus(t('tent_status_pick'), 'loading');
 }
 
 function tentSelectPOI(id, val) {
@@ -307,15 +307,15 @@ function _tentRenderCards() {
             ).join('');
 
         const poiOpts = q.fetchedPOIs.length
-            ? '<option value="">– Select –</option>' +
+            ? `<option value="">${t('tent_select')}</option>` +
               q.fetchedPOIs.map(p =>
                   `<option value="${p.id}"${q.selectedPOI?.id === p.id ? ' selected' : ''}>${esc(p.name)}</option>`
               ).join('')
-            : '<option value="">– Set center first –</option>';
+            : `<option value="">${t('tent_select_poi')}</option>`;
 
         const coordTxt = q.centerLat !== null
             ? `${q.centerLat.toFixed(5)}° N  ${q.centerLng.toFixed(5)}° E`
-            : '– click 📍 to set center –';
+            : t('tent_set_center');
 
         return `
 <div class="tent-card" id="tent-${q.id}">
@@ -327,15 +327,15 @@ function _tentRenderCards() {
     <input type="number" value="${q.radius}" min="1" max="9999" step="1" style="max-width:70px"
       onchange="tentSetRadius(${q.id}, this.value)">
     <select style="flex:1" onchange="tentSetUnit(${q.id}, this.value)">
-      <option value="km"${q.unit === 'km' ? ' selected' : ''}>Kilometers</option>
-      <option value="mi"${q.unit === 'mi' ? ' selected' : ''}>Miles</option>
+      <option value="km"${q.unit === 'km' ? ' selected' : ''}>${t('tent_kilometers')}</option>
+      <option value="mi"${q.unit === 'mi' ? ' selected' : ''}>${t('tent_miles')}</option>
     </select>
   </div>
   <select style="margin-bottom:6px" onchange="tentSetType(${q.id}, this.value)">
     ${typeOpts}
   </select>
   <button id="tent-pick-btn-${q.id}" class="tent-pick-btn" onclick="tentStartPick(${q.id})">
-    📍 Location
+    ${t('tent_location_btn')}
   </button>
   <div id="tent-coord-${q.id}" class="tent-coord">${esc(coordTxt)}</div>
   <select id="tent-poi-select-${q.id}" onchange="tentSelectPOI(${q.id}, this.value)">

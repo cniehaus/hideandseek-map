@@ -12,10 +12,11 @@
 ## Features
 
 ### Map layers
+
 **22 toggleable layers** across three categories:
 
 | Category | Layers |
-|---|---|
+| --- | --- |
 | City overview | City boundary, Postal codes |
 | Transport | Train & tram stations, Bus stops |
 | Emergency & civic | Hospitals, Police stations, Fire stations, Town halls, Embassies, Consulates |
@@ -27,40 +28,61 @@ Clicking any **bus stop** shows a popup listing every bus line that serves it �
 
 ![Bus stop popup showing lines 301, 303, 304, 340](screenshot-buslines.png)
 
-### City boundary layer 
+### City boundary layer
+
 Toggle the **Stadtgrenze / City Boundary** layer to draw the administrative outline of the searched city as a thick dashed line with no fill. Useful for quickly checking whether the hider is still inside the game area. The boundary is fetched using the exact OSM relation ID returned by Nominatim, so it matches the city precisely.
 
 ### Bus route lines
+
 Draw any bus (or tram) line by number directly on the map. Type a line number such as **305** in the *Bus-Linien* section and click *Einzeichnen* – the full route appears as a coloured line. Multiple lines can be shown at once, each with its own colour.
 
 ### Radius & interval tool
+
 Draw a circle of any radius around a chosen centre point – or a set of evenly-spaced rings for interval-based rules.
 
 **Radii are draggable** – grab the centre dot and move the whole circle to a new position without redrawing it.
 
 ### Administrative division checker
+
 Click two points (A then B) to compare their administrative hierarchy across four game-relevant levels:
 
 | Level | Fields checked |
-|---|---|
+| --- | --- |
 | 1. Neighbourhood | neighbourhood, suburb, quarter, hamlet |
 | 2. City | city\_district, city, town, village, municipality |
 | 3. County | county, district, state\_district |
 | 4. State | state, province, region |
 
 Each level is marked **✓** (same division), **✗** (different), or **–** (not applicable). Both points are reverse-geocoded via Nominatim, and the map highlights:
+
 - The **neighbourhood polygon** for each point (orange for A, blue for B)
 - Background outlines at city, county, and state level
 
+### Tentacle questions
+
+The *Questions* panel lets you define **Tentacle** questions – the canonical Hide & Seek mechanic where a player is asked "are you in the Voronoi cell of POI X?"
+
+Set a radius, choose a POI type (hospitals, museums, train stations, …), click the 📍 button to place the centre point on the map, then pick the specific POI from the dropdown. The map shows:
+
+- The **filled polygon** = every location that is closer to the chosen POI than to any other POI of the same type within the radius
+- **Dashed outlines** = all other cells in the diagram (so players can see where the boundaries lie)
+
+Multiple questions can be open at the same time.
+
+![Tentacle question showing Voronoi cells around Oldenburg](screenshot-tentacles.png)
+
 ### Distance & direction tool
+
 Click two points (A then B) to get the Haversine distance and compass bearing. The result is shown with two semicircle zones.
 
 **Both markers are draggable** – move A or B after placing them; distance, bearing, and zones update in real time.
 
 ### Click-point marker
+
 Every map click sets a centre point for the radius tool and marks it with a crosshair symbol so you always know where the last click landed.
 
-### Colour-blind safe palette 
+### Colour-blind safe palette
+
 The map style popover (🗺 button) now includes a **Colour palette** toggle with two options:
 
 - **Default** – the original vivid colours
@@ -69,9 +91,11 @@ The map style popover (🗺 button) now includes a **Colour palette** toggle wit
 The choice is persisted in `localStorage` and switching palettes instantly re-colours any active layers without re-fetching data.
 
 ### Map styles & printing
+
 6 map styles (OSM Standard, Positron, Dark, Voyager, Satellite, ÖPNV). Print-ready A4 PDF via the browser print dialog.
 
 ### Bilingual
+
 English and German, auto-detected from browser locale. Switch at any time with the DE / EN buttons.
 
 ---
@@ -79,12 +103,13 @@ English and German, auto-detected from browser locale. Switch at any time with t
 ## Tech Stack
 
 | What | Library / API |
-|---|---|
+| --- | --- |
 | Map rendering | [Leaflet 1.9](https://leafletjs.com/) |
 | Map tiles | OpenStreetMap, CARTO, Esri, memomaps |
 | POI & route data | [Overpass API](https://overpass-api.de/) (with 3-endpoint fallback) |
 | Geocoding | [Nominatim](https://nominatim.openstreetmap.org/) |
 | OSM → GeoJSON | [osmtogeojson](https://github.com/tyrasd/osmtogeojson) |
+| Spatial analysis | [Turf.js 6](https://turfjs.org/) (Voronoi + geodesic projection) |
 | Languages | Plain JS objects (`langs/de.js`, `langs/en.js`) |
 
 No build step, no bundler, no framework. Just HTML + CSS + vanilla JS.
@@ -93,7 +118,7 @@ No build step, no bundler, no framework. Just HTML + CSS + vanilla JS.
 
 ## Project Structure
 
-```
+```text
 hideandseek-map/
 ├── index.html          # Shell: HTML layout + <script> load order
 ├── style.css           # All styles (sidebar, map, print)
@@ -115,6 +140,7 @@ hideandseek-map/
     ├── measure.js      # Distance & bearing tool + map click handler (draggable)
     ├── boundarylayers.js # nominatimBoundaryLayer() – fetch + draw OSM boundary polygons
     ├── admin.js        # Administrative division checker (reverse-geocode + level comparison)
+    ├── tentacles.js    # Tentacle / Voronoi question tool
     ├── permalink.js    # Shareable URL state
     └── ui.js           # Sidebar, print, error popup, style FAB, setColorMode()
 ```
@@ -150,32 +176,34 @@ npx serve .
 
 ## Contributing
 
-Contributions are very welcome! Here are the most impactful areas:
+Contributions are very welcome! Here are the most impactful areas.
 
 ### Add a new map layer (easiest start)
 
 Each layer is a single object in `LAYER_DEFS` inside `js/layers.js`. To add one:
 
 1. Pick an [Overpass QL](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL) query that returns the features you want.
+
 2. Add an entry to `LAYER_DEFS`:
 
-```js
-// js/layers.js
-my_layer: {
-    label: 'lyr_my_layer',       // translation key
-    color: '#a855f7',            // marker / polygon colour
-    icon:  '🏪',                 // emoji shown in popups
-    buildQuery: (bb) => `[out:json][timeout:60];
-(
-  node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="my_tag"];
-  way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="my_tag"];
-);
-out center bb tags;`,
-    render: renderPOIs,          // use renderPOIs for point features
-},
-```
+    ```js
+    // js/layers.js
+    my_layer: {
+        label: 'lyr_my_layer',       // translation key
+        color: '#a855f7',            // marker / polygon colour
+        icon:  '🏪',                 // emoji shown in popups
+        buildQuery: (bb) => `[out:json][timeout:60];
+    (
+      node(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="my_tag"];
+      way(${bb[0]},${bb[2]},${bb[1]},${bb[3]})["amenity"="my_tag"];
+    );
+    out center bb tags;`,
+        render: renderPOIs,          // use renderPOIs for point features
+    },
+    ```
 
 3. Add a checkbox to `index.html` (copy any existing `<label class="layer-row">` block).
+
 4. Add translation strings to both `langs/de.js` and `langs/en.js`.
 
 That's it – no other code changes needed.
