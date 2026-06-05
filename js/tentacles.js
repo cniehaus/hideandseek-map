@@ -111,7 +111,7 @@ async function _tentFetchPOIs(id) {
 
 // ── Geodesically-correct Voronoi via equirectangular projection ───────────────
 // turf.voronoi works in Euclidean (x,y) space. Geographic lat/lng is NOT
-// Euclidean: at 53°N a degree of longitude is only ~67 km, not 111 km.
+// Euclidean: a degree of longitude is shorter than a degree of latitude by cos(lat).
 // Fix: project to local km coords → compute Voronoi → reproject to lat/lng.
 function _tentProjectedVoronoi(pois, centerLat, centerLng, radiusKm) {
     const KM_PER_DEG = 111;
