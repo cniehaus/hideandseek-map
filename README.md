@@ -151,7 +151,7 @@ Colour definitions live in **`js/config.js`** inside `COLOR_THEMES`. Both `defau
 
 ---
 
-## Running Locally
+## Local use, how to run the software on your computer
 
 No install needed.
 
@@ -160,17 +160,18 @@ git clone https://github.com/cniehaus/hideandseek-map.git
 cd hideandseek-map
 ```
 
-Then open `index.html` in your browser – or serve it with any static file server:
+**Do not open `index.html` directly** (e.g. by double-clicking it). When a page is loaded via `file://`, browsers send requests with `Origin: null`, and external APIs like Nominatim and the Overpass API will reject them — so no data will load.
+
+Instead, serve the folder with any static file server and open the URL it prints:
 
 ```bash
-# Python
+# Python (no install required on macOS/Linux)
 python3 -m http.server 8080
+# → open http://localhost:8080
 
 # Node.js
 npx serve .
 ```
-
-**Note:** The Overpass API blocks requests from `file://` in some browsers (CORS). Use the local server method if you see network errors.
 
 ---
 
