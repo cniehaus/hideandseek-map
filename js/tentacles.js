@@ -186,10 +186,10 @@ async function _tentDraw(id) {
             q.layers.push(
                 L.geoJSON(clipped, {
                     style: {
-                        color:       '#3b82f6',
+                        color:       isSel ? '#3b82f6' : '#ef4444',
                         weight:      isSel ? 2.5 : 1.5,
-                        fillColor:   '#3b82f6',
-                        fillOpacity: isSel ? 0.18 : 0,
+                        fillColor:   isSel ? '#3b82f6' : '#ef4444',
+                        fillOpacity: isSel ? 0.18 : 0.12,
                         dashArray:   isSel ? undefined : '6 4',
                     },
                 }).addTo(map)
