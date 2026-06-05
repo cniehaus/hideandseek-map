@@ -102,6 +102,7 @@ async function _tentFetchPOIs(id) {
             sel.disabled = false;
         }
         setStatus(tf('tent_status_found', q.fetchedPOIs.length, TENT_TYPES[q.poiType].label), 'ok');
+        updatePermalink();
     } catch (err) {
         if (sel) { sel.innerHTML = `<option value="">${t('tent_error')}</option>`; sel.disabled = false; }
         showErrorPopup(err.message);
@@ -253,6 +254,7 @@ function removeTentacleQuestion(id) {
     _tentClearLayers(_tentQuestions[idx]);
     _tentQuestions.splice(idx, 1);
     _tentRenderCards();
+    updatePermalink();
 }
 
 function tentSetRadius(id, val) {
@@ -293,6 +295,49 @@ function tentSelectPOI(id, val) {
     q.selectedPOI = q.fetchedPOIs.find(p => String(p.id) === String(val)) ?? null;
     if (q.selectedPOI) _tentDraw(id);
     else _tentClearLayers(q);
+    updatePermalink();
+}
+
+// ── Permalink serialisation / restore ────────────────────────────────────────
+function tentSerialise() {
+    return _tentQuestions
+        .filter(q => q.centerLat !== null)
+        .map(q =>
+            [q.poiType, q.radius, q.unit,
+             q.centerLat.toFixed(5), q.centerLng.toFixed(5),
+             q.selectedPOI?.id ?? 0].join(',')
+        );
+}
+
+async function tentRestoreFromPermalink(params) {
+    for (const s of params) {
+        const parts = s.split(',');
+        if (parts.length < 6) continue;
+        const [poiType, radiusStr, unit, latStr, lngStr, poiIdStr] = parts;
+        if (!TENT_TYPES[poiType]) continue;
+        const lat    = parseFloat(latStr);
+        const lng    = parseFloat(lngStr);
+        const radius = parseFloat(radiusStr);
+        if (isNaN(lat) || isNaN(lng) || isNaN(radius)) continue;
+
+        const id = _tentNextId++;
+        _tentQuestions.push({
+            id,
+            radius,
+            unit:        unit === 'mi' ? 'mi' : 'km',
+            poiType,
+            centerLat:   lat,
+            centerLng:   lng,
+            selectedPOI: null,
+            fetchedPOIs: [],
+            layers:      [],
+        });
+        _tentRenderCards();
+        await _tentFetchPOIs(id);
+
+        const poiId = poiIdStr && poiIdStr !== '0' ? poiIdStr : null;
+        if (poiId) tentSelectPOI(id, poiId);
+    }
 }
 
 // ── Render question cards ─────────────────────────────────────────────────────

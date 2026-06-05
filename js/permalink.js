@@ -45,6 +45,10 @@ function buildPermalink() {
     // Bus routes — one `route` param per drawn line
     Object.values(busRouteItems).forEach(item => p.append('route', item.ref));
 
+    // Tentacle questions — one `tent` param per question that has a center set
+    // Format: poiType,radius,unit,lat,lng,selectedPoiId (0 = none)
+    tentSerialise().forEach(s => p.append('tent', s));
+
     return `${location.pathname}?${p.toString()}`;
 }
 
@@ -153,6 +157,9 @@ async function loadFromPermalink() {
         await addBusRoute();
     }
     routeInput.value = '';
+
+    // Restore tentacle questions
+    await tentRestoreFromPermalink(p.getAll('tent'));
 
     // Unlock auto-updates and write the canonical URL once
     permalinkReady = true;
