@@ -176,47 +176,118 @@ function renderPOIs(id, data, def) {
             <div class="popup-type">${esc(type)}</div>
             <div class="popup-coords">${lat.toFixed(5)}, ${lng.toFixed(5)}</div>`;
 
+        // Ensure a stable id for the remove button in the popup
+        const elemId = el.id ?? `${lat.toFixed(5)}_${lng.toFixed(5)}`;
+        const removeBtnId = `remove-poi-${id}-${elemId}`;
+        const removeBtnHtml = `\n<div style="margin-top:6px"><button id="${removeBtnId}" class="danger">✕ ${t('remove') || 'Remove'}</button></div>`;
+
         if (id === 'busstops' && el.id) {
             let fetched = false;
             let fetching = false;
-            marker.bindPopup(
-                baseHtml() +
-                    `<div class="popup-routes"><div class="popup-routes-loading"><div class="popup-spinner"></div>${t('stop_lines_loading')}</div></div>`,
-            );
+            marker.bindPopup(baseHtml() + `<div class="popup-routes"><div class="popup-routes-loading"><div class="popup-spinner"></div>${t('stop_lines_loading')}</div></div>` + removeBtnHtml);
+
             marker.on('popupopen', async () => {
+                // attach remove handler (popup DOM exists now)
+                const btn = document.getElementById(removeBtnId);
+                if (btn) {
+                    btn.onclick = () => {
+                        map.removeLayer(marker);
+                        if (activeLayers[id]) {
+                            activeLayers[id] = activeLayers[id].filter((l) => l !== marker);
+                            if (!activeLayers[id].length) delete activeLayers[id];
+                        }
+                        if (layerDataCache[id]?.elements) {
+                            layerDataCache[id].elements = layerDataCache[id].elements.filter((e) => e.id !== el.id);
+                        }
+                        const cntEl = document.getElementById('cnt-' + id);
+                        if (cntEl) {
+                            const n = layerDataCache[id]?.elements?.length ?? (activeLayers[id]?.length ?? 0);
+                            cntEl.textContent = n > 0 ? `(${n})` : '';
+                        }
+                        updatePermalink();
+                    };
+                }
+
                 if (fetched || fetching) return;
                 fetching = true;
                 try {
                     const d = await overpassFetch(
-                        `[out:json][timeout:30];
-(\n  node(${el.id});\n  node(around:80,${lat},${lng})["public_transport"~"^(stop_position|platform)$"];\n);
-relation(bn)["route"~"^(bus|tram|trolleybus|subway|light_rail)$"];
-out tags;`,
+                        `[out:json][timeout:30];\n(\n  node(${el.id});\n  node(around:80,${lat},${lng})["public_transport"~"^(stop_position|platform)$"];\n);\nrelation(bn)["route"~"^(bus|tram|trolleybus|subway|light_rail)$"];\nout tags;`,
                     );
-                    const refs = [
-                        ...new Set(
-                            (d.elements ?? []).filter((r) => r.tags?.ref).map((r) => r.tags.ref),
-                        ),
-                    ].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+                    const refs = [...new Set((d.elements ?? []).filter((r) => r.tags?.ref).map((r) => r.tags.ref))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
-                    const inner = refs.length
-                        ? refs.map((r) => `<span class="route-chip">${esc(r)}</span>`).join('')
-                        : `<span style="color:#484f58;font-size:11px">${t('stop_lines_none')}</span>`;
+                    const inner = refs.length ? refs.map((r) => `<span class="route-chip">${esc(r)}</span>`).join('') : `<span style="color:#484f58;font-size:11px">${t('stop_lines_none')}</span>`;
 
-                    marker.setPopupContent(baseHtml() + `<div class="popup-routes">${inner}</div>`);
+                    marker.setPopupContent(baseHtml() + `<div class="popup-routes">${inner}</div>` + removeBtnHtml);
+                    // reattach remove handler after content replacement
+                    const btn2 = document.getElementById(removeBtnId);
+                    if (btn2) {
+                        btn2.onclick = () => {
+                            map.removeLayer(marker);
+                            if (activeLayers[id]) {
+                                activeLayers[id] = activeLayers[id].filter((l) => l !== marker);
+                                if (!activeLayers[id].length) delete activeLayers[id];
+                            }
+                            if (layerDataCache[id]?.elements) {
+                                layerDataCache[id].elements = layerDataCache[id].elements.filter((e) => e.id !== el.id);
+                            }
+                            const cntEl = document.getElementById('cnt-' + id);
+                            if (cntEl) {
+                                const n = layerDataCache[id]?.elements?.length ?? (activeLayers[id]?.length ?? 0);
+                                cntEl.textContent = n > 0 ? `(${n})` : '';
+                            }
+                            updatePermalink();
+                        };
+                    }
                     fetched = true;
                 } catch (_) {
-                    marker.setPopupContent(
-                        baseHtml() +
-                            `<div class="popup-routes"><span style="color:#f85149;font-size:11px">${t('stop_lines_error')}</span></div>`,
-                    );
+                    marker.setPopupContent(baseHtml() + `<div class="popup-routes"><span style="color:#f85149;font-size:11px">${t('stop_lines_error')}</span></div>` + removeBtnHtml);
+                    const btn3 = document.getElementById(removeBtnId);
+                    if (btn3) {
+                        btn3.onclick = () => {
+                            map.removeLayer(marker);
+                            if (activeLayers[id]) {
+                                activeLayers[id] = activeLayers[id].filter((l) => l !== marker);
+                                if (!activeLayers[id].length) delete activeLayers[id];
+                            }
+                            if (layerDataCache[id]?.elements) {
+                                layerDataCache[id].elements = layerDataCache[id].elements.filter((e) => e.id !== el.id);
+                            }
+                            const cntEl = document.getElementById('cnt-' + id);
+                            if (cntEl) {
+                                const n = layerDataCache[id]?.elements?.length ?? (activeLayers[id]?.length ?? 0);
+                                cntEl.textContent = n > 0 ? `(${n})` : '';
+                            }
+                            updatePermalink();
+                        };
+                    }
                     fetched = true;
                 } finally {
                     fetching = false;
                 }
             });
         } else {
-            marker.bindPopup(baseHtml());
+            marker.bindPopup(baseHtml() + removeBtnHtml);
+            marker.on('popupopen', () => {
+                const btn = document.getElementById(removeBtnId);
+                if (!btn) return;
+                btn.onclick = () => {
+                    map.removeLayer(marker);
+                    if (activeLayers[id]) {
+                        activeLayers[id] = activeLayers[id].filter((l) => l !== marker);
+                        if (!activeLayers[id].length) delete activeLayers[id];
+                    }
+                    if (layerDataCache[id]?.elements) {
+                        layerDataCache[id].elements = layerDataCache[id].elements.filter((e) => e.id !== el.id);
+                    }
+                    const cntEl = document.getElementById('cnt-' + id);
+                    if (cntEl) {
+                        const n = layerDataCache[id]?.elements?.length ?? (activeLayers[id]?.length ?? 0);
+                        cntEl.textContent = n > 0 ? `(${n})` : '';
+                    }
+                    updatePermalink();
+                };
+            });
         }
 
         // Clicking a POI also sets the radius centre point
