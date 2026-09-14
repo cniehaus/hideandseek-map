@@ -529,6 +529,8 @@ button.meas-active:hover {
 
 /* ── FABs (floating action buttons) ──────────────── */
 #printFab,
+#exportStateFab,
+#importStateFab,
 #styleFab,
 #boundaryFab,
 #permalinkFab,
@@ -555,22 +557,30 @@ button.meas-active:hover {
 #printFab {
     bottom: 30px;
 }
-#styleFab {
+#exportStateFab {
     bottom: 84px;
 }
-#boundaryFab {
+#importStateFab {
     bottom: 138px;
 }
-#permalinkFab {
+#styleFab {
     bottom: 192px;
 }
-#layerFab {
+#boundaryFab {
     bottom: 246px;
 }
-#locateFab {
+#permalinkFab {
     bottom: 300px;
 }
+#layerFab {
+    bottom: 354px;
+}
+#locateFab {
+    bottom: 408px;
+}
 #printFab:hover,
+#exportStateFab:hover,
+#importStateFab:hover,
 #styleFab:hover,
 #boundaryFab:hover,
 #permalinkFab:hover,

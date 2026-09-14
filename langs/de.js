@@ -103,6 +103,8 @@ const LANG_DE = {
     fab_print_title:      'Als PDF drucken',
     fab_style_title:      'Kartenstil wählen',
     fab_permalink_title:  'Link kopieren',
+    fab_export_state:     'Kartenzustand exportieren (JSON)',
+    fab_import_state:     'Kartenzustand importieren (JSON)',
     status_ready:         'Bereit',
     status_searching:     'Suche Stadt …',
     status_not_found:     'Stadt nicht gefunden',

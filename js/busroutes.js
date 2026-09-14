@@ -108,6 +108,7 @@ out geom;`;
 
         const routeName = data.elements[0]?.tags?.name ?? ref;
         busRouteItems[id] = { layers, color, name: routeName, ref };
+        busRouteItems[id].data = data; // Store the original Overpass response
         busRouteRefs.add(ref);
 
         addBusRouteListEntry(id, ref, routeName, color);

@@ -103,6 +103,8 @@ const LANG_EN = {
     fab_print_title: 'Print / Save as PDF',
     fab_style_title: 'Choose map style',
     fab_permalink_title: 'Copy link',
+    fab_export_state: 'Export map state (JSON)',
+    fab_import_state: 'Import map state (JSON)',
     status_ready: 'Ready',
     status_searching: 'Searching city …',
     status_not_found: 'City not found',

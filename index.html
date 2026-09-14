@@ -835,6 +835,29 @@
       🔗
     </button>
 
+    <!-- ════════ EXPORT / IMPORT STATE FABs ════════ -->
+    <button
+      id="exportStateFab"
+      onclick="exportMapState()"
+      data-i18n-title="fab_export_state"
+      title="Export map state"
+      aria-label="Export map state"
+    >
+      📦
+    </button>
+
+    <button
+      id="importStateFab"
+      onclick="document.getElementById('importStateInput').click()"
+      data-i18n-title="fab_import_state"
+      title="Import map state"
+      aria-label="Import map state"
+    >
+      📥
+    </button>
+
+    <input id="importStateInput" type="file" accept="application/json" style="display:none" onchange="handleImportStateFile(event)" />
+
     <!-- ════════ LOCATE FAB ════════ -->
     <button
       id="locateFab"

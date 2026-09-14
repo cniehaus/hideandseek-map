@@ -182,3 +182,191 @@ async function loadFromPermalink() {
     // Keep the address bar in sync whenever the user pans or zooms
     map.on('moveend', updatePermalink);
 }
+
+    // ── Export / Import map state (JSON) ────────────────────────────────────────
+    function exportMapState() {
+        const state = {
+            version: 1,
+            view: (() => {
+                const c = map.getCenter();
+                return { lat: c.lat, lng: c.lng, zoom: map.getZoom() };
+            })(),
+            layerDataCache: {},
+            busRoutes: [],
+            // Persist the city the player typed plus the resolved city object
+            city: {},
+            // Persist game zone areas (allowed/drawn areas)
+            gameZone: [],
+        };
+
+        // Only export cached layer data (if present)
+        Object.keys(layerDataCache).forEach((id) => {
+            state.layerDataCache[id] = layerDataCache[id];
+        });
+
+        // Export bus routes including their Overpass responses (if available)
+        Object.values(busRouteItems).forEach((item) => {
+            state.busRoutes.push({ ref: item.ref, name: item.name, color: item.color, data: item.data });
+        });
+
+        // Export current city input and resolved city object (if any)
+        try {
+            state.city.input = document.getElementById('cityInput').value.trim();
+        } catch (_) {}
+        if (typeof currentCity !== 'undefined' && currentCity) state.city.currentCity = currentCity;
+
+        // Export game zone items (serialize geojson feature + metadata)
+        try {
+            Object.values(gzItems || {}).forEach((it) => {
+                state.gameZone.push({ feature: it.feature, name: it.name, kind: it.kind, osmKey: it.osmKey });
+            });
+        } catch (_) {}
+
+        const blob = new Blob([JSON.stringify(state)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `hideandseek-map-state-${new Date().toISOString().slice(0, 19)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function handleImportStateFile(e) {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            try {
+                const obj = JSON.parse(reader.result);
+                importMapState(obj);
+            } catch (err) {
+                showErrorPopup('Invalid state file');
+            }
+        };
+        reader.readAsText(f);
+        // reset input so selecting same file again triggers change
+        e.target.value = '';
+    }
+
+    async function importMapState(state) {
+        if (!state || state.version !== 1) {
+            showErrorPopup('Unsupported state file');
+            return;
+        }
+
+        // Clear current visible state (including any existing game zone)
+        // Do this before restoring the city so `searchCity()` loads fresh
+        // boundary layers for the imported city rather than merging with
+        // whatever was previously displayed.
+        clearAllBusRoutes();
+        clearAllLayers();
+        clearAllBoundaryLayers();
+        try { clearGameZone(); } catch (_) {}
+
+        // Restore city input and immediately search it when possible so the
+        // canonical `currentCity` is populated via `searchCity()` (Nominatim).
+        try {
+            if (state.city?.input) {
+                document.getElementById('cityInput').value = state.city.input;
+                await searchCity();
+            } else if (state.city?.currentCity) {
+                // Fallback: if no input string was exported, restore the
+                // resolved object directly so boundary loaders can use it.
+                currentCity = state.city.currentCity;
+                document.getElementById('cityHint').textContent = currentCity.name ?? '';
+                try {
+                    if (currentCity.bbox && currentCity.bbox.length === 4) {
+                        map.fitBounds([
+                            [currentCity.bbox[0], currentCity.bbox[2]],
+                            [currentCity.bbox[1], currentCity.bbox[3]],
+                        ]);
+                    }
+                } catch (_) {}
+                try {
+                    reloadActiveBoundaryLayers();
+                } catch (_) {}
+            }
+        } catch (_) {}
+
+        // Restore map view
+        if (state.view) map.setView([state.view.lat, state.view.lng], state.view.zoom);
+
+        // Restore layers from cached Overpass results (no network requests)
+        Object.entries(state.layerDataCache ?? {}).forEach(([id, data]) => {
+            if (!LAYER_DEFS[id]) return;
+            layerDataCache[id] = data;
+            const leafletLayers = LAYER_DEFS[id].render(id, data, LAYER_DEFS[id]);
+            activeLayers[id] = leafletLayers;
+            leafletLayers.forEach((l) => l.addTo(map));
+            const cb = document.getElementById('lyr-' + id);
+            if (cb) cb.checked = true;
+            const cntEl = document.getElementById('cnt-' + id);
+            if (cntEl) cntEl.textContent = (data.elements?.length ?? 0) > 0 ? `(${data.elements.length})` : '';
+        });
+        updateLayerDots();
+        updateLayerFabBadge();
+
+        // Restore bus routes from included Overpass responses
+        if (Array.isArray(state.busRoutes)) {
+            for (const br of state.busRoutes) {
+                try {
+                    const id = ++busRouteCounter;
+                    const color = br.color ?? BUS_ROUTE_COLORS[(id - 1) % BUS_ROUTE_COLORS.length];
+                    const layers = renderBusRoute(br.data, color);
+                    layers.forEach((l) => l.addTo(map));
+                    const routeName = br.name ?? br.ref;
+                    busRouteItems[id] = { layers, color, name: routeName, ref: br.ref, custom: false, data: br.data };
+                    busRouteRefs.add(br.ref);
+                    addBusRouteListEntry(id, br.ref, routeName, color);
+                } catch (_) {
+                    /* skip problematic entries */
+                }
+            }
+        }
+
+        // (city has already been restored above via searchCity() or currentCity)
+
+        // Restore game zone areas (allowed/drawn areas)
+        try {
+            if (Array.isArray(state.gameZone)) {
+                for (const gz of state.gameZone) {
+                    try {
+                        const rawFeat = gz.feature;
+                        const feature = rawFeat?.type === 'Feature' ? rawFeat : turf.feature(rawFeat);
+                        const kind = gz.kind ?? 'boundary';
+                        const outline = L.geoJSON(feature, {
+                            style: {
+                                color: '#3fb950',
+                                weight: 3,
+                                opacity: 0.9,
+                                fillOpacity: 0,
+                                dashArray: kind === 'circle' ? '6 5' : null,
+                            },
+                            interactive: false,
+                        }).addTo(map);
+
+                        const id = ++gzCounter;
+                        const name = gz.name ?? (`Imported area ${id}`);
+                        const osmKey = gz.osmKey ?? ('import/' + id);
+                        gzItems[id] = { feature, layers: [outline], name, kind, osmKey };
+                        gzOsmKeys.add(osmKey);
+                        gzAddListEntry(id, name, gz.name ?? name, kind, gz.radiusKm);
+
+                        // Preserve drawn counter when importing drawn areas
+                        if (kind === 'drawn' && typeof osmKey === 'string') {
+                            const m = osmKey.match(/^drawn\/(\d+)$/);
+                            if (m) gzDrawCounter = Math.max(gzDrawCounter, parseInt(m[1], 10));
+                        }
+                    } catch (_) {
+                        /* skip problematic entries */
+                    }
+                }
+                gzRedrawMask();
+            }
+        } catch (_) {}
+
+        updatePermalink();
+        setStatus('State imported', 'ok');
+    }
