@@ -69,12 +69,16 @@ out center bb tags;`,
         label: 'lyr_stations',
         color: '#2289ff',
         icon: '🚉',
-        buildQuery: (bb) => `[out:json][timeout:60];
-(
-  node(${bbStr(bb)})["railway"~"^(station|halt|tram_stop)$"];
-  node(${bbStr(bb)})["amenity"="bus_station"];
-);
-out center bb tags;`,
+      buildQuery: (bb) => `[out:json][timeout:60];
+    (
+      node(${bbStr(bb)})["railway"~"^(station|halt|tram_stop)$"];
+      way(${bbStr(bb)})["railway"~"^(station|halt|tram_stop)$"];
+      relation(${bbStr(bb)})["railway"~"^(station|halt|tram_stop)$"];
+      node(${bbStr(bb)})["amenity"="bus_station"];
+      way(${bbStr(bb)})["amenity"="bus_station"];
+      relation(${bbStr(bb)})["amenity"="bus_station"];
+    );
+    out center bb tags;`,
         render: renderPOIs,
     },
 
