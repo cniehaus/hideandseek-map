@@ -51,13 +51,31 @@ function addBusRouteListEntry(id, ref, name, color) {
     item.id = 'br-' + id;
     item.innerHTML = `
         <div class="dot" style="background:${color};flex-shrink:0"></div>
+        <input type="color" class="br-color" value="${color}" title="${t('lbl_change_color') || 'Change color'}" style="margin-left:6px" />
         <div class="ri-info">
             <div>${t('lbl_line')} ${esc(ref)}</div>
             <div class="ri-lat">${esc(name)}</div>
         </div>
         <button class="danger" title="✕">✕</button>
     `;
+
+    // Remove button
     item.querySelector('button').addEventListener('click', () => removeBusRoute(id));
+
+    // Color picker handler
+    const colorInput = item.querySelector('.br-color');
+    colorInput.addEventListener('input', (e) => {
+        const newColor = e.target.value;
+        const entry = busRouteItems[id];
+        if (!entry) return;
+        entry.color = newColor;
+        entry.custom = true; // remember that user customized this route
+        entry.layers.forEach((l) => l.setStyle?.({ color: newColor }));
+        const dot = item.querySelector('.dot');
+        if (dot) dot.style.background = newColor;
+        updatePermalink();
+    });
+
     list.appendChild(item);
 }
 
@@ -107,7 +125,7 @@ out geom;`;
         layers.forEach((l) => l.addTo(map));
 
         const routeName = data.elements[0]?.tags?.name ?? ref;
-        busRouteItems[id] = { layers, color, name: routeName, ref };
+        busRouteItems[id] = { layers, color, name: routeName, ref, custom: false };
         busRouteRefs.add(ref);
 
         addBusRouteListEntry(id, ref, routeName, color);
@@ -140,10 +158,14 @@ function clearAllBusRoutes() {
 function recolorBusRoutes() {
     const palette = COLOR_THEMES[colorMode].busRoute;
     Object.entries(busRouteItems).forEach(([id, item]) => {
+        // Respect user-chosen custom colors
+        if (item.custom) return;
         const newColor = palette[(parseInt(id) - 1) % palette.length];
         item.layers.forEach((l) => l.setStyle?.({ color: newColor }));
         item.color = newColor;
         const dot = document.querySelector('#br-' + id + ' .dot');
         if (dot) dot.style.background = newColor;
+        const colorInput = document.querySelector('#br-' + id + ' .br-color');
+        if (colorInput) colorInput.value = newColor;
     });
 }
